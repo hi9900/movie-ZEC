@@ -26,7 +26,7 @@ class Keyword(models.Model):
 
 class Movie(models.Model):
     id = models.IntegerField(primary_key=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, null=True)
     original_language = models.CharField(max_length=10, null=True)
     original_title = models.CharField(max_length=100, null=True)
     overview = models.TextField(null=True)
