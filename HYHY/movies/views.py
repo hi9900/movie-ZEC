@@ -8,6 +8,9 @@ from .serializers import MovieSerializer
 
 
 # Create your views here.
+
+# 영화 CRUD -> 작성, 수정, 삭제는 관리자만 할 수 있게
+
 @api_view(['GET', 'POST'])
 def movie_list(request):
     if request.method == 'GET':
