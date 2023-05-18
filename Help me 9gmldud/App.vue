@@ -3,7 +3,7 @@
     <nav>
       <router-link :to="{ name: 'ArticleView' }">Articles</router-link> | 
       <router-link :to="{ name: 'SignUpView' }">SignUpPage</router-link> | 
-      <router-link :to="{ name: 'LogInView' }">LogInPage</router-link>
+      <router-link :to="{ name: 'LogInView' }">LogInPage</router-link> | 
       <button v-if="isLogin" @click="logout">Logout</button>
     </nav>
     <router-view/>
@@ -27,7 +27,6 @@ export default {
   }
 }
 </script>
-
 
 <style>
 #app {
