@@ -48,18 +48,18 @@ class CharacterSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('movie', 'actor')
 
-class ReviewSerializer(serializers.ModelSerializer):
-    hashtags = TagSerializer(many=True, read_only=True)
-    like_users = UserSerializer(many=True, read_only=True)
+# class ReviewSerializer(serializers.ModelSerializer):
+#     hashtags = TagSerializer(many=True, read_only=True)
+#     like_users = UserSerializer(many=True, read_only=True)
 
-    class Meta:
-        model = Review
-        fields = '__all__'
-        read_only_fields = ('movie', 'user', 'watch_movie')
+#     class Meta:
+#         model = Review
+#         fields = '__all__'
+#         read_only_fields = ('movie', 'user', 'watch_movie')
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = '__all__'
-        read_only_fields = ('review')
+# class CommentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Comment
+#         fields = '__all__'
+#         read_only_fields = ('review')
