@@ -6,12 +6,10 @@
         <v-row>
           <v-col cols="1"></v-col>
           <v-col cols="10">
-            <router-view></router-view>
+            <router-view/>
           </v-col>
           <v-col cols="1"></v-col>
         </v-row>
-      </v-container>    
-      <v-container style="height: 1500px;">
       </v-container>
     </v-main>
 
@@ -42,3 +40,6 @@ export default {
 }
 </script>
 
+<style>
+
+</style>
