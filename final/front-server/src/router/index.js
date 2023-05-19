@@ -25,20 +25,6 @@ const routes = [
     name: 'MovieDetail',
     component: () => import('@/views/MovieDetailView')
   },
-  
-
-  {
-    path: '/article',
-    name: 'ArticleView',
-    component: () => import('@/views/ArticleView')
-  },
- 
-  {
-    path: '/create',
-    name: 'CreateView',
-    component: () => import('@/views/CreateView')
-  },
-
   {
     path: '/signup',
     name: 'SignUpView',
@@ -51,11 +37,23 @@ const routes = [
     component: () => import('@/views/LogInView')
   },
 
-  {
-    path: '/:id',
-    name: 'DetailView',
-    component: () => import('@/views/DetailView'),
-  },
+  // {
+  //   path: '/article',
+  //   name: 'ArticleView',
+  //   component: () => import('@/views/ArticleView')
+  // },
+ 
+  // {
+  //   path: '/create',
+  //   name: 'CreateView',
+  //   component: () => import('@/views/CreateView')
+  // },
+
+  // {
+  //   path: '/:id',
+  //   name: 'DetailView',
+  //   component: () => import('@/views/DetailView'),
+  // },
 ]
 
 // const scrollBehavior = function (to, from, savedPosition) {
