@@ -26,42 +26,32 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    // GET_ARTICLES(state, articles) {
-    //   state.articles = articles
-    // },
     GET_MOVIES(state, movies) {
       state.movies = movies
     },
     // signup & login -> 완료하면 토큰 발급
     SAVE_TOKEN(state, token) {
       state.token = token
-      router.push({name : 'ArticleView'}) // store/index.js $router 접근 불가 -> import를 해야함
+      router.push({name : 'Home'}) 
+      // store/index.js $router 접근 불가 -> import를 해야함
     },
     LOGOUT(state) {
       state.token = null;
     },
   },
   actions: {
-    // getArticles(context) {
-    //   axios({
-    //     method: 'get',
-    //     url: `${API_URL}/api/v1/articles/`,
-    //   })
-    //     .then((res) => {
-    //     // console.log(res, context)
-    //       context.commit('GET_ARTICLES', res.data)
-    //     })
-    //     .catch((err) => {
-    //     console.log(err)
-    //   })
-    // },
-    getMovies(context) {
+    getMovies(context, page) {
+      // movie 요청
       axios({
         method: 'get',
         url: `${API_URL}/api/v1/movies/`,
+        params: {
+          page: page,
+        }
       })
       .then((res) => {
         console.log(res.data, context)
+
         context.commit('GET_MOVIES', res.data)
       })
       .catch((err) => console.log(1, err))
@@ -98,9 +88,9 @@ export default new Vuex.Store({
           username, password
         }
       })
-        .then((res) => {
-        context.commit('SAVE_TOKEN', res.data.key)
-        })
+      .then((res) => {
+      context.commit('SAVE_TOKEN', res.data.key)
+      })
       .catch((err) => console.log(err))
     },
     logout(context) {

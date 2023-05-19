@@ -60,24 +60,24 @@ class Character(models.Model):
     character = models.CharField(max_length=50)
 
 
-class Review(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    watch_movie = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 본 영화 
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    hashtags = models.ManyToManyField(Tag)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews') # 좋아요
-    watched_at = models.DateTimeField(default=timezone.now) # default로 현재시간, 변경 가능
-    rating = models.DecimalField(max_digits=2, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(5)]) # 0.5 단위 값만 가질 수 있음
+# class Review(models.Model):
+#     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     watch_movie = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 본 영화 
+#     title = models.CharField(max_length=100)
+#     content = models.TextField()
+#     hashtags = models.ManyToManyField(Tag)
+#     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews') # 좋아요
+#     watched_at = models.DateTimeField(default=timezone.now) # default로 현재시간, 변경 가능
+#     rating = models.DecimalField(max_digits=2, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(5)]) # 0.5 단위 값만 가질 수 있음
 
-    def save(self, *args, **kwargs):
-        self.rating = round(self.rating * 2) / 2  # Round to nearest half point
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         self.rating = round(self.rating * 2) / 2  # Round to nearest half point
+#         super().save(*args, **kwargs)
 
 
-class Comment(models.Model):
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# class Comment(models.Model):
+#     review = models.ForeignKey(Review, on_delete=models.CASCADE)
+#     content = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
