@@ -1,6 +1,5 @@
 <template>
   <v-app-bar app dens color="appBarColor">
-      <v-spacer></v-spacer>
 
       <!-- Logo -->
       <v-img @click="goHome"
@@ -12,29 +11,20 @@
       ></v-img>
 
       <v-spacer></v-spacer>
-      <v-spacer></v-spacer>
-      <v-spacer></v-spacer>
-      <v-spacer></v-spacer>
-      <v-spacer></v-spacer>
 
       <v-btn text :to="{ name: 'Movie' }">Movie</v-btn>
       <!-- <v-btn text :to="{ name: 'List' }">Lists</v-btn> -->
       <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
 
-      <!-- <router-link :to="{ name: 'ArticleView' }">Articles</router-link> | 
-      <router-link :to="{ name: 'SignUpView' }">SignUpPage</router-link> |  -->
       <v-btn text v-if="!isLogin" :to="{ name: 'LogInView' }">LogIn</v-btn>
-
       <v-btn v-else @click="logout">Logout</v-btn>
 
-      
       <!-- 로그인/프로필 버튼
       로그인 시 상태 변경 해야함 -->
-      <!-- <v-btn text :to="{ name: 'Profile' }">Profile</v-btn> -->
+      <v-btn text :to="{ name: 'Profile' }">Profile</v-btn>
 
       <!-- <v-btn text v-if="!loggedIn" :to="{ name: 'Login' }">Login</v-btn>
       <v-btn text v-else :to="{ name: 'Profile' }">Profile</v-btn> -->
-      <v-spacer></v-spacer>
     </v-app-bar>
 </template>
 
