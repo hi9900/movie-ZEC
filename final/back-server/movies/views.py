@@ -13,6 +13,20 @@ from .serializers import *
 
 
 # Create your views here.
+# 영화 CRUD -> 작성, 수정, 삭제는 관리자만 할 수 있게
+# @api_view(['GET', 'POST'])
+# def movie_list(request):
+#     if request.method == 'GET':
+#         movies = Movie.objects.all()
+#         serializer = MovieSerializer(movies, many=True)
+#         return Response(serializer.data)
+    
+#     elif request.method == 'POST':
+#         serializer = MovieSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class MovieListCreate(APIView):
     def get(self, request):
@@ -36,7 +50,6 @@ class MovieListCreate(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-<<<<<<< final/back-server/movies/views.py
 
 
 @api_view(['GET', 'POST'])
@@ -76,117 +89,100 @@ def review_detail(request, review_pk):
             return Response(serializer.data)
         
 
-@api_view(['POST'])
-def comment_create(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
-    serializer = CommentSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(review=review)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-=======
-# 영화 CRUD -> 작성, 수정, 삭제는 관리자만 할 수 있게
+# @api_view(['POST'])
+# def comment_create(request, review_pk):
+#     review = get_object_or_404(Review, pk=review_pk)
+#     serializer = CommentSerializer(data=request.data)
+#     if serializer.is_valid(raise_exception=True):
+#         serializer.save(review=review)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 
-# @api_view(['GET', 'POST'])
-# def movie_list(request):
+# @api_view(['GET'])
+# def comment_list(request):
 #     if request.method == 'GET':
-#         movies = Movie.objects.all()
-#         serializer = MovieSerializer(movies, many=True)
+#         # comments = Comment.objects.all()
+#         comments = get_list_or_404(Comment)
+#         serializer = CommentSerializer(comments, many=True)
 #         return Response(serializer.data)
-    
-#     elif request.method == 'POST':
-#         serializer = MovieSerializer(data=request.data)
-#         if serializer.is_valid():
+
+
+# @api_view(['GET', 'DELETE', 'PUT'])
+# def comment_detail(request, comment_pk):
+#     # comment = Comment.objects.get(pk=comment_pk)
+#     comment = get_object_or_404(Comment, pk=comment_pk)
+
+#     if request.method == 'GET':
+#         serializer = CommentSerializer(comment)
+#         return Response(serializer.data)
+
+#     elif request.method == 'DELETE':
+#         comment.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#     elif request.method == 'PUT':
+#         serializer = CommentSerializer(comment, data=request.data)
+#         if serializer.is_valid(raise_exception=True):
 #             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
->>>>>>> final/back-server/movies/views.py
-    
-
-@api_view(['GET'])
-def comment_list(request):
-    if request.method == 'GET':
-        # comments = Comment.objects.all()
-        comments = get_list_or_404(Comment)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
-
-
-@api_view(['GET', 'DELETE', 'PUT'])
-def comment_detail(request, comment_pk):
-    # comment = Comment.objects.get(pk=comment_pk)
-    comment = get_object_or_404(Comment, pk=comment_pk)
-
-    if request.method == 'GET':
-        serializer = CommentSerializer(comment)
-        return Response(serializer.data)
-
-    elif request.method == 'DELETE':
-        comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    elif request.method == 'PUT':
-        serializer = CommentSerializer(comment, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+#             return Response(serializer.data)
         
 
-# 영화 좋아요
-class MovieViewSet(viewsets.ModelViewSet): 
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+# # 영화 좋아요
+# class MovieViewSet(viewsets.ModelViewSet): 
+#     queryset = Movie.objects.all()
+#     serializer_class = MovieSerializer
 
-    @action(detail=True, methods=['post'])
-    def like(self, request, pk=None):
-        movie = self.get_object()
-        user = request.user
-        movie.like_users.add(user)
-        return Response({'status': 'like set'})
+#     @action(detail=True, methods=['post'])
+#     def like(self, request, pk=None):
+#         movie = self.get_object()
+#         user = request.user
+#         movie.like_users.add(user)
+#         return Response({'status': 'like set'})
 
-    @action(detail=True, methods=['post'])
-    def unlike(self, request, pk=None):
-        movie = self.get_object()
-        user = request.user
-        movie.like_users.remove(user)
-        return Response({'status': 'like removed'})
+#     @action(detail=True, methods=['post'])
+#     def unlike(self, request, pk=None):
+#         movie = self.get_object()
+#         user = request.user
+#         movie.like_users.remove(user)
+#         return Response({'status': 'like removed'})
     
 
-# 영화 좋아요 목록
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_liked_movies(request):
-    user = request.user
-    liked_movies = user.liked_movies.all()
-    serializer = MovieSerializer(liked_movies, many=True)
-    return Response(serializer.data)
+# # 영화 좋아요 목록
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_liked_movies(request):
+#     user = request.user
+#     liked_movies = user.liked_movies.all()
+#     serializer = MovieSerializer(liked_movies, many=True)
+#     return Response(serializer.data)
 
 
-# 리뷰 좋아요
-class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+# # 리뷰 좋아요
+# class ReviewViewSet(viewsets.ModelViewSet):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
 
-    @action(detail=True, methods=['post'])
-    def like(self, request, pk=None):
-        review = self.get_object()
-        user = request.user
-        review.like_users.add(user)
-        return Response({'status': 'like set'})
+#     @action(detail=True, methods=['post'])
+#     def like(self, request, pk=None):
+#         review = self.get_object()
+#         user = request.user
+#         review.like_users.add(user)
+#         return Response({'status': 'like set'})
 
-    @action(detail=True, methods=['post'])
-    def unlike(self, request, pk=None):
-        review = self.get_object()
-        user = request.user
-        # review.likes.remove(user)   ##### 원래 코드인데 내가 맞다 생각해서 밑으로 고쳤는데 안되면 다시 ㄱㄱ
-        review.like_users.remove(user)
-        return Response({'status': 'like removed'})
+#     @action(detail=True, methods=['post'])
+#     def unlike(self, request, pk=None):
+#         review = self.get_object()
+#         user = request.user
+#         # review.likes.remove(user)   ##### 원래 코드인데 내가 맞다 생각해서 밑으로 고쳤는데 안되면 다시 ㄱㄱ
+#         review.like_users.remove(user)
+#         return Response({'status': 'like removed'})
 
 
-# 리뷰 좋아요 목록
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_liked_reviews(request):
-    user = request.user
-    liked_reviews = user.liked_reviews.all()
-    serializer = ReviewSerializer(liked_reviews, many=True)
-    return Response(serializer.data)
+# # 리뷰 좋아요 목록
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_liked_reviews(request):
+#     user = request.user
+#     liked_reviews = user.liked_reviews.all()
+#     serializer = ReviewSerializer(liked_reviews, many=True)
+#     return Response(serializer.data)
