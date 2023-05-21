@@ -36,8 +36,10 @@ INSTALLED_APPS = [
     'articles',
     'movies',
 
+    'django_seed',
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
 
     # CORS policy
     "corsheaders",
@@ -244,3 +246,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+}
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'

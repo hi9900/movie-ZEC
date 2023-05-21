@@ -8,25 +8,34 @@
             <form ref="form">
               <!-- id -->
               <v-text-field
-                label="아이디*"
-                prepend-inner-icon="mdi-account"
-                v-model="user_id"
-                :rules="user_id_rule"
-              ></v-text-field>
+                label="이메일*"
+                prepend-inner-icon="mdi-email"
+                v-model="user_email"
+                :rules="user_email_rule"
+              >
+              <!-- 포커스를 잃으면 중복 확인 API가 호출되고 중복 여부에 따라 표시가 표시 -->
+              <!-- <v-text-field
+              label="이메일"
+              v-model="email"
+              :error-messages="emailDuplicated ? emailDuplicatedMessage : ''"
+              @blur="checkEmailDuplicated"
+            > -->
+              </v-text-field>
               <v-text-field 
                 prepend-inner-icon="mdi-account"
                 v-model="username" 
                 label="이름*" 
                 :rules="username_rule" 
                 required
-                ></v-text-field>
+                >
+                <!-- <v-text-field
+                label="닉네임"
+                v-model="nickname"
+                :error-messages="nicknameDuplicated ? nicknameDuplicatedMessage : ''"
+                @blur="checkNicknameDuplicated"
+              > -->
+                </v-text-field>
 
-              <!-- email 나중에 찾아서 -->
-              <!-- <v-text-field
-                label="E-mail"
-                prepend-inner-icon="mdi-email"
-                v-model="email"
-              ></v-text-field> -->
               
               <!-- password -->
               <v-text-field 
@@ -83,8 +92,8 @@ export default {
   data() {
     return{
       user_id: '',
-      user_id_rule: [
-        v => !!v || '아이디는 필수 입력사항입니다.',
+      user_email_rule: [
+        v => !!v || '이메일는 필수 입력사항입니다.',
         v => /^[a-zA-Z0-9]*$/.test(v) || '아이디는 영문+숫자만 입력 가능합니다.',
         // 아이디 중복 확인
         v => this.checkDuplicate(v)
@@ -92,7 +101,7 @@ export default {
       username: '',
       username_rule: [
         v => !!v || '이름은 필수 입력사항입니다.',
-        v => !(v && v.length >= 30) || '이름은 30자 이상 입력할 수 없습니다.',
+        v => !(v && v.length >= 30) || '이름은 10자 이상 입력할 수 없습니다.',
         v => !/[~!@#$%^&*()_+|<>?:{}]/.test(v) || '이름에는 특수문자를 사용할 수 없습니다.'
       ],
       password1: '',
@@ -107,6 +116,10 @@ export default {
         v => v === this.user_pw || '패스워드가 일치하지 않습니다.'
       ],
       email: null,
+    //   nicknameDuplicated: false,
+    // nicknameDuplicatedMessage: '',
+    // emailDuplicated: false,
+    // emailDuplicatedMessage: '',
     }
   },
   methods: {
@@ -132,7 +145,30 @@ export default {
         }
       }
       return true
-    }
+    },
+    // 일단 긁어왔는데 되는지는 몰라서 주석
+  //   async checkNicknameDuplicated() {
+  //   if (this.nickname) {
+  //     try {
+  //       const response = await axios.get(`/api/check-nickname/${this.nickname}`);
+  //       this.nicknameDuplicated = !response.data.result;
+  //       this.nicknameDuplicatedMessage = response.data.message;
+  //     } catch (error) {
+  //       console.error('Error during nickname checking:', error);
+  //     }
+  //   }
+  // },
+  // async checkEmailDuplicated() {
+  //   if (this.email) {
+  //     try {
+  //       const response = await axios.get(`/api/check-email/${this.email}`);
+  //       this.emailDuplicated = !response.data.result;
+  //       this.emailDuplicatedMessage = response.data.message;
+  //     } catch (error) {
+  //       console.error('Error during email checking:', error);
+  //     }
+  //   }
+  // },
   }
 }
 </script>

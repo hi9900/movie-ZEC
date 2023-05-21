@@ -10,20 +10,19 @@ const routes = [
     component: () => import('@/views/HomePageView')
   },
   {
-    path: '/movie',
+    path: '/movies',
     name: 'Movie',
     component: () => import('@/views/MoviePageView')
+  },
+  {
+    path: '/movies/:id',
+    name: 'MovieDetail',
+    component: () => import('@/views/MovieDetailView')
   },
   {
     path: '/community',
     name: 'Community',
     component: () => import('@/views/CommunityPageView')
-  },
-  {
-    // path: '/movie/:id',
-    path: '/movie/id',
-    name: 'MovieDetail',
-    component: () => import('@/views/MovieDetailView')
   },
   {
     path: '/signup',
@@ -37,16 +36,21 @@ const routes = [
     component: () => import('@/views/LogInView')
   },
   {
-    path: '/profile',
+    path: '/profile/userid',
     name: 'Profile',
     component: () => import('@/views/ProfilePageView')
-  }
+  },
+  {
+    path: '/lists',
+    name: 'Lists',
+    component: () => import('@/views/MovieListsView')
+  },
+  {
+    path: '/reviews/:id',
+    name: 'Reviews',
+    component: () => import('@/views/ReviewDetailView')
+  },
 
-  // {
-  //   path: '/article',
-  //   name: 'ArticleView',
-  //   component: () => import('@/views/ArticleView')
-  // },
  
   // {
   //   path: '/create',
@@ -54,11 +58,6 @@ const routes = [
   //   component: () => import('@/views/CreateView')
   // },
 
-  // {
-  //   path: '/:id',
-  //   name: 'DetailView',
-  //   component: () => import('@/views/DetailView'),
-  // },
 ]
 
 // const scrollBehavior = function (to, from, savedPosition) {

@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app dens color="appBarColor">
-
+      <ModeToggle />
       <!-- Logo -->
       <v-img @click="goHome"
         max-height="50"
@@ -13,7 +13,7 @@
       <v-spacer></v-spacer>
 
       <v-btn text :to="{ name: 'Movie' }">Movie</v-btn>
-      <!-- <v-btn text :to="{ name: 'List' }">Lists</v-btn> -->
+      <v-btn text :to="{ name: 'Lists' }">Lists</v-btn>
       <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
 
       <v-btn text v-if="!isLogin" :to="{ name: 'LogInView' }">LogIn</v-btn>
@@ -29,12 +29,16 @@
 </template>
 
 <script>
+import ModeToggle from '@/components/ModeToggle'
 export default {
   name: 'AppBar',
   data() {
     return {
       loggedIn: false,
     }
+  },
+  components: {
+    ModeToggle,
   },
   computed: {
     isLogin() {

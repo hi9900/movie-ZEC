@@ -6,12 +6,11 @@ from django.conf import settings
 
 # Create your models here.
 class User(AbstractUser):
-    follower = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
-    followee = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)
+    email = models.EmailField(unique=True)
+    nickname = models.CharField(max_length=10, unique=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
+    blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 
-    
-
-
-# class Follow(models.Model):
-    # follower = models.ForeignKey(get_user_model(), related_name='following', on_delete=models.CASCADE)
-    # followee = models.ForeignKey(get_user_model(), related_name='followers', on_delete=models.CASCADE)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
