@@ -1,4 +1,4 @@
-"""my_api URL Configuration
+"""tlqkf URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -16,16 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-# from rest_framework_simplejwt.views import (
-#     TokenObtainPairView,
-#     TokenRefreshView,
-#     TokenVerifyView,
-# )
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/v1/', include('movies.urls')),
-    path('accounts/', include('accounts.urls')),
-    # path('accounts/', include('dj_rest_auth.urls')),
-    # path('accounts/signup/', include('dj_rest_auth.registration.urls')),
+    # 일반 회원 회원가입/로그인
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls'))
 ]

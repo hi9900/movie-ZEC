@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'movies',
 
     'rest_framework',
+    # 이거는 안쓰고 싶었는데
+    'rest_framework_jwt',
     'rest_framework_simplejwt',
 
     # CORS policy
@@ -52,6 +54,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    
+    # sites
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.kakao',
+    'allauth.socialaccount.providers.naver',
 
     # OpenAPI 3.0
     # 'drf_spectacular',
@@ -71,12 +78,12 @@ REST_AUTH = { # 회원가입시 토큰 발급
 SITE_ID = 1
 # 하나의 컨텐츠로 여러 개의 도메인에 등록하고 싶을 때 사용
 REST_USE_JWT = True
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
-ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
-ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# # ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
+# ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
+# # ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
-ACCOUNT_EMAIL_VERIFICATION = 'none' # 회원가입 과정에서 이메일 인증 사용 X
+# ACCOUNT_EMAIL_VERIFICATION = 'none' # 회원가입 과정에서 이메일 인증 사용 X
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
@@ -243,4 +250,40 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# google auth and key
+# 366540029361-c5s01fhk1lr98jj5ccn6i47csasev24n.apps.googleusercontent.com
+# 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
+
+# kakao
+# 1fca46589ad41d07bef09719cb8031b4
+# fbd11135bcdfbb87471be6766db93580
+
+# naver
+# BZ24FOphUZIkJSwupWJh
+# bERdEa8URe    
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+# LOGIN_REDIRECT_URL = 로그인 시 갈 곳
+
+# ACCOUNT_LOGOUT_REDIRECT_URL = 로그아웃시 갈 URL `settings.LOGOUT_REDIRECT_URL or “/”`
 

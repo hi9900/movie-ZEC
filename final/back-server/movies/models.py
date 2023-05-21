@@ -52,7 +52,7 @@ class Movie(models.Model):
     director = models.ManyToManyField(Director)
     # director = models.ForeignKey(Director, on_delete=models.SET_NULL, null=True)
     keywords = models.ManyToManyField(Keyword)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', null=True) # 좋아요
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies') #, null=True) # 좋아요
     # user.article_set에서 article_set이 유저가 작성한 글인지, 좋아요를 누른 글인지를 알 수 없게된다. 따라서 동일한 모델에서 위와 같이 진행 할 때는 반드시 역참조를 해줘야한다. 만약 위와같은 상황에서 migrations를 하면 relate_name을 추가하라고 코드에 뜬다.
 
 
@@ -64,12 +64,12 @@ class Character(models.Model):
 
 class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    watch_movie = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True) # 본 영화 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_reviews')
+    watch_movie = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='watched_movies') #, null=True) # 본 영화 
     title = models.CharField(max_length=100)
     content = models.TextField()
     hashtags = models.ManyToManyField(Tag, null=True)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews', null=True) # 좋아요
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews') #, null=True) # 좋아요
     watched_at = models.DateTimeField(default=timezone.now) # default로 현재시간, 변경 가능
     rating = models.DecimalField(max_digits=2, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(5)]) # 0.5 단위 값만 가질 수 있음
 

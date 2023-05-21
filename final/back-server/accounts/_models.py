@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
-# https://axce.tistory.com/99
-# https://pyjwt.readthedocs.io/en/latest/
-# Create your models here.
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password, **kwargs):
     	# """
@@ -40,12 +40,15 @@ class UserManager(BaseUserManager):
         superuser.save(using=self._db)
         return superuser
 
-# AbstractBaseUser를 상속해서 유저 커스텀
+
+# Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(default='', max_length=100, unique=True, null=False, blank=False)
     nickname = models.CharField(default='', max_length=100, null=False, blank=False, unique=True)
     username = models.CharField(default='', max_length=100, null=False, blank=False)
+    follower = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
+    followee = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)
 
 
     is_superuser = models.BooleanField(default=False)
@@ -59,3 +62,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	# 사용자의 username field는 email으로 설정 (이메일로 로그인)
     USERNAME_FIELD = 'email'
+
+    
+
+
+# class Follow(models.Model):
+    # follower = models.ForeignKey(get_user_model(), related_name='following', on_delete=models.CASCADE)
+    # followee = models.ForeignKey(get_user_model(), related_name='followers', on_delete=models.CASCADE)
