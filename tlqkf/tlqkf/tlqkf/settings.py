@@ -144,6 +144,7 @@ ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
 ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # 테스트를 위해 콘솔 이메일 백엔드 사용
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
