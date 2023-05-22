@@ -19,6 +19,7 @@ const routes = [
     name: 'MovieDetail',
     component: () => import('@/views/MovieDetailView')
   },
+  
   {
     path: '/community',
     name: 'Community',
@@ -44,6 +45,11 @@ const routes = [
     path: '/lists',
     name: 'Lists',
     component: () => import('@/views/MovieListsView')
+  },
+  {
+    path: '/lists/:directorid',
+    name: 'Director',
+    component: () => import('@/views/MovieDirectorView')
   },
   {
     path: '/reviews/:id',

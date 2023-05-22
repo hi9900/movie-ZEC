@@ -33,16 +33,16 @@ def is_admin(request, user_id):
 
 
 @api_view(['GET'])
-def check_nickname(request, nickname):
-    if User.objects.filter(nickname=nickname).exists():
-        return Response({'message': '중복된 닉네임입니다.', 'result': False})
-    return Response({'message': '회원가입이 가능한 닉네임입니다.', 'result': True})
+def check_username(request, username):
+    if User.objects.filter(username=username).exists():
+        return Response({'message': '이미 존재하는 이름입니다.', 'result': False})
+    return Response({'message': '회원가입이 가능한 이름입니다.', 'result': True})
 
 
 @api_view(['GET'])
 def check_email(request, email):
     if User.objects.filter(email=email).exists():
-        return Response({'message': '중복된 이메일입니다.', 'result': False})
+        return Response({'message': '이미 존재하는 이메일입니다.', 'result': False})
     return Response({'message': '회원가입이 가능한 이메일입니다.', 'result': True})
 
 

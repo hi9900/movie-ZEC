@@ -8,18 +8,26 @@
             <form @submit="login">
               <!-- id -->
               <v-text-field
-                label="ID"
-                prepend-inner-icon="mdi-account"
-                v-model="username"
-              ></v-text-field>
-              <!-- password -->
-              <v-text-field
-                prepend-inner-icon="mdi-lock"
-                type="password"
-                label="Password"
-                v-model="password"
+                label="이메일"
+                prepend-inner-icon="mdi-email"
+                v-model="user_email"
+                clearable
+                required
+                @input="checkEmailDuplicated"
+                :error-messages="!emailDuplicated ? '존재하지 않는 이메일입니다.' : ''"
               >
               </v-text-field>
+
+              <!-- password -->
+              <v-text-field 
+                prepend-inner-icon="mdi-lock"
+                label="비밀번호" 
+                type="password" 
+                v-model="password"
+                clearable
+                required
+                ></v-text-field>
+
               <v-btn
                 type="submit"
                 color="blue lighten-1 text-capitalize"
@@ -31,6 +39,7 @@
               >
                 Login
               </v-btn>
+              
               <v-btn
                 @click="goToSignup"
                 color="blue lighten-1 text-capitalize"
@@ -50,29 +59,46 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'LogInView',
   data() {
     return{
-      username: null,
+      user_email: null,
       password: null,
+      
+      emailDuplicated: true,
+      emailDuplicatedMessage: '',
     }
   },
   methods: {
     login(){
-      const username = this.username
+      const user_email = this.user_email
       const password = this.password
 
       const payload = {
-        username, password
+        user_email, password
       }
 
-      this.$store.dispatch('login', payload)
+      this.$store.dispatch('account/login', payload)
 
     },
     goToSignup() {
       this.$router.push({name: 'SignUpView'})
+    },
+    async checkEmailDuplicated() {
+    const API_URL = 'http://127.0.0.1:8000' 
+    if (this.user_email) {
+      try {
+        const response = await axios.get(`${API_URL}/accounts/check-email/${this.user_email}`);
+        this.emailDuplicated = !response.data.result
+        this.emailDuplicatedMessage = response.data.message
+      } catch (error) {
+        console.error('Error during email checking:', error)
+      }
     }
+  },
   }
 }
 </script>

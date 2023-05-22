@@ -15,59 +15,114 @@ from .filters import *
 import random
 
 # Create your views /rializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# 감독, 장르, 영화 랜덤으로 영화 찾기: 5개씩
+@api_view(['GET'])
+def movie_lists_random(request):
+    # 랜덤 감독
+    director = get_list_or_404(Director)
+    random_director = random.choice(director)
+    movies_d = list(Movie.objects.filter(director__id=random_director.id).order_by('-popularity')[:5])
+    director_data = get_object_or_404(Director, pk=random_director.id)
+    serializer_dm = MovieSerializer(movies_d, many=True)
+    serializer_dd = DirectorSerializer(director_data)
+
+    # 랜덤 장르
+    genre = get_list_or_404(Genre)
+    random_genre = random.choice(genre)
+    movies_g = list(Movie.objects.filter(genres__id=random_genre.id).order_by('-popularity')[:5])
+    genre_data = get_object_or_404(Genre, pk=random_genre.id)
+    serializer_gm = MovieSerializer(movies_g, many=True)
+    serializer_gg = GenreSerializer(genre_data)
+
+    # 랜덤 배우
+    actor = get_list_or_404(Actor)
+    random_actor = random.choice(actor)
+    # 배우 별로 전체 movie list
+    movies_a = list(Movie.objects.filter(characters__actor__id=random_actor.id).order_by('-popularity')[:5])
+    actor_data = get_object_or_404(Actor, pk=random_actor.id)
+    serializer_am = MovieSerializer(movies_a, many=True)
+    serializer_aa = ActorSerializer(actor_data)
+
+    response = {
+        'director_movies': {
+            'director': serializer_dd.data,
+            'data': serializer_dm.data,
+        },
+        'genre_movies' :{
+            'genre': serializer_gg.data,
+            'data': serializer_gm.data,
+        },
+        'actor_movies': {
+            'actor_data': serializer_aa.data,
+            'data': serializer_am.data
+        }
+    }
+    return Response(response, status=status.HTTP_200_OK)
+
 
 # 감독별로 영화 찾기 (랜덤 20개 or 20개 이하 시 그만큼)
 @api_view(['GET'])
 def movie_list_by_director(request, director_id):
 
     # 감독 별로 전체 movie list
-    movies = list(Movie.objects.filter(director__id=director_id))
-    
+    movies = list(Movie.objects.filter(director__id=director_id).order_by('-popularity'))
+    director_data = get_object_or_404(Director, pk=director_id)
+
     # 랜덤 20개 추출하기 (20개 보다 작다면 그만큼만)
-    num_movies = min(20, len(movies))
-    random_movies = random.sample(movies, num_movies)
+    # num_movies = min(20, len(movies))
+    # random_movies = random.sample(movies, num_movies)
     
     # 직렬 데이터
-    serializer = MovieSerializer(random_movies, many=True)
+    serializer = MovieSerializer(movies, many=True)
+    serializer_d = DirectorSerializer(director_data)
+
+    response = {
+        'director_data': serializer_d.data,
+        'data': serializer.data
+    }
+    return Response(response, status=status.HTTP_200_OK)
+
+
+# 배우별로 영화 찾기 (랜덤 20개 or 20개 이하 시 그만큼)
+@api_view(['GET'])
+def movie_list_by_actor(request, actor_id):
+    actor = get_list_or_404(Actor)
+    # 배우 별로 전체 movie list
+    movies = list(Movie.objects.filter(characters__actor__id=actor.id).order_by('-popularity'))
+    
+    # 랜덤 20개 추출하기 (20개 보다 작다면 그만큼만)
+    # num_movies = min(20, len(movies))
+    # random_movies = random.sample(movies, num_movies)
+    
+    # 직렬 데이터
+    serializer = MovieSerializer(movies, many=True)
     
     return Response(serializer.data, status=status.HTTP_200_OK)
-
-# # 배우별로 영화 찾기 (랜덤 20개 or 20개 이하 시 그만큼)
-# @api_view(['GET'])
-# def movie_list_by_actor(request, actor_id):
-
-#     # 배우 별로 전체 movie list
-#     movies = list(Movie.objects.filter(actors__id=actor_id))
-    
-#     # 랜덤 20개 추출하기 (20개 보다 작다면 그만큼만)
-#     num_movies = min(20, len(movies))
-#     random_movies = random.sample(movies, num_movies)
-    
-#     # 직렬 데이터
-#     serializer = MovieSerializer(random_movies, many=True)
-    
-#     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 장르별로 영화 찾기 (랜덤 20개 or 20개 이하 시 그만큼)
 @api_view(['GET'])
 def movie_list_by_genre(request, genre_id):
-
     # 장르 별로 전체 movie list
-    movies = list(Movie.objects.filter(genres__id=genre_id))
+    movies = list(Movie.objects.filter(genres__id=genre_id).order_by('-popularity'))
     
     # 랜덤 20개 추출하기 (20개 보다 작다면 그만큼만)
-    num_movies = min(20, len(movies))
-    random_movies = random.sample(movies, num_movies)
+    # num_movies = min(20, len(movies))
+    # random_movies = random.sample(movies, num_movies)
     
     # 직렬 데이터
-    serializer = MovieSerializer(random_movies, many=True)
-    
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer = MovieSerializer(movies, many=True)
+    genre_data = get_object_or_404(Genre, pk=genre_id)
+    serializer_g = GenreSerializer(genre_data)
+    response = {
+        'genre_data': serializer_g.data,
+        'data': serializer.data
+    }
+    return Response(response, status=status.HTTP_200_OK)
 
 
 class MovieListCreate(APIView):
-    # 전체 영화 조회 -> 이제안써
+    # 전체 영화 조회 -> 이제안써 관리자페이지에서 쓸까
     def get(self, request):
         page = request.query_params.get('page', 1)
         page_size = request.query_params.get('page_size', 30)
@@ -165,7 +220,6 @@ def review_detail(request, review_pk):
             serializer.save(review=review)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-    
 
 # @api_view(['GET'])
 # def comment_list(request):
