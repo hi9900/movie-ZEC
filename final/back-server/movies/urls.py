@@ -21,6 +21,15 @@ urlpatterns = [
     # path('reviews/', views.review_list),
     path('movies/<int:movie_id>/reviews/', views.review_list),
     path('reviews/<int:review_pk>/', views.review_detail),
+    path('reviews/<int:review_pk>/like/', views.update_like_review),
+    # path('reviews/<int:review_pk>/unlike/', views.unlike),
     # path('comments/<int:comment_pk>/', views.comment_detail),
     # path('reviews/<int:review_pk>/comments/', views.comment_create),
+    
+    # 리뷰 댓글
+    path('reviews/<int:review_pk>/comments/', views.comment_list),
+    path('comments/<int:comment_pk>/', views.comment_detail),
+    
+    # 대댓글
+    path("reviews/<int:review_pk>/comments/<int:parent_pk>/replies/", views.reply_list),
 ]
