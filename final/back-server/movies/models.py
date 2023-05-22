@@ -62,10 +62,10 @@ class Tag(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews') #, null=True) # 좋아요
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews', null=True) # 좋아요
     hashtags = models.ManyToManyField(Tag)
     content = models.TextField(null=True)
-    watched = models.BooleanField(null=True, default=False)
+    watched = models.BooleanField(null=True, default=False) # 리뷰가 있으면 무조건 True
     like = models.BooleanField(null=True, default=False)
     watched_at = models.DateTimeField(default=timezone.now) # default로 현재시간, 변경 가능
     rating = models.DecimalField(null=True, max_digits=2, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(5)]) # 0.5 단위 값만 가질 수 있음
@@ -80,6 +80,7 @@ class Review(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

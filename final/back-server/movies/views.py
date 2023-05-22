@@ -7,6 +7,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets, filters
+from rest_framework.authentication import TokenAuthentication
 
 from .models import *
 from .serializers import *
@@ -181,23 +182,23 @@ def search_movies(request):
 
 
 @api_view(['GET', 'POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def review_list(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     if request.method == 'GET':
-        reviews = get_list_or_404(Review)
+        reviews = list(Review.objects.filter(movie__id=movie_id).order_by('-created_at'))
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(movie=movie) #, user=request.user)
+            serializer.save(movie=movie, user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET', 'POST', 'DELETE', 'PUT'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def review_detail(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
     if request.method == 'GET':
@@ -228,28 +229,27 @@ def review_detail(request, review_pk):
 #         serializer = CommentSerializer(comments, many=True)
 #         return Response(serializer.data)
 
-@api_view(['POST'])
-def comment_create(request, review_pk):
+# 댓글
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def comment_list(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
-    serializer = CommentSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(review=review)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-
-@api_view(['GET'])
-def comment_list(request):
     if request.method == 'GET':
-        # comments = Comment.objects.all()
-        comments = get_list_or_404(Comment)
+        comments = list(Comment.objects.filter(review__id=review_pk, parent_comment__isnull=True).order_by('-created_at'))
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(review=review, user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
+# 댓글
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([IsAuthenticated])
 def comment_detail(request, comment_pk):
-    # comment = Comment.objects.get(pk=comment_pk)
     comment = get_object_or_404(Comment, pk=comment_pk)
 
     if request.method == 'GET':
@@ -265,6 +265,26 @@ def comment_detail(request, comment_pk):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
+        
+        
+# 대댓글
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def reply_list(request, review_pk, parent_pk):
+    
+    review = get_object_or_404(Review, pk=review_pk)
+    comment = get_object_or_404(Comment, pk=parent_pk)
+    
+    if request.method == 'GET':
+        comments = list(Comment.objects.filter(parent_comment__id=parent_pk).order_by('-created_at'))
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(review=review, user=request.user, parent_comment=comment)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
 
 # 영화 좋아요
@@ -296,26 +316,44 @@ def get_liked_movies(request):
     serializer = MovieSerializer(liked_movies, many=True)
     return Response(serializer.data)
 
-
-# 리뷰 좋아요
-class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-
-    @action(detail=True, methods=['post'])
-    def like(self, request, pk=None):
-        review = self.get_object()
-        user = request.user
-        review.like_users.add(user)
-        return Response({'status': 'like set'})
-
-    @action(detail=True, methods=['post'])
-    def unlike(self, request, pk=None):
-        review = self.get_object()
-        user = request.user
-        # review.likes.remove(user)   ##### 원래 코드인데 내가 맞다 생각해서 밑으로 고쳤는데 안되면 다시 ㄱㄱ
+# 리뷰 좋아요여부 변경
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_like_review(request, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    user = request.user
+    
+    # 이미 좋아요한 경우 취소
+    if user in review.like_users.all():
         review.like_users.remove(user)
-        return Response({'status': 'like removed'})
+        return Response({"message": "좋아요 취소"}, status=status.HTTP_200_OK)
+    
+    # 없는 경우 좋아요
+    else:
+        review.like_users.add(user)
+        return Response({"message": "좋아요 성공"}, status=status.HTTP_200_OK)
+    
+
+# # 리뷰 좋아요
+# class ReviewViewSet(viewsets.ModelViewSet):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+#     authentication_classes = [TokenAuthentication]
+
+#     @action(detail=True, methods=['post'])
+#     def like(self, request, pk=None):
+#         review = self.get_object()
+#         user = request.user
+#         review.like_users.add(user)
+#         return Response({'status': 'like set'})
+
+#     @action(detail=True, methods=['post'])
+#     def unlike(self, request, pk=None):
+#         review = self.get_object()
+#         user = request.user
+#         # review.likes.remove(user)   ##### 원래 코드인데 내가 맞다 생각해서 밑으로 고쳤는데 안되면 다시 ㄱㄱ
+#         review.like_users.remove(user)
+#         return Response({'status': 'like removed'})
 
 
 # 리뷰 좋아요 목록

@@ -63,20 +63,29 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    # user = UserSerializer()
+    replies = serializers.SerializerMethodField()
     class Meta:
         model = Comment
         fields = '__all__'
         # fields = ('id', 'author', 'content', 'created_at')
-        read_only_fields = ('review', )
+        read_only_fields = ('review', 'user')
+    
+    def get_replies(self, obj):
+        replies = obj.replies.all()
+        serializers = CommentSerializer(replies, many=True)
+        return serializers.data;
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    # hashtags = TagSerializer(many=True, read_only=True)
-    user = UserSerializer()
-    like_users = UserSerializer(many=True, read_only=True)
+    hashtags = TagSerializer(many=True, read_only=True)
+    # like_users = UserSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     class Meta:
         model = Review
