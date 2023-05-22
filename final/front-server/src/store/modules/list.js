@@ -7,17 +7,16 @@ const list = {
     directorMovies: [],
     genreMovies: [],
     randomMovies: [],
+    actorMovies: [],
     movies: []
   },
   getters: {
   },  
   mutations: {
     GET_RANDOM(state, movies){
-      state.directorMovies = movies.directed_movies
+      state.directorMovies = movies.director_movies
       state.genreMovies = movies.genre_movies
-
-
-      state.randomMovies = movies
+      state.actorMovies = movies.actor_movies
     },
     // GET_DIRECTOR(state, movies) {
     //   state.directorMovies = movies

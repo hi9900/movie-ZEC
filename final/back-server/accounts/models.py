@@ -18,6 +18,7 @@ class User(AbstractUser):
         return self.username
 
 
+
 # class UserManager(BaseUserManager):
 #     def create_user(self, email, password, **kwargs):
 #     	# """

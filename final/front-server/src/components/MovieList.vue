@@ -49,9 +49,9 @@ export default {
   },
   data() {
     return {
-    WatchIconColor: false,
-    heartIconColor: false,
-    starIconColor: false,
+    // WatchIconColor: false,
+    // heartIconColor: false,
+    // starIconColor: false,
     }
   },
   methods: {
@@ -59,14 +59,44 @@ export default {
       this.$router.push({name: 'MovieDetail', params: {id: movieId}})
     },
     toggleEye() {
-    this.WatchIconColor = !this.WatchIconColor;
+      const watched = !this.WatchIconColor
+      const payload = {
+        movieId: this.movie.id,
+        watched,
+      }
+      this.$store.dispatch('profile/updateReview', payload)
+      this.WatchIconColor = watched
   },
   toggleHeart() {
-    this.heartIconColor = !this.heartIconColor;
-  },
+    const liked = !this.heartIconColor
+    this.$store.dispatch('profile/updateReview', {
+      movieId: this.movie.id,
+      liked,
+      })
+    this.heartIconColor = liked
+    },
   toggleStar() {
-    this.starIconColor = !this.starIconColor;
+    const rating = !this.starIconColor ? 3 : 0
+      this.$store.dispatch('profile/updateReview', {
+        movieId: this.movie.id,
+        rating,
+      })
+      this.starIconColor = rating >= 3
   },
+  },
+  computed: {
+    WatchIconColor() {
+      const review = this.$store.getters['profile/userReviews', this.movie.id]
+      return review ? review.watched : false;
+    },
+    heartIconColor() {
+      const review = this.$store.getters['profile/userReviews', this.movie.id];
+      return review ? review.liked : false;
+    },
+    starIconColor() {
+      const review = this.$store.getters['profile/userReviews', this.movie.id];
+      return review ? review.rating >= 3 : false;
+    },
   }
 }
 

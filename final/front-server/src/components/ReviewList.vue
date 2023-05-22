@@ -4,6 +4,33 @@
 
   <div v-for="category in categories" :key="category.id">
   <h2>{{ category.name }}</h2>
+  <v-container>
+    <v-row>
+      <v-col
+        v-for="review in reviews"
+        :key="review.id"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <v-card elevation="2" hover>
+          <v-card-title>
+            {{ review.title }}
+            <v-spacer></v-spacer>
+            {{ review.date }}
+          </v-card-title>
+          <v-card-subtitle>
+            Rating: {{ review.rating }}
+          </v-card-subtitle>
+          <v-card-text>
+            {{ review.content }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+
 
 <!-- 
   {{ review.user }}

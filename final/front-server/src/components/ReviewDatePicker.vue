@@ -1,32 +1,66 @@
-<!-- ReviewDatePicker.vue -->
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="5">
-        <v-date-picker
-          v-model="selectedDate"
-          :events="reviewDatesList"
-          event-color="green"
-          @change="dateChanged"
-        ></v-date-picker>
-      </v-col>
-      <v-col cols="7">
-        <v-card v-if="selectedReview">
-          <v-card-title>{{selectedReview.title}}</v-card-title>
-          <v-card-text>
-            {{selectedReview.date}}<br />
-            {{selectedReview.content}}<br />
-            평점 : {{selectedReview.rating}}
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-tabs>
+      <v-tab>Diary</v-tab>
+      <v-tab>전체 리뷰</v-tab>
+
+      <v-tab-item>
+        <v-row>
+          <v-col cols="5">
+            <v-date-picker
+              v-model="selectedDate"
+              :events="eventsForDatePicker"
+              :event-color="eventColorResolver"
+              @change="dateChanged"
+            ></v-date-picker>
+            <v-btn color="primary" @click="selectToday">오늘 날짜 선택</v-btn>
+          </v-col>
+          <v-col cols="7">
+            <v-card v-if="selectedReview">
+              <v-card-title>{{ selectedReview.title }}</v-card-title>
+              <v-card-text>
+                {{ selectedReview.date }}<br />
+                {{ selectedReview.content }}<br />
+                평점: {{ selectedReview.rating }}
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-tab-item>
+
+      <v-tab-item>
+        <v-list>
+          <!-- https://letterboxd.com/schaffrillas/films/reviews/ 보면서 수정해 -->
+          <v-list-item v-for="review in reviews" :key="review.id">
+          <v-list-item-avatar tile size="96">
+            <v-img :src="review.poster"></v-img>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>{{ review.movieTitle }}</v-list-item-title>
+            <v-list-item-subtitle>{{ review.releaseDate }}</v-list-item-subtitle>
+            <div>{{ review.content }}</div>
+            <div>평점: {{ review.rating }}</div>
+            <v-list-item-action>
+              <v-icon>mdi-thumb-up</v-icon>
+              {{ review.likes }}
+            </v-list-item-action>
+          </v-list-item-content>
+        </v-list-item>
+
+        </v-list>
+      </v-tab-item>
+    </v-tabs>
   </v-container>
 </template>
 
 <script>
+// import ReviewList from "@/components/ReviewList.vue";
+
 export default {
   name: "ReviewDatePicker",
+  components: {
+    // ReviewList
+  },
   data() {
     return {
       selectedDate: null,
@@ -38,6 +72,7 @@ export default {
           date: "2023-05-13",
           content: "첫 번째 리뷰의 상세 내용입니다.",
           rating: 5,
+          status: "content",
         },
         {
           id: 2,
@@ -45,19 +80,43 @@ export default {
           date: "2023-05-15",
           content: "두 번째 리뷰의 상세 내용입니다.",
           rating: 3,
+          status: "watched",
         },
         // 추가 리뷰 데이터...
       ],
     };
   },
   computed: {
-    reviewDatesList() {
+    eventsForDatePicker() {
       return this.reviews.map((review) => review.date);
     },
   },
   methods: {
     dateChanged(date) {
       this.selectedReview = this.reviews.find((review) => review.date === date);
+    },
+    selectToday() {
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+      this.selectedDate = todayStr;
+      this.dateChanged(todayStr);
+    },
+    eventColorResolver(eventDate) {
+      const matchedReview = this.reviews.find(
+        (review) => review.date === eventDate
+      );
+      if (!matchedReview) {
+        return null;
+      }
+      if (matchedReview.status === "watched") {
+        return "blue";
+      } else if (matchedReview.status === "content") {
+        return "green";
+      } else if (matchedReview.status === "liked") {
+        return "red";
+      } else {
+        return null;
+      }
     },
   },
 };

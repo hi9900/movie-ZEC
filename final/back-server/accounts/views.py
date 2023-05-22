@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from django.http import JsonResponse
-from rest_framework import viewsets
-from rest_framework import status
+from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes, permission_classes
+from rest_framework.views    import APIView
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView
-# from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
@@ -17,14 +17,42 @@ from django.http.response import JsonResponse
 from .models import *
 from .serializers import *
 
+User = get_user_model()
 
+############################################################
+# JWT
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+    # def post(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     token = serializer.validated_data["access"]
+    #     username = serializer.validated_data["username"]
+    #     response_data = {
+    #         "access": token,
+    #         "username": username,
+    #     }
+    #     return Response(response_data)
+
+
+# 인가된 사용자만 접근할 수 있는 View 생성
+class OnlyAuthenticatedUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+		
+    # JWT 인증방식 클래스 지정하기
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request):
+        # Token에서 인증된 user만 가져온다.
+        user = request.user
+        print(f"user 정보 : {user}")
+        if not user:
+            return Response({"error": "접근 권한이 없습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"message": "Accepted"})
 
 
 ############################################################
-# 확인해봐야함
-# Create your views here.
+
 @api_view(['GET'])
 def is_admin(request, user_id):
     user = User.objects.get(id=user_id)
@@ -137,18 +165,19 @@ def signup(request):
 #     else:
 #         return Response({'detail': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['get'])
+@api_view(['GET'])
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
-# def profile(request, username):    
-#     person = get_object_or_404(get_user_model(), username=username)
-#     context ={
-#         'username': person.username,
-#         'email': person.email,
-#         'created_at': person.date_joined,
-#         'followers':person.followers.all().count(),  # change here
-#         'followings':person.following.all().count(),  # change here
-#         # 'followers': UserSerializer(person.followers, many=True).data,
-#         # 'following': UserSerializer(person.following, many=True).data, 팔로잉 한 사람 정보까지 띄우려면 주석해제
-#     }
-#     return JsonResponse(context)
+def profile(request, username):    
+    user = get_object_or_404(User, username=username)
+    serializer = UserProfileSerializer(user)
+    # response = {
+    #     'username': user.username,
+    #     'email': user.email,
+    #     'created_at': user.date_joined,
+    #     'followers':user.followers.all().count(),  # change here
+    #     'followings':user.following.all().count(),  # change here
+        # 'followers': UserSerializer(user.followers, many=True).data,
+        # 'following': UserSerializer(user.following, many=True).data, 팔로잉 한 사람 정보까지 띄우려면 주석해제
+    # }
+    return Response(serializer.data)

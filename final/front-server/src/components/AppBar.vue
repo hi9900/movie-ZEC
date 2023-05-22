@@ -1,8 +1,9 @@
 <template>
-  <v-app-bar app dens color="appBarColor">
-      <ModeToggle />
+  <v-app-bar app color="appBarColor">
+
       <!-- Logo -->
-      <v-img @click="goHome"
+      <v-img 
+        @click="goHome"
         max-height="50"
         max-width="150"
         :src="require('@/assets/logo.png')"
@@ -16,15 +17,31 @@
       <v-btn text :to="{ name: 'Lists' }">Lists</v-btn>
       <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
 
-      <v-btn text v-if="!isLogin" :to="{ name: 'LogInView' }">LogIn</v-btn>
-      <v-btn v-else @click="logout">Logout</v-btn>
 
-      <!-- 로그인/프로필 버튼
-      로그인 시 상태 변경 해야함 -->
-      <v-btn text :to="{ name: 'Profile' }">Profile</v-btn>
+      <v-btn text v-if="!isLogin" :to="{ name: 'LogIn' }">LogIn</v-btn>
 
-      <!-- <v-btn text v-if="!loggedIn" :to="{ name: 'Login' }">Login</v-btn>
-      <v-btn text v-else :to="{ name: 'Profile' }">Profile</v-btn> -->
+      <v-menu v-else open-on-hover offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          v-if="isLogin"
+          text
+          v-bind="attrs"
+          v-on="on"
+          
+          :to="{ name: 'Profile'}"
+        >
+      <!-- 유저네임을 받는 방법? -->
+          Profile
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item @click.prevent="logout">
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
+      <ModeToggle />
     </v-app-bar>
 </template>
 
@@ -42,22 +59,18 @@ export default {
   },
   computed: {
     isLogin() {
-      return this.$store.getters.isLogin
+      return this.$store.getters['account/isLogin']
     }
   },
   methods: {
     logout() {
-      this.$store.dispatch('logout');
-      alert('로그인이 필요한 페이지입니다...')
-      this.$router.push({ name: 'LogInView' })
+      this.$store.dispatch('account/logout')
+      this.$router.push({ name: 'Home' })
     },
     goHome() {
-      // 가드로 바꾸기 -> 누르면 맨 위로 올라가게
-      if (this.$route.name !== 'Home'){
       this.$router.push({name: 'Home'})
       // console.log(this.$route.name)
-      }
-    },
+    }
   }
 }
 </script>
@@ -65,5 +78,8 @@ export default {
 <style>
 .logoImg {
   cursor: pointer;
+}
+.button-padding-left {
+  padding-left: 16px;
 }
 </style>

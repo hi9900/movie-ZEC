@@ -3,26 +3,22 @@
   <v-row>
       <v-col cols="10">
       <!-- 여긴 검색창 -->
-      <!-- 플레이스홀더: 배우, 영화제목을 검색해봐라 -->
       <v-text-field
       v-model="searchInput"
       label="Search for movies"
-      outlined
-      prepend-inner-icon="mdi-magnify"
       @keyup.enter="search"
+      prepend-inner-icon="mdi-magnify"
+      outlined
       filled
       rounded
       dense
     >
     </v-text-field>
-    
-      </v-col>
+    </v-col>
 
       <v-col cols="2">
       <!-- 검색버튼 -->
-        <v-btn
-        @click="search"
-        >
+        <v-btn @click="search">
           검색
         </v-btn>
       </v-col>
@@ -30,7 +26,6 @@
 
 
     <!-- <v-row>
-      
     <v-btn @click="filterData">Filter Data</v-btn>
     <v-select
       label="Filter by"
@@ -40,8 +35,8 @@
       item-value="value"
     ></v-select>
     <v-text-field label="Filter value" v-model="filterValue"></v-text-field>
-    </v-row>
--->
+    </v-row> -->
+
     <v-row>
       <p>{{ MoviesCount }}개의 결과</p>
     </v-row> 
@@ -60,15 +55,6 @@ export default {
    },
   data() {
     return {
-      filters: [
-        { text: "Rating", value: "rating" },
-        { text: "Genre", value: "genre" },
-        { text: "Keyword", value: "keyword" },
-        { text: "Director", value: "director" },
-        { text: "Year", value: "year" },
-      ],
-      selectedFilter: "",
-      filterValue: "",
      searchInput: this.searchQuery,
     }
   },

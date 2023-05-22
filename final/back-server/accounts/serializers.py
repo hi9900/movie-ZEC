@@ -6,11 +6,11 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+User = get_user_model()
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = 'email'
 
-User = get_user_model()
 
 class CustomRegisterSerializer(RegisterSerializer):
     email = serializers.EmailField(required=True)
@@ -48,6 +48,18 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__' # 이거는 기본하고 구별할때 변경가능
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    # 리뷰랑 코멘트, 무비리스트 시리얼라이저 추가하기 임포트 먼저 해야해
+    # reviews = ReviewSerializer(many=True, read_only=True)
+    # comments = CommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'profile_image', 'following', 'blocked_users', 'is_staff']
+        # fields = '__all__'
+        # read_only_fields = ['email', 'username']
 
 
 # class UserSerializer(serializers.ModelSerializer):
