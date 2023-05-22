@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     getDirectorId(){
-      const directorId = this.$route.params.directorid
+      const directorId = this.$route.params.id
       this.$store.dispatch('list/getDirectorId', directorId)
     }
   },

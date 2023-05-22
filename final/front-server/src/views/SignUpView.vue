@@ -5,7 +5,7 @@
         <v-card>
           <div class="pa-10">
             <h1 style="text-align: center" class="mb-10">회원가입</h1>
-            <form ref="form">
+            <form ref="form" @submit.prevent="signUp">
                
               <!-- user_email -->
               <v-text-field
@@ -30,6 +30,7 @@
                 @blur="checkUsernameDuplicated"
                 :error-messages="usernameDuplicated ? usernameDuplicatedMessage : ''"
                 :messages="!usernameDuplicated ? usernameDuplicatedMessage : ''"
+                hint="2~10자의 문자 및 숫자만 사용 가능합니다."
                 required
                 clearable
                 >
@@ -39,19 +40,25 @@
               <v-text-field 
                 prepend-inner-icon="mdi-lock"
                 label="비밀번호 *" 
-                type="password" 
+                :type="show1 ? 'text' : 'password'"
+                hint="8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요."
                 v-model="password1"
                 :rules="password_rule"
+                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="show1 = !show1"
                 clearable
                 required
                 ></v-text-field>
                 <!-- 8~16자 영문 대 소문지, 숫자, 특수문자를 사용하세요 -->
               <v-text-field
                 prepend-inner-icon="mdi-lock"
-                type="password"
+                :type="show2 ? 'text' : 'password'"
                 label="비밀번호 확인"
                 v-model="password2"
                 :rules="password_rule2"
+                :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="show2 = !show2"
+
                 clearable
                 required
               ></v-text-field>
@@ -65,7 +72,7 @@
                 dark
                 class="mb-3"
               >
-                Signup
+                회원가입 후 로그인
               </v-btn>
             </form>
           </div>
@@ -81,6 +88,9 @@ export default {
   name: 'SignUpView',
   data() {
     return{
+      show1: false,
+      show2: false,
+      password: 'Password',
       user_email: '',
       user_email_rule: [
         v => !!v || '이메일는 필수 입력사항입니다.',
@@ -103,13 +113,12 @@ export default {
         v => !(v && v.length <= 7) || '8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요',
         v => !!(v && /\d/.test(v)) || '8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요',
         v => !!(v && /[A-Za-z]/.test(v)) || '8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요',
-        v => !!(v && /[^A-Za-z0-9]/.test(v)) || '특수문자를 포함하여 입력해주세요.8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요',
+        v => !!(v && /[^A-Za-z0-9]/.test(v)) || '8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요',
         v => !!(v && /[A-Z]{1}/.test(v)) || '8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요',
       ],
       password2: '',
       password_rule2: [
         v => this.password2 === 'ins' ? !!v || '패스워드는 필수 입력사항입니다.' : true,
-        v => !(v && v.length >= 30) || '패스워드는 30자 이상 입력할 수 없습니다.',
         v => v === this.password1 || '패스워드가 일치하지 않습니다.'
       ],
       usernameDuplicated: false,
@@ -120,7 +129,7 @@ export default {
   },
   methods: {
     signUp() {
-      // console.log('signup')
+      console.log('signup')
       const email = this.user_email
       const username = this.username
       const password1 = this.password1
@@ -130,7 +139,7 @@ export default {
         email, username, password1, password2
       }
 
-      this.$store.dispatch('account/signup', payload)
+      this.$store.dispatch('account/signUp', payload)
     },
     
     async checkUsernameDuplicated() {

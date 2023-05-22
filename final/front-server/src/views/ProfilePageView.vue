@@ -1,56 +1,68 @@
 <template>
       <v-container fluid>
-        <div v-if="isAdmin">
-    <h3>관리자 입니다</h3>
+    <div v-if="profile.is_staff">
+    <h3>관리자페이지로 이동</h3>
   </div>
         <v-row>
           <v-col cols="12" md="3">
-            <v-sheet class="profile-info">
-              <v-avatar size="120" class="mx-auto d-block">
-                <img :src="profile.profileImage" :alt="profile.name" />
-              </v-avatar>
-              <h2 class="profile-title">{{ profile.name }}</h2>
-              <div class="profile-stats">
-                <div><b>{{ profile.reviews }}</b> 리뷰</div>
-                <div><b>{{ profile.ratings }}</b> 평점</div>
-                <div><b>{{ profile.followers }}</b> 팔로워</div>
-                <div><b>{{ profile.following }}</b> 팔로잉</div>
-              </div>
+    <v-sheet class="profile-info">
+    <v-avatar size="120" class="mx-auto d-block">
+      <img :src="profile.profile_image" :alt="profile.name" />
+    </v-avatar>
+    <h2 class="profile-title">{{ profile.username }}</h2>
+    <div class="profile-stats">
+      <!-- 각각 갯수 표시 -->
+      <div><b>{{ profile.reviews }}</b> 리뷰</div>
+       <router-link :to="`/profile/${profile.username}/followers`">
+      <div><b>{{ profile.followers }}</b> 팔로워</div>
+        </router-link>
+          <router-link :to="`/profile/${profile.username}/following`">
+      <div><b>{{ profile.following }}</b> 팔로잉</div>
+        </router-link>
+    </div>
+
+
+    <div v-if="!isMyProfile">
     <v-btn
     color="primary"
     v-if="!isFollowing"
     @click="follow"
-  >
+    >
     팔로우
-  </v-btn>
-  <v-btn
+    </v-btn>
+    <v-btn
     color="red"
     v-else
     @click="unfollow"
-  >
+    >
     팔로우 취소
-  </v-btn>
-  <v-btn
+    </v-btn>
+    <v-btn
     color="error"
     v-if="!isBlocked"
     @click="blockUser"
-  >
+    >
     차단하기
-  </v-btn>
-  <v-btn
+    </v-btn>
+    <v-btn
     color="success"
     v-else
     @click="unblockUser"
-  >
+    >
     차단 해제
-  </v-btn>
-            </v-sheet>
-          </v-col>
-          <v-col cols="12" md="9">
-  <MyProfileData  />
+    </v-btn>
+    </div>
+
+    </v-sheet>
+  </v-col>
+
+  <v-col cols="12" md="9">
+  <MyProfileData 
+  />
+  <!-- :profile="profile" -->
 </v-col>
-        </v-row>
-      </v-container>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -64,14 +76,15 @@ export default {
   },
   data() {
     return {
+      isMyProfile: false,
       profile: {
-        profileImage: "https://letterboxd.com/hih1/avatar/medium/",
-        name: "hih1",
+        profile_image: "https://letterboxd.com/hih1/avatar/medium/",
+        username: "hih1",
         reviews: 91,
         ratings: 2382,
         followers: 421,
         following: 341,
-        bio: "영화에 관한 글을 씁니다.",
+        is_staff: false
       },
       isFollowing: false,
       isBlocked: false,
@@ -79,6 +92,11 @@ export default {
     };
   },
   methods: {
+    // username과 관련된 정보 받아오기
+    // getMyProfile(username) {
+    //   this.$store.dispatch('profile/getMyProfile', username)
+    // },
+
   //   async blockUser() {
   //   try {
   //     await axios.post(`/api/block-user/${this.profileUserId}`);
@@ -112,15 +130,14 @@ export default {
   //   }
   // },
   },
-//   created() {
-  // 관리자 여부 확인
-//   try {
-//     const response = axios.get(`/api/is-admin/${this.profileUserId}`);
-//     this.isAdmin = response.data.is_admin;
-//   } catch (error) {
-//     console.error("Error checking if user is admin:", error);
-//   }
-// }
+  created() {
+    // console.log(this.$route.params.username)
+    this.getMyProfile(this.$route.params.username)
+    
+    // 이 프로필 페이지 정보가 로그인 한 유저 정보와 같은지 확인
+    this.isMyProfile = this.$route.params.username === this.authenticatedUser.username
+
+}
 }
 </script>
 

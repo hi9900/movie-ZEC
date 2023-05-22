@@ -59,6 +59,13 @@ class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
 
+class MovieList(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    movies = models.ManyToManyField(Movie)
+
+
+
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)

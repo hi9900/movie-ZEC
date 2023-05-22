@@ -16,13 +16,13 @@ from .filters import *
 import random
 
 # Create your views /rializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# 감독, 장르, 영화 랜덤으로 영화 찾기: 5개씩
+# 감독, 장르, 영화 랜덤으로 영화 찾기: 30개씩
 @api_view(['GET'])
 def movie_lists_random(request):
     # 랜덤 감독
     director = get_list_or_404(Director)
     random_director = random.choice(director)
-    movies_d = list(Movie.objects.filter(director__id=random_director.id).order_by('-popularity')[:5])
+    movies_d = list(Movie.objects.filter(director__id=random_director.id).order_by('-popularity')[:30])
     director_data = get_object_or_404(Director, pk=random_director.id)
     serializer_dm = MovieSerializer(movies_d, many=True)
     serializer_dd = DirectorSerializer(director_data)
@@ -30,7 +30,7 @@ def movie_lists_random(request):
     # 랜덤 장르
     genre = get_list_or_404(Genre)
     random_genre = random.choice(genre)
-    movies_g = list(Movie.objects.filter(genres__id=random_genre.id).order_by('-popularity')[:5])
+    movies_g = list(Movie.objects.filter(genres__id=random_genre.id).order_by('-popularity')[:30])
     genre_data = get_object_or_404(Genre, pk=random_genre.id)
     serializer_gm = MovieSerializer(movies_g, many=True)
     serializer_gg = GenreSerializer(genre_data)
@@ -39,7 +39,7 @@ def movie_lists_random(request):
     actor = get_list_or_404(Actor)
     random_actor = random.choice(actor)
     # 배우 별로 전체 movie list
-    movies_a = list(Movie.objects.filter(characters__actor__id=random_actor.id).order_by('-popularity')[:5])
+    movies_a = list(Movie.objects.filter(characters__actor__id=random_actor.id).order_by('-popularity')[:30])
     actor_data = get_object_or_404(Actor, pk=random_actor.id)
     serializer_am = MovieSerializer(movies_a, many=True)
     serializer_aa = ActorSerializer(actor_data)
@@ -54,14 +54,14 @@ def movie_lists_random(request):
             'data': serializer_gm.data,
         },
         'actor_movies': {
-            'actor_data': serializer_aa.data,
+            'actor': serializer_aa.data,
             'data': serializer_am.data
         }
     }
     return Response(response, status=status.HTTP_200_OK)
 
 
-# 감독별로 영화 찾기 (랜덤 20개 or 20개 이하 시 그만큼)
+# 감독별로 영화 찾기
 @api_view(['GET'])
 def movie_list_by_director(request, director_id):
 
@@ -84,7 +84,7 @@ def movie_list_by_director(request, director_id):
     return Response(response, status=status.HTTP_200_OK)
 
 
-# 배우별로 영화 찾기 (랜덤 20개 or 20개 이하 시 그만큼)
+# 배우별로 영화 찾기
 @api_view(['GET'])
 def movie_list_by_actor(request, actor_id):
     actor = get_list_or_404(Actor)
@@ -101,7 +101,7 @@ def movie_list_by_actor(request, actor_id):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# 장르별로 영화 찾기 (랜덤 20개 or 20개 이하 시 그만큼)
+# 장르별로 영화 찾기
 @api_view(['GET'])
 def movie_list_by_genre(request, genre_id):
     # 장르 별로 전체 movie list
@@ -123,26 +123,40 @@ def movie_list_by_genre(request, genre_id):
 
 
 class MovieListCreate(APIView):
-    # 전체 영화 조회 -> 이제안써 관리자페이지에서 쓸까
     def get(self, request):
-        page = request.query_params.get('page', 1)
-        page_size = request.query_params.get('page_size', 30)
-        movies = Movie.objects.order_by('-popularity')
-        count = movies.count()
-        paginator = Paginator(movies, page_size)
-        total_pages = paginator.num_pages  # 전체 페이지 수
-        try:
-            movies_page = paginator.page(page)
-        except:
-            return Response({"detail": "Invalid page."}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = MovieSerializer(movies_page, many=True)
+        genres = get_list_or_404(Genre)
+        serializers_g = GenreSerializer(genres, many=True)
+
+        keyword = get_list_or_404(Keyword)
+        serializers_k = KeywordSerializer(keyword, many=True)
+
         response = {
-        "page": page, 
-        "total_pages": total_pages,
-        'count': count,
-        "data": serializer.data, 
+            'genres': serializers_g.data,
+            'keyword': serializers_k.data
         }
-        return Response(response, status=status.HTTP_200_OK)
+        return Response(response)
+    
+
+    # 전체 영화 조회 -> 이제안써 관리자페이지에서 쓸까
+    # def get(self, request):
+    #     page = request.query_params.get('page', 1)
+    #     page_size = request.query_params.get('page_size', 30)
+    #     movies = Movie.objects.order_by('-popularity')
+    #     count = movies.count()
+    #     paginator = Paginator(movies, page_size)
+    #     total_pages = paginator.num_pages  # 전체 페이지 수
+    #     try:
+    #         movies_page = paginator.page(page)
+    #     except:
+    #         return Response({"detail": "Invalid page."}, status=status.HTTP_400_BAD_REQUEST)
+    #     serializer = MovieSerializer(movies_page, many=True)
+    #     response = {
+    #     "page": page, 
+    #     "total_pages": total_pages,
+    #     'count': count,
+    #     "data": serializer.data, 
+    #     }
+    #     return Response(response, status=status.HTTP_200_OK)
     def post(self, request):
         serializer = MovieSerializer(data=request.data)
         if serializer.is_valid():
@@ -179,6 +193,48 @@ def search_movies(request):
         'data': serializer.data
     }
     return Response(response)
+
+##########################
+# 되는지 모르겠음
+# list
+@api_view(["GET", "POST"])
+def movie_list_create(request):
+    if request.method == "GET":
+        movie_lists = get_list_or_404(MovieList)
+        # movie_lists = MovieList.objects.filter(user=request.user)
+        serializer = MovieListSerializer(movie_lists, many=True)
+        return Response(serializer.data)
+
+    elif request.method == "POST":
+        serializer = MovieListSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(["GET", "PUT", "DELETE"])
+def movie_list_detail_update_delete(request, list_pk):
+    try:
+        movie_list = MovieList.objects.get(pk=list_pk)
+    except MovieList.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        serializer = MovieListSerializer(movie_list)
+        return Response(serializer.data)
+
+    elif request.method == "PUT":
+        serializer = MovieListSerializer(movie_list, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == "DELETE":
+        movie_list.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+##########################
 
 
 @api_view(['GET', 'POST'])
