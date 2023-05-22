@@ -1,12 +1,14 @@
 <template>
   <v-container>
-    
+    <!-- 영화 검색 -->
     <MovieSearch 
       :searchQuery="searchQuery"
       :MoviesCount="MoviesCount"
       @search="updateSearchQuery"
     />
-  <!-- 영화 정보 표시 코드 -->
+
+
+  <!-- 영화 카드 하나씩 표시 -->
     <v-row no-gutters>
       <v-col
         v-for="movie in movieList"
@@ -22,10 +24,12 @@
       </v-col>
     </v-row>
 
-    <div v-if="totalPages > 1">
+<!-- 맨 끝 없애고 점점 늘어가게 되나? -->
+<!-- 맨앞 맨끝이 안보여도 되고 ...으로 보이게 -->
+    <div v-if="totalPages > 1" >
        <v-pagination
         v-model="currentPage"
-        @input="searchMovies"
+        @input="updateMovie"
         :length="totalPages"
         total-visible="7"
       ></v-pagination>
@@ -35,7 +39,7 @@
 
 <script>
 
-import MovieSearch from '@/components/MovieSearch'
+import MovieSearch from '@/components/movie/MovieSearch'
 import MovieList from '@/components/MovieList'
 export default {
   name: 'MoviePage',
@@ -46,10 +50,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      searchQuery: '',
-      // movieList: null,
-      // totalPages: null,
-      // MoviesCount: null,
+      searchQuery: ''
     }
   },
   computed: {
@@ -66,12 +67,13 @@ export default {
   watch: {
     searchQuery(query) {
       this.searchQuery = query.trim()
-      this.searchMovies()
+      this.updateMovie()
     },
   },
   methods: {
     updateSearchQuery(query) {
-      this.searchQuery = query;
+      this.searchQuery = query
+      this.currentPage = 1
     },
     // getMovies() {
     //   this.$store.dispatch('movie/getMovies', {
@@ -80,9 +82,9 @@ export default {
     //   })
     //   window.scrollTo(0, 0)
     // },
-    searchMovies() {
-    console.log(this.searchQuery)
-     this.$store.dispatch('movie/searchMovies', {
+    updateMovie() {
+      console.log(this.searchQuery)
+      this.$store.dispatch('movie/updateMovies', {
         page: this.currentPage,
         search: this.searchQuery,
       })
@@ -90,7 +92,7 @@ export default {
   },
   },
   created() {
-    this.searchMovies()
+    this.updateMovie()
   },
 }
 </script>

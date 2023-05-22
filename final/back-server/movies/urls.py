@@ -13,6 +13,9 @@ urlpatterns = [
     path('movies/genres/<int:genre_id>/', views.movie_list_by_genre),
     path('movies/random/', views.movie_lists_random),
 
+    path('movielist/', views.movie_list_create),
+    path("movie_lists/", views.movie_list_create),
+    path("movie_lists/<int:list_pk>/", views.movie_list_detail_update_delete),
 
     # 리뷰
     # path('reviews/', views.review_list),

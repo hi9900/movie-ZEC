@@ -4,8 +4,8 @@
       <v-flex xs12>
         <v-card>
           <div class="pa-10">
-            <h1 style="text-align: center" class="mb-10">Login</h1>
-            <form @submit="login">
+            <h1 style="text-align: center" class="mb-10">로그인</h1>
+            <form @submit.prevent="login">
               <!-- id -->
               <v-text-field
                 label="이메일"
@@ -37,7 +37,7 @@
                 dark
                 class="mb-3"
               >
-                Login
+                로그인
               </v-btn>
               
               <v-btn
@@ -48,7 +48,7 @@
                 block
                 dark
               >
-                Sign Up
+                회원가입
               </v-btn>
             </form>
           </div>
@@ -74,18 +74,18 @@ export default {
   },
   methods: {
     login(){
-      const user_email = this.user_email
+      const email = this.user_email
       const password = this.password
 
       const payload = {
-        user_email, password
+        email, password
       }
 
       this.$store.dispatch('account/login', payload)
 
     },
     goToSignup() {
-      this.$router.push({name: 'SignUpView'})
+      this.$router.push({name: 'SignUp'})
     },
     async checkEmailDuplicated() {
     const API_URL = 'http://127.0.0.1:8000' 

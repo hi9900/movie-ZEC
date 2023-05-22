@@ -3,6 +3,14 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+// 홈 -> 홈 새로고침
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(() => {
+    return window.location.reload()
+  })
+}
+
 const routes = [
   {
     path: '/',
@@ -27,19 +35,29 @@ const routes = [
   },
   {
     path: '/signup',
-    name: 'SignUpView',
+    name: 'SignUp',
     component: () => import('@/views/SignUpView')
   },
 
   {
     path: '/login',
-    name: 'LogInView',
+    name: 'LogIn',
     component: () => import('@/views/LogInView')
   },
   {
-    path: '/profile/userid',
+    path: '/profile/username',
     name: 'Profile',
     component: () => import('@/views/ProfilePageView')
+  },
+  {
+    path: "/profile/:username/followers",
+    name: "FollowersList",
+    component: () => import("@/views/FollowersListView"),
+  },
+  {
+    path: "/profile/:username/following",
+    name: "FollowingList",
+    component: () => import("@/views/FollowingListView"),
   },
   {
     path: '/lists',
@@ -47,9 +65,9 @@ const routes = [
     component: () => import('@/views/MovieListsView')
   },
   {
-    path: '/lists/:directorid',
-    name: 'Director',
-    component: () => import('@/views/MovieDirectorView')
+    path: '/lists/:id',
+    name: 'ListsDetail',
+    component: () => import('@/views/ListsDirectorView')
   },
   {
     path: '/reviews/:id',
@@ -66,20 +84,11 @@ const routes = [
 
 ]
 
-// const scrollBehavior = function (to, from, savedPosition) {
-//   if (savedPosition) {
-//     return savedPosition
-//   } else {
-//     return { x: 0, y: 0 }
-//   }
-// }
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes,
-  
-  // scrollBehavior
+  routes
 })
 
 export default router

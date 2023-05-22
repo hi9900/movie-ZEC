@@ -8,6 +8,7 @@ const movie = {
     movies: [],
     movie: [],
     count: null,
+    genres: [],
   },
   getters: {
     getAllMovies: (state) => state.movies,
@@ -23,25 +24,12 @@ const movie = {
     GET_MOVIE(state, movie) {
       state.movie = movie
     },
+
   },
   actions: {
-    getMovies(context, Query) {
-      // movie 요청
-      // console.log(Query)
-      axios({
-        method: 'get',
-        url: `${API_URL}/api/v1/movies/`,
-        params: {
-          page: Query.page,
-          search: Query.search
-        }
-      })
-      .then((res) => {
-        // console.log(res.data, page)
-        context.commit('GET_MOVIES', res.data)
-      })
-      .catch((err) => console.log(err))
-    },
+
+
+    // 영화 단일 조회
     getMovieId(context, movieId) {
       axios({
         method: 'get',
@@ -53,7 +41,9 @@ const movie = {
       })
       .catch((err) => console.log(err))
     },
-    searchMovies(context, Query) {
+
+    // 영화 조회
+    updateMovies(context, Query) {
       console.log(Query)
       axios({
         method: 'get',
@@ -64,22 +54,14 @@ const movie = {
         }
       })
       .then((res) => {
-        console.log(res)
+        console.log(res.data)
         context.commit('GET_MOVIES', res.data)
       })
       .catch((err) => console.log(err, Query))
     },
-  //   filterMovies({ commit }, filter) {
-  //     axios({
-  //       method: 'get',
-  //       url: `${API_URL}/movies/?search=${filter}`
-  //     })
-  //     .then(res => {
-  //       console.log(res.data)
-  //         commit('SET_MOVIES', res.data);
-  //     })
-  //     .catch(error => console.log(error));
-  // },
+    
+    // 
+    
   },
 }
 

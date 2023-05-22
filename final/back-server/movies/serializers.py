@@ -51,6 +51,16 @@ class MovieSerializer(serializers.ModelSerializer):
         model = Movie
         fields = '__all__'
 
+##########################
+# 되는지 모르겠음
+class MovieListSerializer(serializers.ModelSerializer):
+    movies = MovieSerializer(many=True, read_only=True)
+    class Meta:
+        model = MovieList
+        fields = '__all__'
+        read_only_fields = ('user',)
+##########################
+
 
 # class ReviewListSerializer(serializers.ModelSerializer):
 #     username = serializers.CharField(source='user.username', read_only=True)

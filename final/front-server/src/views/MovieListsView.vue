@@ -2,16 +2,21 @@
 <!-- 집가서 이거하기 -->
   <v-skeleton-loader v-if="!randomMovies" type="carousel"></v-skeleton-loader>
   <v-container v-else>
+    <h1>오늘의 랜덤 영화</h1>
     <v-row>
       <!-- 랜덤 감독 추천 -->
-      <v-col cols="12" sm="6" md="4">
-        <v-card> 
+      <v-col cols="12" sm="6" md="4" no-gutter>
+        <v-card height="250px" outlined @click="goToDirector(directorMovies.director.id)"> 
           <!-- @click="goToDirector(directorMovies.director_data.id)"> -->
           <!-- 카드를 누르면 그 감독의 영화 조회 페이지로 이동 -->
-          <v-card-title>{{ directorMovies.director.name }}감독의 영화</v-card-title>
+          <v-card-title class="card-title-margin">{{ directorMovies.director.name }}감독의 인기 영화</v-card-title>
+
           <v-card-text>
               <div class="poster-container">
               <v-img
+              aspect-ratio="2/3"
+              max-width="100%"
+              
                 v-for="(movie, index) in directorMovies.data.slice(0, 5)"
                 :key="movie.id"
                 :src="'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + movie.poster_path"
@@ -27,48 +32,52 @@
       </v-col>
       <!-- 랜덤 장르 추천 -->
       <!-- 카드를 누르면 그 장르의 영화 조회 페이지로 이동 -->
-      <!-- <v-col cols="12" sm="6" md="4">
-        <v-card @click="goToGenre(randomMovies.genre_movies.genre.id)">
-          <v-card-title>{{ randomMovies.genre_movies.genre.name }}장르의 영화</v-card-title>
+      <v-col cols="12" sm="6" md="4">
+        <v-card height="250px" outlined> 
+          <!-- @click="goToDirector(directorMovies.director_data.id)"> -->
+          <!-- 카드를 누르면 그 감독의 영화 조회 페이지로 이동 -->
+          <v-card-title class="card-title-margin">{{ genreMovies.genre.name }}장르의 인기 영화</v-card-title>
           <v-card-text>
               <div class="poster-container">
               <v-img
-                v-for="(movie, index) in randomMovies.genre_movies.data.slice(0, 5)"
+              aspect-ratio="2/3"
+              max-width="100%"
+                v-for="(movie, index) in genreMovies.data.slice(0, 5)"
                 :key="movie.id"
                 :src="'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + movie.poster_path"
                 :alt="movie.title"
                 class="poster"
-                :style="{ zIndex: randomMovies.genre_movies.data.length - index, marginLeft: -index * 20 + 'px' }"
+                :style="{ zIndex: genreMovies.data.length - index, marginLeft: -index * 20 + 'px' }"
               ></v-img>
             </div>
-              <v-col v-if="randomMovies.genre_movies.data.length > 5" cols="4" class="more-movies" >
+              <v-col v-if="genreMovies.data.length > 5" cols="4" class="more-movies" >
               </v-col>
           </v-card-text>
         </v-card>
-      </v-col> -->
-    </v-row>
+      </v-col>
 
-    <v-row>
-      <!-- <v-col v-for="list in movieLists" :key="list.id" cols="12" sm="6" md="4">
-        <v-card>
-          <v-card-title>{{ list.title }}</v-card-title>
+      <!-- 랜덤 배우 -->
+      <v-col cols="12" sm="6" md="4">
+        <v-card height="250px" outlined> 
+          <!-- @click="goToDirector(directorMovies.director_data.id)"> -->
+          <!-- 카드를 누르면 그 감독의 영화 조회 페이지로 이동 -->
+          <v-card-title class="card-title-margin">{{ actorMovies.actor.name }}의 인기 출연 영화</v-card-title>
           <v-card-text>
               <div class="poster-container">
               <v-img
-                v-for="(movie, index) in list.movies.slice(0, 5)"
+              aspect-ratio="2/3"
+              max-width="100%"
+                v-for="(movie, index) in actorMovies.data.slice(0, 5)"
                 :key="movie.id"
-                :src="movie.poster"
+                :src="'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + movie.poster_path"
                 :alt="movie.title"
                 class="poster"
-                :style="{ zIndex: list.movies.length - index, marginLeft: -index * 20 + 'px' }"
+                :style="{ zIndex: actorMovies.data.length - index, marginLeft: -index * 20 + 'px' }"
               ></v-img>
             </div>
-              <v-col v-if="list.movies.length > 5" cols="4" class="more-movies" >
-                <v-chip>+{{ list.movies.length - 5 }}</v-chip>
-              </v-col>
           </v-card-text>
         </v-card>
-      </v-col> -->
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -79,15 +88,18 @@ export default {
   name: 'MovieLists',
   data() {
     return {
-      // movieLists: []
+      
     }
   },
   computed: {
     directorMovies () {
       return this.$store.state.list.directorMovies
     },
-    GenreMovies () {
+    genreMovies () {
       return this.$store.state.list.genreMovies
+    },
+    actorMovies() {
+      return this.$store.state.list.actorMovies
     },
     randomMovies() {
       return this.$store.state.list.randomMovies
@@ -103,7 +115,7 @@ export default {
       // 안되는게 아니라 너무너무느림
     },
     goToDirector(directorId) {
-      this.$router.push({ name: 'Director', params: { directorid: directorId }})
+      this.$router.push({ name: 'ListsDetail', params: { id: directorId }})
     },
     // goToDirector(directorId) {
     //   this.$router.push({ name: 'Director', params: { directorid: directorId }})
@@ -120,16 +132,16 @@ export default {
   display: flex;
   align-items: flex-start;
 }
-
 .poster {
   width: 100px;
-  height: auto;
+  height: 150px;
   object-fit: cover;
 }
-.more-movies {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
+.card-title-margin {
+  margin-bottom: 1rem;
+}
+
+.card-text-padding {
+  padding-top: 3rem;
 }
 </style>

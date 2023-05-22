@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import CustomTokenObtainPairView
+from .views import CustomTokenObtainPairView, OnlyAuthenticatedUserView
 
 urlpatterns = [
     # 일반 회원 회원가입/로그인
@@ -18,6 +18,7 @@ urlpatterns = [
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/authonly/', OnlyAuthenticatedUserView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
@@ -37,11 +38,13 @@ urlpatterns = [
     path('api/following/<int:user_id>/', views.following),
     path('api/followers/<int:user_id>/', views.followers),
     
-    # 차단
+    # 차단 확인/생성/취소
     path('api/block-user/<int:user_id>/', views.block_user),
     path('api/unblock-user/<int:user_id>/', views.unblock_user),
-    # path('registration/', include('dj_rest_auth.registration.urls')),
+
+    # 프로필
+    path('users/<str:username>/', views.profile)
+
     # path("register/", RegisterAPIView.as_view()), # post - 회원가입
     # path("auth/", AuthAPIView.as_view()), # post - 로그인, delete - 로그아웃, get - 유저정보
-    # path("auth/refresh/", TokenRefreshView.as_view()), # jwt 토큰 재발급
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
