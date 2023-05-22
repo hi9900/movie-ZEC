@@ -1,18 +1,21 @@
 <template>
-  <v-switch label="Dark mode" v-model="darkMode"></v-switch>
+<div>
+  <v-btn icon @click="toggleDarkMode">
+      <v-icon>mdi-theme-light-dark</v-icon>
+  </v-btn>
+</div>
 </template>
 
 <script>
 export default {
-  computed: {
-    darkMode: {
-      get() {
-        return this.$vuetify.theme.dark;
-      },
-      set(value) {
-        this.$vuetify.theme.dark = value;
+  data: () => ({ 
+      darkMode: false
+    }),
+    methods: {
+      toggleDarkMode: function() {
+        this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+        localStorage.setItem("darkTheme", this.$vuetify.theme.dark.toString())
       },
     },
-  },
-};
+}
 </script>

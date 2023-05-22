@@ -6,7 +6,7 @@ from django.conf import settings
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    nickname = models.CharField(max_length=10, unique=True)
+    username = models.CharField(max_length=10, unique=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
