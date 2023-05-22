@@ -19,7 +19,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
-        fields = ('id', 'name', )
+        fields = '__all__'
 
 
 class DirectorSerializer(serializers.ModelSerializer):
@@ -46,7 +46,7 @@ class MovieSerializer(serializers.ModelSerializer):
     director = DirectorSerializer(many=True, read_only=True)
     keywords = KeywordSerializer(many=True, read_only=True)
     characters = CharacterSerializer(many=True, read_only=True)
-    # like_users = UserSerializer(many=True, read_only=True)
+    like_users = UserSerializer(many=True, read_only=True)
     class Meta:
         model = Movie
         fields = '__all__'
@@ -69,6 +69,8 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         # fields = ('id', 'author', 'content', 'created_at')
         read_only_fields = ('review', )
+
+
 
 
 class ReviewSerializer(serializers.ModelSerializer):

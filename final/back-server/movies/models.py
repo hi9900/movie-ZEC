@@ -13,7 +13,6 @@ class Genre(models.Model):
 
 class Actor(models.Model):
     id = models.IntegerField(primary_key=True)
-    # character = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     profile_path = models.CharField(max_length=200)
 
