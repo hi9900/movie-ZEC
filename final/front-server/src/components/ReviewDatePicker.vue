@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-tabs>
-      <v-tab>날짜별</v-tab>
+      <v-tab>Diary</v-tab>
       <v-tab>전체 리뷰</v-tab>
 
       <v-tab-item>
@@ -30,18 +30,23 @@
 
       <v-tab-item>
         <v-list>
-          <v-list-item
-            v-for="review in reviews"
-            :key="review.id"
-            :color="eventColorResolver(review.date)"
-          >
-            <v-list-item-title>{{ review.title }}</v-list-item-title>
-            <v-list-item-subtitle>{{ review.date }}</v-list-item-subtitle>
-            <v-list-item-content>{{ review.content }}</v-list-item-content>
+          <!-- https://letterboxd.com/schaffrillas/films/reviews/ 보면서 수정해 -->
+          <v-list-item v-for="review in reviews" :key="review.id">
+          <v-list-item-avatar tile size="96">
+            <v-img :src="review.poster"></v-img>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>{{ review.movieTitle }}</v-list-item-title>
+            <v-list-item-subtitle>{{ review.releaseDate }}</v-list-item-subtitle>
+            <div>{{ review.content }}</div>
+            <div>평점: {{ review.rating }}</div>
             <v-list-item-action>
-              평점: {{ review.rating }}
+              <v-icon>mdi-thumb-up</v-icon>
+              {{ review.likes }}
             </v-list-item-action>
-          </v-list-item>
+          </v-list-item-content>
+        </v-list-item>
+
         </v-list>
       </v-tab-item>
     </v-tabs>
@@ -49,8 +54,13 @@
 </template>
 
 <script>
+// import ReviewList from "@/components/ReviewList.vue";
+
 export default {
   name: "ReviewDatePicker",
+  components: {
+    // ReviewList
+  },
   data() {
     return {
       selectedDate: null,
