@@ -5,24 +5,20 @@ from django.conf import settings
 
 
 class User(AbstractUser):
-    # following = models.ManyToManyField('self', through='UserFollowing', related_name='followers', symmetrical=False)
+    email = models.EmailField(unique=True)
+    nickname = models.CharField(max_length=10, unique=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
+    blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
+
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     def __str__(self) :
         return self.username
-        
-
-# class UserFollowing(models.Model):
-#     user = models.ForeignKey(User, related_name='user_following', on_delete=models.CASCADE)
-#     following_user = models.ForeignKey(User, related_name='user_followers', on_delete=models.CASCADE)
-#     created = models.DateTimeField(auto_now_add=True, db_index=True)
-
-#     class Meta:
-#         unique_together = (('user', 'following_user'),)
-
 
 
 # class UserManager(BaseUserManager):
-
 #     def create_user(self, email, password, **kwargs):
 #     	# """
 #         # 주어진 이메일, 비밀번호 등 개인정보로 User 인스턴스 생성
@@ -72,11 +68,3 @@ class User(AbstractUser):
 # 	# 사용자의 username field는 email으로 설정 (이메일로 로그인)
 #     USERNAME_FIELD = 'email'
 
-     
-    
-
-
-
-# class Follow(models.Model):
-    # follower = models.ForeignKey(get_user_model(), related_name='following', on_delete=models.CASCADE)
-    # followee = models.ForeignKey(get_user_model(), related_name='followers', on_delete=models.CASCADE)

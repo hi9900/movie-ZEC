@@ -7,12 +7,12 @@ Vue.use(Vuetify);
 export default new Vuetify({
   theme: {
     dark: true,
-    themes: {
-      dark: {
-        appBarColor: '#14181C',
-        footerColor: '#2C3440',
-        background: '#1E252B',
-      }
-    }
+    // themes: {
+    //   dark: {
+    //     appBarColor: '#14181C',
+    //     footerColor: '#2C3440',
+    //     background: '#14181d',
+    //   }
+    // }
   },
 });

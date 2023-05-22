@@ -1,49 +1,91 @@
+<!-- diaryTab.vue -->
 <template>
   <v-container>
-    <v-calendar ref="calendar" :events="reviews" @click:event="showEventDetails"></v-calendar>
-    <v-dialog v-model="eventDialog" max-width="400px">
-      <template #activator="{ on, attrs }">
-        <v-sheet
-          v-if="selectedEvent"
-          color="primary"
-          dark
-          elevation="2"
-          v-on="on"
-          v-bind="attrs"
-        >
-          {{ selectedEvent.title }}
+    <v-tabs>
+      <v-tab>Diary</v-tab>
+      <v-tab-item>
+        <v-sheet height="600">
+          <v-calendar
+            ref="calendar"
+            v-model="selectedDate"
+            :events="diaryEntries"
+            :event-color="getEventColor"
+            @click:event="showDiaryEntry"
+          ></v-calendar>
         </v-sheet>
-      </template>
-      <v-card>
-        <v-card-title class="text-h5">{{ selectedEvent.title }}</v-card-title>
-        <v-card-text>{{ selectedEvent.description }}</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="eventDialog = false">닫기</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+        <diary-dialog v-model="dialog" :entry="selectedEntry" />
+      </v-tab-item>
+
+      <v-tab>Reviews</v-tab>
+      <v-tab-item>
+        <v-sheet height="600">
+          <v-calendar
+            ref="calendar"
+            v-model="selectedDate"
+            :events="reviews"
+            :event-color="getEventColor"
+            @click:event="showReview"
+          ></v-calendar>
+        </v-sheet>
+        <review-dialog v-model="dialog" :review="selectedReview" />
+      </v-tab-item>
+    </v-tabs>
   </v-container>
 </template>
 
 <script>
+import DiaryDialog from "./DiaryDialog.vue";
+import ReviewDialog from "./ReviewDialog.vue";
+
 export default {
-  name: "DiaryTab",
+  name: "diaryTab",
+  components: {
+    DiaryDialog,
+    ReviewDialog,
+  },
   data() {
     return {
-      eventDialog: false,
-      selectedEvent: null,
+      selectedDate: new Date(),
+      dialog: false,
+      selectedEntry: null,
+      selectedReview: null,
+      diaryEntries: [
+        {
+          id: 1,
+          title: "할 일 1",
+          date: "2022-04-13",
+          content: "첫 번째 할 일의 상세 내용입니다.",
+          done: false,
+        },
+        // 기타 다이어리 데이터...
+      ],
       reviews: [
-        { title: "영화 리뷰 1", start: "2023-02-01", description: "내용 1" },
-        { title: "영화 리뷰 2", start: "2023-02-15", description: "내용 2" },
-        // 기타 리뷰 등록 날짜 추가
+        {
+          id: 1,
+          title: "리뷰 1",
+          date: "2022-04-13",
+          content: "첫 번째 리뷰의 상세 내용입니다.",
+          rating: 5,
+        },
+        // 기타 리뷰 데이터...
       ],
     };
   },
   methods: {
-    showEventDetails(event) {
-      this.selectedEvent = event;
-      this.eventDialog = true;
+    showDiaryEntry(event) {
+      this.selectedEntry = event;
+      this.dialog = true;
+    },
+    showReview(event) {
+      this.selectedReview = event;
+      this.dialog = true;
+    },
+    getEventColor(event) {
+      if (event.hasOwnProperty("done")) {
+        return event.done ? "green" : "red";
+      } else if (event.hasOwnProperty("rating")) {
+        return event.rating >= 4 ? "blue" : "orange";
+      }
     },
   },
 };

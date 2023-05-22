@@ -139,7 +139,7 @@ export default {
     toggleLike() {
       this.liked = !this.liked
     },
-     toggleHeart() {
+    toggleHeart() {
       this.hearted = !this.hearted
     },
     toggleWatch() {
@@ -165,7 +165,7 @@ export default {
 
 <style>
 .actions-panel__card {
-  max-width: 180px;
+  max-width: 300px;
   padding: 1rem;
 }
 

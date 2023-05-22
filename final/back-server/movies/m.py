@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Movie
 from .serializers import MovieSerializer
 
+# get: 영화 조회
 class MovieListCreate(APIView):
     def get(self, request):
         movies = Movie.objects.all()

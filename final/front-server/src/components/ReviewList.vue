@@ -1,28 +1,19 @@
 <template>
   <v-container>
-    
-    <!-- <div v-for="(review, index) in reviews" :key="index" class="review">
-      <div class="review-header">
-        <img class="avatar" :src="review.avatar" alt="Avatar" />
-        <div class="review-user">
-          <h3>{{review.username}}</h3>
-          <v-rating v-model="review.rating" readonly></v-rating>
-        </div>
-        <div class="review-date">
-          {{ review.date }}
-        </div>
-      </div>
-      <div class="review-body">
-        {{ review.text }}
-      </div>
-    </div> -->
 
-    <div v-for="category in categories" :key="category.id">
+
+  <div v-for="category in categories" :key="category.id">
   <h2>{{ category.name }}</h2>
-  <review-list :reviews="allReviews[category.id]" />
-</div>
 
-    <!-- 내 리뷰: 있으면 -->
+<!-- 
+  {{ review.user }}
+  {{ review.rating }}
+  {{ review.content }}가 있는 데이터 5개
+  {{review.like_users|length}} 
+  
+  -->
+<!-- 리뷰 컨텐트를 누르면 리뷰 디테일 뷰로 이동 -->
+      <!-- 내 리뷰: 있으면 -->
   <!-- <v-row>
     내 리뷰
     <hr>
@@ -40,6 +31,9 @@
     최신 리뷰 -->
     <!-- 최신 리뷰 -->
   <!-- </v-row> -->
+  </div>
+
+
   </v-container>
 
 </template>
