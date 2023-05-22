@@ -7,6 +7,7 @@ from rest_framework.decorators import permission_classes, api_view, authenticati
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework_simplejwt.views import TokenObtainPairView
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
@@ -15,6 +16,11 @@ from django.http.response import JsonResponse
 
 from .models import *
 from .serializers import *
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
 
 ############################################################
 # 확인해봐야함

@@ -3,15 +3,14 @@
     "model": "accounts.user",
     "pk": 1,
     "fields": {
-        "password": "pbkdf2_sha256$260000$K4bIg2DlujAXidvganrIH8$/WW6t9wKL0zryAyQk8keKt5rU1B//sxtSdPGlZu3Gsk=",
-        "last_login": "2023-05-22T00:43:50.513Z",
-        "username": "admin",
+        "password": "pbkdf2_sha256$260000$OUD2ddBI2oa04eyxyMWxD5$ViFMY5RG9Ap1oE4DC6cZ8ff0O06kmC3ODPSUXCYQxYY=",
+        "last_login": "2023-05-22T05:35:34.468Z",
         "first_name": "",
         "last_name": "",
         "is_active": true,
-        "date_joined": "2023-05-22T00:43:40.266Z",
+        "date_joined": "2023-05-22T05:35:14.144Z",
         "email": "admin@admin.kr",
-        "nickname": "",
+        "username": "admin",
         "profile_image": "",
         "is_staff": true,
         "is_superuser": true,
@@ -25,8 +24,8 @@
     "model": "sites.site",
     "pk": 1,
     "fields": {
-        "domain": "http://127.0.0.1:8000",
-        "name": "127.0"
+        "domain": "http://127.0.0.1:8000/",
+        "name": "127.0.0.1"
     }
 },
 {

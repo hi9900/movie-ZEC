@@ -76,13 +76,17 @@ REST_AUTH = { # 회원가입시 토큰 발급
     'SESSION_LOGIN': False,
 }
 
+ACCOUNT_EMAIL_VERIFICATION = 'none' # 회원가입 과정에서 이메일 인증 사용 X
+
 SITE_ID = 1
 # 하나의 컨텐츠로 여러 개의 도메인에 등록하고 싶을 때 사용
 REST_USE_JWT = True
 # # ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
-# ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
+ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
 # # ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # ACCOUNT_EMAIL_VERIFICATION = 'none' # 회원가입 과정에서 이메일 인증 사용 X
 
@@ -229,7 +233,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-KR'
 
 TIME_ZONE = 'UTC'
 
@@ -252,9 +256,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
-}
+# 커스텀 시리얼라이저 사용
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+# }
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
@@ -290,7 +295,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# LOGIN_REDIRECT_URL = 로그인 시 갈 곳
+# LOGIN_REDIRECT_URL =  로그인 시 갈 곳
 
 # ACCOUNT_LOGOUT_REDIRECT_URL = 로그아웃시 갈 URL `settings.LOGOUT_REDIRECT_URL or “/”`
 
