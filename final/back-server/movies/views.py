@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework.decorators import permission_classes, action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_METHODS
 from rest_framework.views import APIView
 from django.core.paginator import Paginator
 from django.shortcuts import render
@@ -14,6 +14,14 @@ from .serializers import *
 from .filters import *
 
 import random
+
+
+class IsAuthenticatedPostOnly(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return request.user and request.user.is_authenticated
+
 
 # Create your views /rializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # 감독, 장르, 영화 랜덤으로 영화 찾기: 30개씩
@@ -238,7 +246,7 @@ def movie_list_detail_update_delete(request, list_pk):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticatedPostOnly])
 def review_list(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     if request.method == 'GET':
