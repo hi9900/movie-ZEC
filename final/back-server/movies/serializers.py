@@ -41,37 +41,6 @@ class CharacterSerializer(serializers.ModelSerializer):
         fields = ('character', 'actor', )
 
 
-class MovieSerializer(serializers.ModelSerializer):
-    genres = GenreSerializer(many=True, read_only=True)
-    director = DirectorSerializer(many=True, read_only=True)
-    keywords = KeywordSerializer(many=True, read_only=True)
-    characters = CharacterSerializer(many=True, read_only=True)
-    like_users = UserSerializer(many=True, read_only=True)
-    class Meta:
-        model = Movie
-        fields = '__all__'
-
-##########################
-# 되는지 모르겠음
-class MovieListSerializer(serializers.ModelSerializer):
-    movies = MovieSerializer(many=True, read_only=True)
-    class Meta:
-        model = MovieList
-        fields = '__all__'
-        read_only_fields = ('user',)
-##########################
-
-
-# class ReviewListSerializer(serializers.ModelSerializer):
-#     username = serializers.CharField(source='user.username', read_only=True)
-
-#     class Meta:
-#         model = Review
-#         # fields = ('id', 'title', 'content')
-#         # fields = ('id', 'title', 'content', 'user', 'username')
-#         fields = '__all__'
-
-
 class CommentSerializer(serializers.ModelSerializer):
     # user = UserSerializer()
     replies = serializers.SerializerMethodField()
@@ -101,3 +70,37 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
         read_only_fields = ('movie', 'user', 'created_at', 'updated_at')
+
+
+class MovieSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True, read_only=True)
+    director = DirectorSerializer(many=True, read_only=True)
+    keywords = KeywordSerializer(many=True, read_only=True)
+    characters = CharacterSerializer(many=True, read_only=True)
+    like_users = UserSerializer(many=True, read_only=True)
+    class Meta:
+        model = Movie
+        fields = '__all__'
+
+##########################
+# 되는지 모르겠음
+class MovieListSerializer(serializers.ModelSerializer):
+    movies = MovieSerializer(many=True, read_only=True)
+    # 유저 pk로 유저 정보도 저장해서 내보내줘
+    # user_name = UserSerializer(read_only=True)
+    class Meta:
+        model = MovieList
+        fields = '__all__'
+        read_only_fields = ('user',)
+##########################
+
+
+# class ReviewListSerializer(serializers.ModelSerializer):
+#     username = serializers.CharField(source='user.username', read_only=True)
+
+#     class Meta:
+#         model = Review
+#         # fields = ('id', 'title', 'content')
+#         # fields = ('id', 'title', 'content', 'user', 'username')
+#         fields = '__all__'
+

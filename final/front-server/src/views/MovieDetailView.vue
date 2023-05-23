@@ -20,7 +20,7 @@
             <v-img
           class="movie-poster"
           spect-ratio="0.675"
-          :src="'https://www.themoviedb.org/t/p/original/'+`${movie.poster_path}`"
+          :src="`https://www.themoviedb.org/t/p/original/${movie.poster_path}`"
         ></v-img>
           <!-- :lazy-src="'https://www.themoviedb.org/t/p/original/'+`${movie.poster_path}`" -->
 
@@ -148,12 +148,15 @@
         <!-- 리뷰 간단 작성 폼 -->
         <!-- movie 데이터 푸랍 -->
         <ReviewSimple 
+        :movie="movie"
         />
         </v-col>
         </v-row>
         <!-- 여기도 간격 -->
         <ReviewList 
-        :reviews="reviews"
+        :review="review"
+        v-for="review in reviews"
+        :key="review.id"
         />
         </v-col>
       </v-row>
@@ -189,7 +192,7 @@ export default {
   methods: {
     getMovieId(){
       const movieId = this.$route.params.id
-      console.log(movieId)
+      // console.log(movieId)
       this.$store.dispatch('movie/getMovieId', movieId)
     },
   },

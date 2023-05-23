@@ -11,9 +11,11 @@ urlpatterns = [
     path('movies/directors/<int:director_id>/', views.movie_list_by_director),
     path('movies/actors/<int:actor_id>/', views.movie_list_by_actor),
     path('movies/genres/<int:genre_id>/', views.movie_list_by_genre),
+    # 키워드 조회 추가
+
+
     path('movies/random/', views.movie_lists_random),
 
-    path('movielist/', views.movie_list_create),
     path("movie_lists/", views.movie_list_create),
     path("movie_lists/<int:list_pk>/", views.movie_list_detail_update_delete),
 
