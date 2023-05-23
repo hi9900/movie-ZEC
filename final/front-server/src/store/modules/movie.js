@@ -9,6 +9,7 @@ const movie = {
     movie: [],
     count: null,
     genres: [],
+    reviews: [],
   },
   getters: {
     getAllMovies: (state) => state.movies,
@@ -24,23 +25,48 @@ const movie = {
     GET_MOVIE(state, movie) {
       state.movie = movie
     },
-
+    GET_REVIEWS(state, review) {
+      state.reviews = review
+    }
   },
   actions: {
-
-
-    // 영화 단일 조회
     getMovieId(context, movieId) {
-      axios({
-        method: 'get',
-        url: `${API_URL}/api/v1/movies/${movieId}/`
-      })
-      .then((res) => {
-        console.log(res.data)
-        context.commit('GET_MOVIE', res.data)
-      })
-      .catch((err) => console.log(err))
-    },
+    axios
+    .all([
+      axios.get(`${API_URL}/api/v1/movies/${movieId}/`), 
+      axios.get(`${API_URL}/api/v1/movies/${movieId}/reviews/`)
+    ])
+    .then(
+      axios.spread((res1, res2) => {
+      console.log(res1.data, res2.data)
+      context.commit('GET_MOVIE', res1.data)
+      context.commit('GET_REVIEWS', res2.data)
+    })
+    )
+    .catch((err) => console.log(err))
+  },
+    // 영화 단일 조회
+    // getMovieId(context, movieId) {
+    //   axios({
+    //     method: 'get',
+    //     url: `${API_URL}/api/v1/movies/${movieId}/`
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data)
+    //     context.commit('GET_MOVIE', res.data)
+    //   })
+    //   .catch((err) => console.log(err))
+    // },
+    // // 한 영화의 전체 리뷰 조회
+    // fetchReviews() {
+    //   axios({
+    //     method: 'get',
+    //     url: `${API_URL}/api/v1/movies/${movieId}/reviews/`,
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data)
+    //   })
+    // },
 
     // 영화 조회
     updateMovies(context, Query) {

@@ -122,7 +122,7 @@
   </v-container>
 </template>
 
-<script>
+<script >
 export default {
 
   data() {
@@ -163,7 +163,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .actions-panel__card {
   max-width: 300px;
   padding: 1rem;

@@ -21,8 +21,8 @@
           class="movie-poster"
           spect-ratio="0.675"
           :src="'https://www.themoviedb.org/t/p/original/'+`${movie.poster_path}`"
-          :lazy-src="'https://www.themoviedb.org/t/p/original/'+`${movie.poster_path}`"
         ></v-img>
+          <!-- :lazy-src="'https://www.themoviedb.org/t/p/original/'+`${movie.poster_path}`" -->
 
         <v-row class="my-2">
           <v-col class="d-flex flex-column align-center">
@@ -40,9 +40,31 @@
         </v-row>
 
         <v-row>
-          <v-col>
           <!-- 예고편 유투브 링크 -->
-          </v-col>
+                  <!-- 여기 유투브 예고편 모달 -->
+        <!-- 체크안해봄 -->
+          <!-- <v-col>
+          <v-row>
+            <v-col>
+      <v-btn color="blue" @click="showTrailerModal = true">Watch Trailer</v-btn>
+    </v-col>
+  </v-row>
+  
+  <v-dialog v-model="showTrailerModal" width="1000" fullscreen hide-overlay>
+    <v-card>
+      <v-card-text>
+        <iframe width="100%" height="500" :src="`https://www.youtube.com/embed/${youtube_trailer}?autoplay=1`" 
+        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen></iframe>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" text @click="showTrailerModal = false">Close</v-btn>
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+          </v-col> -->
           </v-row>
           </v-col>
 
@@ -116,26 +138,7 @@
         </v-col>
       </v-row>
 
-        <!-- 여기 유투브 예고편 모달 -->
-        <!-- 체크안해봄 -->
-          <v-row>
-            <v-col>
-      <v-btn color="blue" @click="showTrailerModal = true">Watch Trailer</v-btn>
-    </v-col>
-  </v-row>
-  
-  <v-dialog v-model="showTrailerModal" width="1000" fullscreen hide-overlay>
-    <v-card>
-      <v-card-text>
-        <iframe width="100%" height="500" :src="`https://www.youtube.com/embed/${youtube_trailer}?autoplay=1`" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="showTrailerModal = false">Close</v-btn>
-        <v-spacer></v-spacer>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+
 
         <!-- <v-row>여긴 모얼앳 TMDB</v-row> -->
         </v-col>
@@ -150,6 +153,7 @@
         </v-row>
         <!-- 여기도 간격 -->
         <ReviewList 
+        :reviews="reviews"
         />
         </v-col>
       </v-row>
@@ -159,6 +163,7 @@
 </template>
 
 <script>
+
 import ReviewSimple from '@/components/ReviewSimple'
 import ReviewList from '@/components/ReviewList'
 export default {
@@ -177,12 +182,16 @@ export default {
     movie() {
       return this.$store.state.movie.movie
     },
+    reviews() {
+      return this.$store.state.movie.reviews
+    }
   },
   methods: {
     getMovieId(){
       const movieId = this.$route.params.id
+      console.log(movieId)
       this.$store.dispatch('movie/getMovieId', movieId)
-    }
+    },
   },
   created() {
     this.getMovieId()

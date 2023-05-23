@@ -10,29 +10,33 @@ const account = {
     accessToken: null,
     refreshToken: null,
     username: '',
+    useremail: '',
   },
   getters: {
     // 로그인
     isLogin(state) {
-      return state.token ? true : false
+      return state.accessToken ? true : false
     }
   },
   mutations: {
-    // 로그인
-    // signup & login -> 완료하면 토큰 발급
+    // 회원가입
     SAVE_TOKEN(state, token) {
       state.token = token
-      router.push({name : 'Home'})
+      router.push({name : 'LogIn'})
     },
+
     SET_ACCESS(state, token){
       state.accessToken = token.access
     },
     SET_REFRESH(state, token) {
       state.refreshToken = token.refresh
     },
+    // 로그인하면 토큰 두개 받아옴
     LOGIN(state, token){
       state.accessToken = token.access
       state.refreshToken = token.refresh
+      state.username = token.username
+      state.useremail = token.email
       router.push({name : 'Home'})
     },
     // 로그아웃
@@ -43,6 +47,8 @@ const account = {
       state.token = null
       state.accessToken = null
       state.refreshToken = null
+      state.username = '',
+      state.useremail = ''
     },
     SET_USER(state, username){
       state.username = username
@@ -76,8 +82,8 @@ const account = {
       const password = payload.password
       axios({
         method: 'post',
-        url: `${API_URL}/accounts/dj-rest-auth/login/`,
-        // url: `${API_URL}/accounts/api/token/`,
+        // url: `${API_URL}/accounts/dj-rest-auth/login/`,
+        url: `${API_URL}/accounts/api/token/`,
         data: {
           email, password
         }
@@ -86,13 +92,15 @@ const account = {
         // 사용자 확인
         console.log('로그인')
         console.log(res)
-        context.commit('SAVE_TOKEN', res.data)
-        // context.commit('LOGIN', res.data)
+        // context.commit('SAVE_TOKEN', res.data)
+        context.commit('LOGIN', res.data)
         // context.commit('SET_ACCESS', res.data)
         // context.commit('SET_REFRESH', res.data)
       })
       .catch((err) => console.log(err))
     },
+    // 만료된거 확인하고 받아와야함 토큰을 추가로 받아오는 로직
+
     logout(context) {
       context.commit('RESET')
       // axios 요청 안해도 되나?
@@ -118,8 +126,29 @@ const account = {
       console.log(err)
     }
   },
+  // updatePassword() {
+  //   axios({
+  //     method: 'post',
+  //     // url: `${API_URL}/accounts/dj-rest-auth/login/`,
+  //     url: `${API_URL}/accounts/api/token/`,
+  //     data: {
+  //       email, password
+  //     }
+  //   })
+  //   .then((res) => {
+  //     // 사용자 확인
+  //     console.log('로그인')
+  //     console.log(res)
+  //     // context.commit('SAVE_TOKEN', res.data)
+  //     context.commit('LOGIN', res.data)
+  //     // context.commit('SET_ACCESS', res.data)
+  //     // context.commit('SET_REFRESH', res.data)
+  //   })
+  //   .catch((err) => console.log(err))
+  // },
+  }
 }
-}
+
 
 
 export default account

@@ -102,7 +102,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .fixed-height {
   height: 400px;
   min-height: 400px;

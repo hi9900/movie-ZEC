@@ -2,10 +2,11 @@
   <v-container>
 
 
-  <div v-for="category in categories" :key="category.id">
-  <h2>{{ category.name }}</h2>
+  <!-- <div v-for="category in categories" :key="category.id"> -->
+  <!-- <h2>{{ category.name }}</h2> -->
   <v-container>
     <v-row>
+      <!-- 가로로 보이게 바꾸기 -->
       <v-col
         v-for="review in reviews"
         :key="review.id"
@@ -16,16 +17,27 @@
       >
         <v-card elevation="2" hover>
           <v-card-title>
-            {{ review.title }}
+            
+            {{ review.content }}
             <v-spacer></v-spacer>
-            {{ review.date }}
+            <!-- 이거 날짜만 -->
+            {{ review.created_at }}
           </v-card-title>
           <v-card-subtitle>
+            <!-- 별로 바꾸기 -->
             Rating: {{ review.rating }}
           </v-card-subtitle>
           <v-card-text>
-            {{ review.content }}
+            작성자 {{ review.user }}
           </v-card-text>
+          <v-card-action>
+            <!-- 리뷰 좋아요 버튼 -->
+            <v-btn> 
+               <!-- @click.prevent="like"> -->
+              <v-icon>mdi-heart</v-icon>
+              {{ review.like_users.length }}
+            </v-btn>
+          </v-card-action>
         </v-card>
       </v-col>
     </v-row>
@@ -58,7 +70,7 @@
     최신 리뷰 -->
     <!-- 최신 리뷰 -->
   <!-- </v-row> -->
-  </div>
+  <!-- </div> -->
 
 
   </v-container>
@@ -66,29 +78,14 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      reviews: [
-        {
-          username: "ExampleUser1",
-          rating: 5,
-          date: "1 January 2023",
-          text:
-            "I absolutely loved this movie! Can't wait for the next one.",
-        },
-        {
-          username: "ExampleUser2",
-          rating: 3,
-          date: "3 January 2023",
-          text:
-            "The movie was entertaining, but it didn't live up to the hype.",
-        },
-      ],
+      
        categories: [
       { id: "my-reviews", name: "내가 쓴 리뷰" },
       { id: "following", name: "팔로우한 유저가 쓴 리뷰" },
-      { id: "popular", name: "인기 리뷰" },
       { id: "latest", name: "최신 리뷰" },
     ],
     allReviews: {
@@ -107,11 +104,12 @@ export default {
     },
     };
   },
-  methods: {
-    fetchReviews() {
-      // Fetch reviews for the current page from an external API
-    },
+  props: {
+    reviews: Array
   },
+  methods: {
+    
+  }
 };
 </script>
 

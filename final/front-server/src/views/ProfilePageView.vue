@@ -52,6 +52,11 @@
     차단 해제
     </v-btn>
     </div>
+    <div v-else> 
+      <v-btn>
+        회원 정보 수정
+      </v-btn>
+    </div>
 
     </v-sheet>
   </v-col>
