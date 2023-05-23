@@ -13,7 +13,7 @@
                 v-model="user_email"
                 clearable
                 required
-                @input="checkEmailDuplicated"
+                @blur="checkEmailDuplicated"
                 :error-messages="!emailDuplicated ? '존재하지 않는 이메일입니다.' : ''"
               >
               </v-text-field>

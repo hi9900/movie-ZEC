@@ -1,49 +1,47 @@
 <template>
-<v-skeleton-loader v-if="!movie" type="carousel"></v-skeleton-loader>
-  <v-container v-else>
-    
-<div class="backdrop-container">
-  <v-parallax height="500">
+  <v-container v-if="!movie" type="carousel"></v-container>
+  <v-container fluid v-else>
     <div
-      class="backdrop-image"
-      :style="`background-image: url(https://www.themoviedb.org/t/p/original/${movie.backdrop_path})`"
+      class="backdrop-container"
+      :class="`themed-border themetype-${
+        $vuetify.theme.dark ? 'dark' : 'light'
+      }`"
     >
-      <div class="backdrop-fade"></div>
+      <div
+        class="backdrop-image"
+        :style="`background-image: url(https://www.themoviedb.org/t/p/original/${movie?.backdrop_path})`"
+      ></div>
     </div>
-  </v-parallax>
-</div>
-
-    <!-- 사이 띄우기 -->
-    <v-row md="2"></v-row>
-        <v-row>
-          <v-col md="2" class="poster-container">
-            <v-img
-          class="movie-poster"
-          spect-ratio="0.675"
-          :src="`https://www.themoviedb.org/t/p/original/${movie.poster_path}`"
-        ></v-img>
+    <v-container mt-3>
+      <v-row>
+        <!-- 영화 정보 왼쪽 플로팅 -->
+        <v-col md="2" class="poster-container md-2 hidden-sm-and-down">
+          <!-- 영화 포스터 -->
+          <v-img
+            class="movie-poster"
+            spect-ratio="0.675"
+            :src="`https://www.themoviedb.org/t/p/original/${movie?.poster_path}`"
+          ></v-img>
           <!-- :lazy-src="'https://www.themoviedb.org/t/p/original/'+`${movie.poster_path}`" -->
 
-        <v-row class="my-2">
-          <v-col class="d-flex flex-column align-center">
-            <v-icon color="blue">mdi-eye</v-icon>
-            <p>갯수</p>
-          </v-col>
-          <v-col class="d-flex flex-column align-center">
-            <v-icon color="red">mdi-heart</v-icon>
-            <p>갯수</p>
-          </v-col>
-          <v-col class="d-flex flex-column align-center">
-            <v-icon color="yellow">mdi-star</v-icon>
-            <p>갯수</p>
-          </v-col>
-        </v-row>
+          <v-row class="mt-2">
+            <v-col class="d-flex flex-column align-center">
+              <v-icon color="red">mdi-heart</v-icon>
+              <p>
+                {{ movie.like_users?.length }}
+              </p>
+            </v-col>
+            <v-col class="d-flex flex-column align-center">
+              <v-icon color="yellow">mdi-star</v-icon>
+              <p>{{ movie.vote_average }}</p>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <!-- 예고편 유투브 링크 -->
-                  <!-- 여기 유투브 예고편 모달 -->
-        <!-- 체크안해봄 -->
-          <!-- <v-col>
+          <!-- 예고편 유투브 링크 모달으로 띄워보기 -->
+          <!-- 여기 유투브 예고편 모달 -->
+          <!-- 체크안해봄 -->
+          <!-- <v-row>
+           <v-col>
           <v-row>
             <v-col>
       <v-btn color="blue" @click="showTrailerModal = true">Watch Trailer</v-btn>
@@ -64,109 +62,127 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-          </v-col> -->
-          </v-row>
-          </v-col>
+          </v-col> 
+          </v-row>-->
+        </v-col>
 
-          <v-col md="10">
-            <v-row>
-          <!-- <v-col md="2"></v-col> -->
-          <v-col md="9" no-gutter>
+        <v-col xs="12">
           <v-row>
             <v-col>
-            <h1>{{movie.title}}</h1>
+              <v-row>
+                <v-col>
+                  <h1>{{ movie.title }}</h1>
+                  <p class="text-subtitle-1">
+                    {{ movie.original_title }}
+                  </p>
+                  <span class="text-body-1"
+                    >{{ movie.release_date?.substr(0, 4) }}
+                  </span>
+                  <span class="font-weight-thin">Directed by </span>
+                  <span
+                    class="text-body-1"
+                    v-for="director in movie.director"
+                    :key="director.id"
+                    >{{ director.name }}
+                  </span>
+                  <!-- <span>{{ movie.runtime }}M</span> -->
+                </v-col>
+              </v-row>
+
+              <!-- 5줄이 넘어가면 더보기 -->
+              <v-row>
+                <v-col>
+                  <p class="font-weight-light overview">
+                    {{ movie.overview }}
+                  </p>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-tabs fixed-tabs color="dark">
+                    <v-tab> 장르 </v-tab>
+                    <v-tab> 출연 </v-tab>
+
+                    <!-- chip 클릭하면 그거 보러 갈수있게? -->
+                    <v-tab-item>
+                      <v-card-text>
+                        <v-chip
+                          class="ma-1"
+                          v-for="genre in movie.genres"
+                          :key="genre.id"
+                        >
+                          {{ genre.name }}
+                        </v-chip>
+                      </v-card-text>
+                      <v-card-text>
+                        <div
+                          v-if="movie.keywords?.length > 0"
+                          class="text-caption"
+                        >
+                          키워드
+                        </div>
+                        <v-chip
+                          class="ma-1"
+                          small
+                          v-for="keyword in movie.keywords"
+                          :key="keyword.id"
+                        >
+                          {{ keyword.name }}
+                        </v-chip>
+                      </v-card-text>
+                    </v-tab-item>
+                    <v-tab-item>
+                      <v-card-text>
+                        <v-chip
+                          class="ma-1"
+                          v-for="character in displayedCharacters"
+                          :key="character.id"
+                        >
+                          {{ character.actor.name }}
+                          |
+                          {{ character.character }}
+                        </v-chip>
+                        <v-chip
+                          :ripple="false"
+                          @click="showAll"
+                          v-if="!showFullList"
+                          >더보기</v-chip
+                        >
+                      </v-card-text>
+                    </v-tab-item>
+                  </v-tabs>
+                </v-col>
+              </v-row>
+            </v-col>
+
+            <v-col md="3" no-gutter class="d-none d-md-block">
+              <!-- 리뷰 간단 작성 폼 -->
+              <!-- movie 데이터 푸랍 -->
+              <ReviewSimple :movie="movie" />
+            </v-col>
+          </v-row>
+
+          <!-- 간격 왜 안생겨 -->
+          <v-row>
+            <v-col mt-3 class="d-md-none">
+              <span>리뷰 작성하기 </span>
+              <v-icon class="ml-2">mdi-pencil</v-icon>
             </v-col>
           </v-row>
           <v-row>
-          <v-col>
-            <v-row>{{movie.release_date}}</v-row>
-            <v-row>{{movie.runtime}}</v-row>
-          </v-col>
-          <v-col>Directed by 
-            <p v-for="director in movie.director" :key=director.id>{{director.name}}</p>
-            </v-col>
-        </v-row>
-        <!-- 5줄이 넘어가면 더보기 나중에 구현 -->
-        <v-row>
-          <v-col>
-          <p><strong>Overview:</strong></p>
-          {{movie.overview}}
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col no-gutter>
-        <p><strong>장르:</strong></p>
-          <v-chip-group>
-          <v-chip
-          :ripple="false" v-for="genre in movie.genres" :key="genre.id">
-            {{ genre.name }}
-          </v-chip>
-          </v-chip-group>
-          </v-col>
-        </v-row>
-
-        <v-row align="center">
-          <v-col>
-    <p><strong>키워드:</strong></p>
-        <v-chip-group>
-          <v-chip
-            v-for="keyword in movie.keywords"
-            :key="keyword.id"
-            color="blue-grey lighten-4"
-            small
-          >
-            {{ keyword.name }}
-          </v-chip>
-        </v-chip-group>
-  </v-col>
-        </v-row>
-
-      <v-row align="center">
-        <v-col>
-          <p><strong>출연진:</strong></p>
-          <v-chip-group>
-            <v-chip
-              v-for="character in movie.characters"
-              :key="character.id"
-              color="green lighten-4"
-              small
-            >
-              {{ character.actor.name }} - {{ character.character }}
-            </v-chip>
-          </v-chip-group>
+            <ReviewList
+              :review="review"
+              v-for="review in reviews"
+              :key="review.id"
+            />
+          </v-row>
         </v-col>
       </v-row>
-
-
-
-        <!-- <v-row>여긴 모얼앳 TMDB</v-row> -->
-        </v-col>
-
-
-        <v-col md="3" no-gutter>
-        <!-- 리뷰 간단 작성 폼 -->
-        <!-- movie 데이터 푸랍 -->
-        <ReviewSimple 
-        :movie="movie"
-        />
-        </v-col>
-        </v-row>
-        <!-- 여기도 간격 -->
-        <ReviewList 
-        :review="review"
-        v-for="review in reviews"
-        :key="review.id"
-        />
-        </v-col>
-      </v-row>
-        
-   
+    </v-container>
   </v-container>
 </template>
 
 <script>
-
 import ReviewSimple from '@/components/ReviewSimple'
 import ReviewList from '@/components/ReviewList'
 export default {
@@ -176,6 +192,7 @@ export default {
   },
   data() {
     return {
+      showFullList: false
       // movie: null,
       // showTrailerModal: false,
       // youtube_trailer: 'abcdefghijklmnop',
@@ -187,14 +204,24 @@ export default {
     },
     reviews() {
       return this.$store.state.movie.reviews
+    },
+    displayedCharacters() {
+      if (this.showFullList) return this.movie.characters
+      return this.movie.characters?.slice(0, 10)
+    },
+    isLogin() {
+      return this.$store.getters['accounts/isLogin']
     }
   },
   methods: {
-    getMovieId(){
+    getMovieId() {
       const movieId = this.$route.params.id
       // console.log(movieId)
       this.$store.dispatch('movie/getMovieId', movieId)
     },
+    showAll() {
+      this.showFullList = true
+    }
   },
   created() {
     this.getMovieId()
@@ -203,10 +230,9 @@ export default {
 </script>
 
 <style scoped>
-.backdrop-container {
+/* .backdrop-container {
   position: relative;
 }
-
 .backdrop-image {
   position: absolute;
   top: 0;
@@ -215,26 +241,57 @@ export default {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+} */
+/* Gradient border */
+.backdrop-container {
+  position: relative;
+  height: 500px;
 }
 
-/* .backdrop-fade {
-    background-image: linear-gradient(90deg,#14181d 0,rgba(20,24,29,.986) .97%,rgba(20,24,29,.945) 2.07833333%,rgba(20,24,29,.883) 3.29666667%,rgba(20,24,29,.803) 4.60166667%,rgba(20,24,29,.711) 5.96666667%,rgba(20,24,29,.61) 7.365%,rgba(20,24,29,.504) 8.77166667%,rgba(20,24,29,.398) 10.16%,rgba(20,24,29,.296) 11.505%,rgba(20,24,29,.203) 12.78%,rgba(20,24,29,.122) 13.95833333%,rgba(20,24,29,.059) 15.01666667%,rgba(20,24,29,.016) 15.92833333%,rgba(20,24,29,0) 16.66666667%,rgba(20,24,29,0) 83.33333333%,rgba(20,24,29,.016) 84.07166667%,rgba(20,24,29,.059) 84.98333333%,rgba(20,24,29,.122) 86.04166667%,rgba(20,24,29,.203) 87.22%,rgba(20,24,29,.296) 88.495%,rgba(20,24,29,.398) 89.84%,rgba(20,24,29,.504) 91.22833333%,rgba(20,24,29,.61) 92.635%,rgba(20,24,29,.711) 94.03333333%,rgba(20,24,29,.803) 95.39833333%,rgba(20,24,29,.883) 96.70333333%,rgba(20,24,29,.945) 97.92166667%,rgba(20,24,29,.986) 99.03%,#14181d),linear-gradient(0deg,#14181d 0,#14181d 21.48148148%,rgba(20,24,29,.986) 23.63703704%,rgba(20,24,29,.945) 26.1%,rgba(20,24,29,.883) 28.80740741%,rgba(20,24,29,.803) 31.70740741%,rgba(20,24,29,.711) 34.74074074%,rgba(20,24,29,.61) 37.84814815%,rgba(20,24,29,.504) 40.97407407%,rgba(20,24,29,.398) 44.05925926%,rgba(20,24,29,.296) 47.04814815%,rgba(20,24,29,.203) 49.88148148%,rgba(20,24,29,.122) 52.5%,rgba(20,24,29,.059) 54.85185185%,rgba(20,24,29,.016) 56.87777778%,rgba(20,24,29,0) 58.51851852%);
-    background-repeat: no-repeat;
-    content: "";
-    display: block;
-    height: 675px;
-    left: 50%;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    width: 1200px;
-    z-index: 0;
-} */
+.backdrop-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  margin: 8px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.themetype-dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.6) 0%,
+    transparent 70%
+  );
+}
+
+.themetype-light::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.6) 0%,
+    transparent 70%
+  );
+}
 
 .poster-container {
   position: sticky;
-  top: 0;
+  top: 70px;
   align-self: flex-start;
 }
 .movie-poster {
@@ -242,5 +299,9 @@ export default {
   margin: auto;
 }
 
+.overview {
+  /* word-break: break-all; */
+  word-break: keep-all;
+}
 </style>
 
