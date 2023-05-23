@@ -160,3 +160,24 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
         read_only_fields = ('created_at', 'updated_at')
+
+
+class LikeReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+
+class LikeMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ('id', 'title', 'release_date', 'poster_path', 'runtime')  
+        # Movie 모델에서 더 필요한거 있으면 fields에 추가
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    like_reviews = LikeReviewSerializer(many=True, read_only=True)
+    like_movies = LikeMovieSerializer(many=True, read_only=True)
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email', 'username', 'like_reviews', 'like_movies')
