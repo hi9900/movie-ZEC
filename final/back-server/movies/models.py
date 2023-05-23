@@ -9,24 +9,28 @@ from django.conf import settings
 class Genre(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
-
+    def __str__(self) :
+        return self.name
 
 class Actor(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
     profile_path = models.CharField(max_length=200)
-
+    def __str__(self) :
+        return self.name
 
 class Director(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
     profile_path = models.CharField(max_length=200)
-
+    def __str__(self) :
+        return self.name
 
 class Keyword(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
-
+    def __str__(self) :
+        return self.name
 
 # 배우 : 영화(영화감독) = M : N
 class Movie(models.Model):
@@ -47,30 +51,34 @@ class Movie(models.Model):
     keywords = models.ManyToManyField(Keyword)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies') #, null=True) # 좋아요
     # user.article_set에서 article_set이 유저가 작성한 글인지, 좋아요를 누른 글인지를 알 수 없게된다. 따라서 동일한 모델에서 위와 같이 진행 할 때는 반드시 역참조를 해줘야한다. 만약 위와같은 상황에서 migrations를 하면 relate_name을 추가하라고 코드에 뜬다.
-
+    def __str__(self) :
+        return self.title
 
 class Character(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='characters')
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
     character = models.CharField(max_length=50)
-    
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    def __str__(self) :
+        return self.name
 
 
 class MovieList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     movies = models.ManyToManyField(Movie)
-
+    def __str__(self) :
+        return self.title
 
 
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews', null=True) # 좋아요
-    hashtags = models.ManyToManyField(Tag)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews', blank=True) # 좋아요
+    hashtags = models.ManyToManyField(Tag, blank=True)
     content = models.TextField(null=True)
     watched = models.BooleanField(null=True, default=False) # 리뷰가 있으면 무조건 True
     like = models.BooleanField(null=True, default=False)
@@ -82,6 +90,9 @@ class Review(models.Model):
     def save(self, *args, **kwargs):
         self.rating = round(self.rating * 2) / 2  # Round to nearest half point
         super().save(*args, **kwargs)
+        
+    def __str__(self) :
+        return self.id
 
 
 class Comment(models.Model):
@@ -91,3 +102,6 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) :
+        return self.id

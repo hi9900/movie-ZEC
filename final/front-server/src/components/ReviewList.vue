@@ -4,12 +4,11 @@
 
   <!-- <div v-for="category in categories" :key="category.id"> -->
   <!-- <h2>{{ category.name }}</h2> -->
-  <v-container>
+  <v-container 
+    @click="onReview">
     <v-row>
       <!-- 가로로 보이게 바꾸기 -->
       <v-col
-        v-for="review in reviews"
-        :key="review.id"
         cols="12"
         sm="6"
         md="4"
@@ -30,14 +29,14 @@
           <v-card-text>
             작성자 {{ review.user }}
           </v-card-text>
-          <v-card-action>
+          <!-- <v-card-action> -->
             <!-- 리뷰 좋아요 버튼 -->
-            <v-btn> 
+            <!-- <v-btn>  -->
                <!-- @click.prevent="like"> -->
-              <v-icon>mdi-heart</v-icon>
+              <!-- <v-icon>mdi-heart</v-icon>
               {{ review.like_users.length }}
             </v-btn>
-          </v-card-action>
+          </v-card-action> -->
         </v-card>
       </v-col>
     </v-row>
@@ -82,33 +81,19 @@
 export default {
   data() {
     return {
-      
-       categories: [
-      { id: "my-reviews", name: "내가 쓴 리뷰" },
-      { id: "following", name: "팔로우한 유저가 쓴 리뷰" },
-      { id: "latest", name: "최신 리뷰" },
-    ],
-    allReviews: {
-      "my-reviews": [
-        /* 내가 쓴 리뷰 데이터 */
-      ],
-      following: [
-        /* 팔로우한 유저가 쓴 리뷰 데이터 */
-      ],
-      popular: [
-        /* 인기 리뷰 데이터 */
-      ],
-      latest: [
-        /* 최신 리뷰 데이터 */
-      ],
-    },
+
     };
   },
   props: {
-    reviews: Array
+    review: Object
   },
   methods: {
     
+    onReview(){
+      // 리뷰 단일 페이지로 이동
+      console.log(this.review.id)
+      this.$router.push({name: 'ReviewDetail', params: {reviewId: this.review.id}})
+    }
   }
 };
 </script>

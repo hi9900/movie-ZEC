@@ -75,10 +75,11 @@ const routes = [
     component: () => import('@/views/ListsDirectorView')
   },
   {
-    path: '/reviews/:id',
-    name: 'Reviews',
+    path: '/reviews/:reviewId',
+    name: 'ReviewDetail',
     component: () => import('@/views/ReviewDetailView')
   },
+
 
  
   // {

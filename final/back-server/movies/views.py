@@ -195,7 +195,7 @@ def search_movies(request):
     return Response(response)
 
 ##########################
-# 되는지 모르겠음
+# admin 사이트로는 됨 
 # list
 @api_view(["GET", "POST"])
 def movie_list_create(request):
@@ -238,7 +238,7 @@ def movie_list_detail_update_delete(request, list_pk):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def review_list(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     if request.method == 'GET':
@@ -332,7 +332,7 @@ def reply_list(request, review_pk, parent_pk):
     comment = get_object_or_404(Comment, pk=parent_pk)
     
     if request.method == 'GET':
-        comments = list(Comment.objects.filter(parent_comment__id=parent_pk).order_by('-created_at'))
+        comments = list(Comment.objects.filter(parent_comment__id=parent_pk).order_by('created_at'))
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
     
