@@ -222,9 +222,9 @@ def movie_list_create(request):
     
 
 @api_view(["GET", "PUT", "DELETE"])
-def movie_list_detail_update_delete(request, list_pk):
+def movie_list_detail_update_delete(request, list_id):
     try:
-        movie_list = MovieList.objects.get(pk=list_pk)
+        movie_list = MovieList.objects.get(id=list_id)
     except MovieList.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -263,8 +263,8 @@ def review_list(request, movie_id):
 
 @api_view(['GET', 'POST', 'DELETE', 'PUT'])
 @permission_classes([IsAuthenticated])
-def review_detail(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
+def review_detail(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
     if request.method == 'GET':
         serializer = ReviewSerializer(review)
         return Response(serializer.data)
@@ -296,10 +296,10 @@ def review_detail(request, review_pk):
 # 댓글
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def comment_list(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
+def comment_list(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
     if request.method == 'GET':
-        comments = list(Comment.objects.filter(review__id=review_pk, parent_comment__isnull=True).order_by('-created_at'))
+        comments = list(Comment.objects.filter(review__id=review_id, parent_comment__isnull=True).order_by('-created_at'))
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
     
@@ -313,8 +313,8 @@ def comment_list(request, review_pk):
 # 댓글
 @api_view(['GET', 'DELETE', 'PUT'])
 @permission_classes([IsAuthenticated])
-def comment_detail(request, comment_pk):
-    comment = get_object_or_404(Comment, pk=comment_pk)
+def comment_detail(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
 
     if request.method == 'GET':
         serializer = CommentSerializer(comment)
@@ -334,13 +334,13 @@ def comment_detail(request, comment_pk):
 # 대댓글
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def reply_list(request, review_pk, parent_pk):
+def reply_list(request, review_id, parent_id):
     
-    review = get_object_or_404(Review, pk=review_pk)
-    comment = get_object_or_404(Comment, pk=parent_pk)
+    review = get_object_or_404(Review, id=review_id)
+    comment = get_object_or_404(Comment, id=parent_id)
     
     if request.method == 'GET':
-        comments = list(Comment.objects.filter(parent_comment__id=parent_pk).order_by('created_at'))
+        comments = list(Comment.objects.filter(parent_comment__id=parent_id).order_by('created_at'))
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
     
@@ -351,24 +351,24 @@ def reply_list(request, review_pk, parent_pk):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
 
-# 영화 좋아요
-class MovieViewSet(viewsets.ModelViewSet): 
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+# # 영화 좋아요
+# class MovieViewSet(viewsets.ModelViewSet): 
+#     queryset = Movie.objects.all()
+#     serializer_class = MovieSerializer
 
-    @action(detail=True, methods=['post'])
-    def like(self, request, pk=None):
-        movie = self.get_object()
-        user = request.user
-        movie.like_users.add(user)
-        return Response({'status': 'like set'})
+#     @action(detail=True, methods=['post'])
+#     def like(self, request, id=None):
+#         movie = self.get_object()
+#         user = request.user
+#         movie.like_users.add(user)
+#         return Response({'status': 'like set'})
 
-    @action(detail=True, methods=['post'])
-    def unlike(self, request, pk=None):
-        movie = self.get_object()
-        user = request.user
-        movie.like_users.remove(user)
-        return Response({'status': 'like removed'})
+#     @action(detail=True, methods=['post'])
+#     def unlike(self, request, pk=None):
+#         movie = self.get_object()
+#         user = request.user
+#         movie.like_users.remove(user)
+#         return Response({'status': 'like removed'})
     
 
 # 영화 좋아요 목록
@@ -383,8 +383,8 @@ def get_liked_movies(request):
 # 리뷰 좋아요여부 변경
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_like_review(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
+def update_like_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
     user = request.user
     
     # 이미 좋아요한 경우 취소
@@ -396,7 +396,40 @@ def update_like_review(request, review_pk):
     else:
         review.like_users.add(user)
         return Response({"message": "좋아요 성공"}, status=status.HTTP_200_OK)
+
+
+# 영화 좋아요여부 변경
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_like_movie(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    user = request.user
     
+    # 이미 좋아요한 경우 취소
+    if user in movie.like_users.all():
+        movie.like_users.remove(user)
+        return Response({"message": "좋아요 취소"}, status=status.HTTP_200_OK)
+    
+    # 없는 경우 좋아요
+    else:
+        movie.like_users.add(user)
+        return Response({"message": "좋아요 성공"}, status=status.HTTP_200_OK)
+
+
+# 유저 정보 보자
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_detail_view(request):
+    user = request.user
+    serializer = UserDetailSerializer(user)
+    return Response(serializer.data)
+
+# class UserDetailView(generics.RetrieveAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+
+
+
 
 # # 리뷰 좋아요
 # class ReviewViewSet(viewsets.ModelViewSet):
