@@ -8,7 +8,8 @@ const list = {
     genreMovies: [],
     randomMovies: [],
     actorMovies: [],
-    movies: []
+    movies: [],
+    movielists: [],
   },
   getters: {
   },  
@@ -26,6 +27,9 @@ const list = {
     // },
     GET_MOVIES(state, movies) {
       state.movies = movies
+    },
+    GET_LISTS(state, movies){
+      state.movielists = movies
     }
   },
   actions: {
@@ -39,19 +43,19 @@ const list = {
         context.commit('GET_RANDOM', res.data)
       })
       .catch((err) => console.log(err))
-    //   await axios
-    //   .all([
-    //     // axios.get(`${API_URL}/api/v1/movies/directors/random/`), 
-    //     axios.get(`${API_URL}/api/v1/movies/genres/random/`)
-    //   ])
-    //   .then(
-    //     axios.spread((res2) => {
-    //     console.log(res2)
-    //     // context.commit('GET_DIRECTOR', res1.data)
-    //     context.commit('GET_GENRE', res2.data)
-    //   })
-    //   )
-    //   .catch((err) => console.log(err))
+      // await axios
+      // .all([
+      //   // axios.get(`${API_URL}/api/v1/movies/directors/random/`), 
+      //   axios.get(`${API_URL}/api/v1/movies/genres/random/`)
+      // ])
+      // .then(
+      //   axios.spread((res2) => {
+      //   console.log(res2)
+      //   // context.commit('GET_DIRECTOR', res1.data)
+      //   context.commit('GET_GENRE', res2.data)
+      // })
+      // )
+      // .catch((err) => console.log(err))
     },
 
     getDirector(context) {
@@ -84,6 +88,17 @@ const list = {
     .then((res) => {
       console.log(res.data)
       context.commit('GET_GENRE', res.data)
+    })
+    .catch((err) => console.log(err))
+  },
+  getLists(context) {
+    axios({
+      method: 'get',
+      url: `${API_URL}/api/v1/movie_lists/`,
+    })
+    .then((res) => {
+      console.log(res.data)
+      context.commit('GET_LISTS', res.data)
     })
     .catch((err) => console.log(err))
   },

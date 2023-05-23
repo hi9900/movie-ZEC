@@ -47,6 +47,37 @@ class CharacterSerializer(serializers.ModelSerializer):
         fields = ('character', 'actor', )
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    # user = UserSerializer()
+    replies = serializers.SerializerMethodField()
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        # fields = ('id', 'author', 'content', 'created_at')
+        read_only_fields = ('review', 'user')
+    
+    def get_replies(self, obj):
+        replies = obj.replies.all()
+        serializers = CommentSerializer(replies, many=True)
+        return serializers.data;
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    hashtags = TagSerializer(many=True, read_only=True)
+    # like_users = UserSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only_fields = ('movie', 'user', 'created_at', 'updated_at')
+
+
 class MovieSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True, read_only=True)
     director = DirectorSerializer(many=True, read_only=True)
@@ -68,6 +99,8 @@ class MoviesimplifySerializer(serializers.ModelSerializer):
 # 되는지 모르겠음
 class MovieListSerializer(serializers.ModelSerializer):
     movies = MovieSerializer(many=True, read_only=True)
+    # 유저 pk로 유저 정보도 저장해서 내보내줘
+    # user_name = UserSerializer(read_only=True)
     class Meta:
         model = MovieList
         fields = '__all__'

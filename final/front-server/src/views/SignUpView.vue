@@ -72,7 +72,7 @@
                 dark
                 class="mb-3"
               >
-                회원가입 후 로그인
+                회원가입
               </v-btn>
             </form>
           </div>

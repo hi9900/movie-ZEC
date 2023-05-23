@@ -12,7 +12,7 @@
   </v-dialog>
 </template>
 
-<script>
+<script scoped>
 export default {
   name: 'DiaryDialog',
   props: {

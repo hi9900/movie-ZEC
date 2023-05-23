@@ -45,7 +45,12 @@ const routes = [
     component: () => import('@/views/LogInView')
   },
   {
-    path: '/profile/username',
+    path: '/update',
+    name: 'Update',
+    component: () => import('@/views/UpdateView')
+  },
+  {
+    path: '/profile/:username',
     name: 'Profile',
     component: () => import('@/views/ProfilePageView')
   },
@@ -70,10 +75,11 @@ const routes = [
     component: () => import('@/views/ListsDirectorView')
   },
   {
-    path: '/reviews/:id',
-    name: 'Reviews',
+    path: '/reviews/:reviewId',
+    name: 'ReviewDetail',
     component: () => import('@/views/ReviewDetailView')
   },
+
 
  
   // {

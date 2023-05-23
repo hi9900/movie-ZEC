@@ -79,10 +79,22 @@
         </v-card>
       </v-col>
     </v-row>
+
+  <h2>유저 영화</h2>
+    <v-row>
+      <v-col cols="12" sm="6" md="4" no-gutter
+      v-for="movielist in movielists" :key="movielist.id"
+      >
+        <UserLists 
+          :movielist="movielist"
+        />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
+import UserLists from '@/components/UserLists'
 
 export default {
   name: 'MovieLists',
@@ -90,6 +102,9 @@ export default {
     return {
       
     }
+  },
+  components: {
+    UserLists
   },
   computed: {
     directorMovies () {
@@ -103,6 +118,9 @@ export default {
     },
     randomMovies() {
       return this.$store.state.list.randomMovies
+    },
+    movielists() {
+      return this.$store.state.list.movielists
     }
   },
   methods: {
@@ -119,15 +137,19 @@ export default {
     },
     // goToDirector(directorId) {
     //   this.$router.push({ name: 'Director', params: { directorid: directorId }})
-    // }
+    // },
+    getLists(){
+      this.$store.dispatch('list/getLists')
+    }
   },
   created() {
     this.getMovie()
+    this.getLists()
   }
 };
 </script>
 
-<style>
+<style scoped>
 .poster-container {
   display: flex;
   align-items: flex-start;

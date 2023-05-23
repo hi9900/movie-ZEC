@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script scoped>
 import ReviewDatePicker from "@/components/ReviewDatePicker.vue";
 export default {
   components: {

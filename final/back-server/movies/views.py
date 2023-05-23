@@ -203,7 +203,7 @@ def search_movies(request):
     return Response(response)
 
 ##########################
-# 되는지 모르겠음
+# admin 사이트로는 됨 
 # list
 @api_view(["GET", "POST"])
 def movie_list_create(request):
@@ -340,7 +340,7 @@ def reply_list(request, review_pk, parent_pk):
     comment = get_object_or_404(Comment, pk=parent_pk)
     
     if request.method == 'GET':
-        comments = list(Comment.objects.filter(parent_comment__id=parent_pk).order_by('-created_at'))
+        comments = list(Comment.objects.filter(parent_comment__id=parent_pk).order_by('created_at'))
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
     

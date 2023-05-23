@@ -28,8 +28,8 @@
           v-bind="attrs"
           v-on="on"
           
-          :to="{ name: 'Profile'}"
-        >
+          :to="{ name: 'Profile', params: { username: username } }"        
+>
       <!-- 유저네임을 받는 방법? -->
           Profile
         </v-btn>
@@ -37,6 +37,9 @@
       <v-list>
         <v-list-item @click.prevent="logout">
           <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click.prevent="update">
+          <v-list-item-title>회원정보수정</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -60,6 +63,9 @@ export default {
   computed: {
     isLogin() {
       return this.$store.getters['account/isLogin']
+    },
+    username() {
+      return this.$store.state.account.username
     }
   },
   methods: {
@@ -70,12 +76,16 @@ export default {
     goHome() {
       this.$router.push({name: 'Home'})
       // console.log(this.$route.name)
+    },
+    update() {
+      this.$store.dispatch('account/logout')
+      this.$router.push({ name: 'Update' })
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .logoImg {
   cursor: pointer;
 }

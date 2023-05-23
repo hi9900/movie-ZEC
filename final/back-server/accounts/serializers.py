@@ -24,23 +24,22 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
+# class CustomRegisterSerializer(RegisterSerializer):
+#     email = serializers.EmailField(required=True)
+#     nickname = serializers.CharField(required=True, 
+#                                      validators=[UniqueValidator(queryset=User.objects.all())])
+#     profile_image = serializers.ImageField(required=False)
 
-class CustomRegisterSerializer(RegisterSerializer):
-    email = serializers.EmailField(required=True)
-    nickname = serializers.CharField(required=True, 
-                                     validators=[UniqueValidator(queryset=User.objects.all())])
-    profile_image = serializers.ImageField(required=False)
-
-    def get_cleaned_data(self):
-        super(CustomRegisterSerializer, self).get_cleaned_data()
-        return {
-            'username': self.validated_data.get('username', ''),
-            'password1': self.validated_data.get('password1', ''),
-            'password2': self.validated_data.get('password2', ''),
-            'email': self.validated_data.get('email', ''),
-            'nickname': self.validated_data.get('nickname', ''),
-            'profile_image': self.validated_data.get('profile_image', None)
-        }
+#     def get_cleaned_data(self):
+#         super(CustomRegisterSerializer, self).get_cleaned_data()
+#         return {
+#             'username': self.validated_data.get('username', ''),
+#             'password1': self.validated_data.get('password1', ''),
+#             'password2': self.validated_data.get('password2', ''),
+#             'email': self.validated_data.get('email', ''),
+#             'nickname': self.validated_data.get('nickname', ''),
+#             'profile_image': self.validated_data.get('profile_image', None)
+#         }
 
 class UserSerializer(serializers.ModelSerializer):
     # write_only는 시리얼라이징은 하지만 응답에는 포함시키지 않는다는 의미

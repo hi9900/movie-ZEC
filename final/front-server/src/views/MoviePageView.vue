@@ -31,7 +31,7 @@
         v-model="currentPage"
         @input="updateMovie"
         :length="totalPages"
-        total-visible="7"
+        :total-visible="7"
       ></v-pagination>
     </div>
   </v-container>
@@ -98,4 +98,10 @@ export default {
 </script>
 
 <style scoped>
+/* v-pagination__navigation--last {
+  display: none;
+}
+.v-pagination >>> .v-pagination__navigation--last {
+  display: none;
+} */
 </style>
