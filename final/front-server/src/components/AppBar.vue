@@ -1,36 +1,32 @@
 <template>
   <v-app-bar app color="appBarColor">
+    <!-- Logo -->
+    <v-img
+      @click="goHome"
+      max-height="50"
+      max-width="150"
+      :src="require('@/assets/logo.png')"
+      alt="Your Logo"
+      class="mr-4 logoImg"
+    ></v-img>
 
-      <!-- Logo -->
-      <v-img 
-        @click="goHome"
-        max-height="50"
-        max-width="150"
-        :src="require('@/assets/logo.png')"
-        alt="Your Logo"
-        class="mr-4 logoImg"
-      ></v-img>
+    <v-spacer></v-spacer>
 
-      <v-spacer></v-spacer>
+    <v-btn text :to="{name: 'Movie'}">Movie</v-btn>
+    <v-btn text :to="{name: 'Lists'}">Lists</v-btn>
+    <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
 
-      <v-btn text :to="{ name: 'Movie' }">Movie</v-btn>
-      <v-btn text :to="{ name: 'Lists' }">Lists</v-btn>
-      <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
+    <v-btn text v-if="!isLogin" :to="{name: 'LogIn'}">LogIn</v-btn>
 
-
-      <v-btn text v-if="!isLogin" :to="{ name: 'LogIn' }">LogIn</v-btn>
-
-      <v-menu v-else open-on-hover offset-y>
-      <template v-slot:activator="{ on, attrs }">
+    <v-menu v-else open-on-hover offset-y>
+      <template v-slot:activator="{on, attrs}">
         <v-btn
           v-if="isLogin"
           text
           v-bind="attrs"
           v-on="on"
-          
-          :to="{ name: 'Profile', params: { username: username } }"        
->
-      <!-- 유저네임을 받는 방법? -->
+          :to="{name: 'Profile', params: {username: username}}"
+        >
           Profile
         </v-btn>
       </template>
@@ -44,8 +40,8 @@
       </v-list>
     </v-menu>
 
-      <ModeToggle />
-    </v-app-bar>
+    <ModeToggle />
+  </v-app-bar>
 </template>
 
 <script>
@@ -54,11 +50,11 @@ export default {
   name: 'AppBar',
   data() {
     return {
-      loggedIn: false,
+      loggedIn: false
     }
   },
   components: {
-    ModeToggle,
+    ModeToggle
   },
   computed: {
     isLogin() {
@@ -71,7 +67,7 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('account/logout')
-      this.$router.push({ name: 'Home' })
+      this.$router.push({name: 'Home'})
     },
     goHome() {
       this.$router.push({name: 'Home'})
@@ -79,7 +75,7 @@ export default {
     },
     update() {
       this.$store.dispatch('account/logout')
-      this.$router.push({ name: 'Update' })
+      this.$router.push({name: 'Update'})
     }
   }
 }

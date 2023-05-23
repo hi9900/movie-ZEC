@@ -27,7 +27,7 @@ const routes = [
     name: 'MovieDetail',
     component: () => import('@/views/MovieDetailView')
   },
-  
+
   {
     path: '/community',
     name: 'Community',
@@ -81,20 +81,16 @@ const routes = [
   },
 
 
- 
-  // {
-  //   path: '/create',
-  //   name: 'CreateView',
-  //   component: () => import('@/views/CreateView')
-  // },
-
 ]
 
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior() { // scrollBehavior 메서드 추가
+    return { x: 0, y: 0 }
+  }
 })
 
 export default router

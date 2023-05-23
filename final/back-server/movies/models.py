@@ -79,7 +79,7 @@ class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews', blank=True) # 좋아요
     hashtags = models.ManyToManyField(Tag, blank=True)
-    content = models.TextField(null=True)
+    content = models.TextField(blank=True)
     watched = models.BooleanField(null=True, default=True) # 리뷰가 있으면 무조건 True
     like = models.BooleanField(null=True, default=False)
     watched_at = models.DateTimeField(default=timezone.now) # default로 현재시간, 변경 가능
