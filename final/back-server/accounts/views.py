@@ -21,7 +21,7 @@ User = get_user_model()
 
 ############################################################
 # JWT
-class CustomTokenObtainPairView(TokenObtainPairView):
+class LoginTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
     # def post(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
