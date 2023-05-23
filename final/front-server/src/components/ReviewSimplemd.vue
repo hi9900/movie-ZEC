@@ -1,31 +1,30 @@
 <template>
   <v-container>
-    <!-- 내가 가진 리뷰 데이터가 있으면 색칠 하기 -->
-    <v-card class="actions-panel__card d-none d-md-block" tile>
-      <v-card-text class="py-0 px-0">
-        <v-row>
-          <v-col cols="6" class="text-center" py-2>
-            <v-icon :color="WatchIconColor" class="mx-2">mdi-eye</v-icon>
-          </v-col>
-          <v-col cols="6" class="text-center" py-2>
-            <v-icon :color="heartIconColor" class="mx-2">mdi-heart</v-icon>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="6" class="text-center" py-2>
-            <v-btn icon @click="showReviewModal = true" class="mx-2"
-              ><v-icon>mdi-pencil</v-icon></v-btn
-            >
-          </v-col>
-          <v-col cols="6" class="text-center" py-2>
-            <v-btn icon @click="sharePage" class="mx-2">
-              <v-icon>mdi-share-variant</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-
+    <v-bottom-navigation hide-on-scroll fixed>
+      <!-- sm 이하일 때만 아래 바에 표시되는 카드 컴포넌트 -->
+      <v-card class="actions-panel__card d-md-none" tile>
+        <v-card-text class="py-0 px-0">
+          <v-row>
+            <v-col cols="3" align="center" class="text-center" py-2>
+              <v-icon :color="WatchIconColor" class="mx-2">mdi-eye</v-icon>
+            </v-col>
+            <v-col cols="3" align="center" class="text-center" py-2>
+              <v-icon :color="heartIconColor" class="mx-2">mdi-heart</v-icon>
+            </v-col>
+            <v-col cols="3" align="center" class="text-center" py-2>
+              <v-btn icon @click="showReviewModal = true" class="mx-2">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+            </v-col>
+            <v-col cols="3" align="center" class="text-center" py-2>
+              <v-btn icon @click="sharePage" class="mx-2">
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-bottom-navigation>
     <!-- 리뷰 작성 모달 -->
     <v-dialog v-model="showReviewModal" max-width="600px">
       <v-card>

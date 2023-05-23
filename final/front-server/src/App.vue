@@ -2,20 +2,15 @@
   <v-app>
     <AppBar />
     <v-main>
-      
-
       <v-container fluid>
         <v-row>
           <v-col cols="1"></v-col>
           <v-col cols="10">
-            <router-view/>
+            <router-view />
           </v-col>
           <v-col cols="1"></v-col>
         </v-row>
       </v-container>
-
-
-      
     </v-main>
 
     <!-- <v-footer color="footerColor">
@@ -28,6 +23,22 @@
       </v-container>
     </v-footer> -->
 
+    <!-- 맨위로 버튼 -->
+    <v-fab-transition>
+      <v-btn
+        v-show="hidden"
+        elevation="2"
+        bottom
+        right
+        fab
+        fixed
+        dark
+        color="secondary"
+        @click="$vuetify.goTo(0)"
+      >
+        <v-icon dark>mdi-chevron-up</v-icon>
+      </v-btn>
+    </v-fab-transition>
   </v-app>
 </template>
 
@@ -38,31 +49,32 @@ export default {
   name: 'App',
   data() {
     return {
-      scroll: 0,
-      scrollTarget: null
+      fab: false,
+      hidden: false,
+      offsetTop: 0
     }
   },
   components: {
     AppBar
   },
-  mounted() {
-    // goTop을 위해 mount 시 element 설정
-    this.scrollTarget = document.getElementById('scroll-target');
-  },
   methods: {
-      onScroll(e) {
-        // 스크롤 움직일 때 마다 호출됨
-        this.scroll = e.target.scrollTop;
-      },
-    goTop() {
-      if (this.scrollTarget) {
-        this.scrollTarget.scrollTop = 0;
-      }
-      }
-}
+    handleScroll() {
+      this.hidden = window.scrollY > 200 ? true : false
+    }
+  },
+  beforeMount() {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
 }
 </script>
 
 <style>
+.v-btn--floating {
+  /* position: absolute; */
 
+  position: relative;
+}
 </style>
