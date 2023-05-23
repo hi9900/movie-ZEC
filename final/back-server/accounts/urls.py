@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import CustomTokenObtainPairView, OnlyAuthenticatedUserView
+from .views import LoginTokenObtainPairView, OnlyAuthenticatedUserView
 
 urlpatterns = [
     # 일반 회원 회원가입/로그인
@@ -16,7 +16,7 @@ urlpatterns = [
 
     # 회원가입
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', LoginTokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/authonly/', OnlyAuthenticatedUserView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

@@ -49,7 +49,7 @@ class Movie(models.Model):
     genres = models.ManyToManyField(Genre)
     director = models.ManyToManyField(Director)
     keywords = models.ManyToManyField(Keyword)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies') #, null=True) # 좋아요
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True) #, null=True) # 좋아요
     # user.article_set에서 article_set이 유저가 작성한 글인지, 좋아요를 누른 글인지를 알 수 없게된다. 따라서 동일한 모델에서 위와 같이 진행 할 때는 반드시 역참조를 해줘야한다. 만약 위와같은 상황에서 migrations를 하면 relate_name을 추가하라고 코드에 뜬다.
     def __str__(self) :
         return self.title
