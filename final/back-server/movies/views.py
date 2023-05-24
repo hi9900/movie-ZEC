@@ -335,7 +335,6 @@ def comment_detail(request, comment_id):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def reply_list(request, review_id, parent_id):
-    
     review = get_object_or_404(Review, id=review_id)
     comment = get_object_or_404(Comment, id=parent_id)
     
@@ -419,8 +418,8 @@ def update_like_movie(request, movie_id):
 # 유저 정보 보자
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def user_detail_view(request):
-    user = request.user
+def user_detail_view(request, user_id):
+    user = get_object_or_404(get_user_model(), id=user_id)
     serializer = UserDetailSerializer(user)
     return Response(serializer.data)
 

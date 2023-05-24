@@ -11,6 +11,8 @@ class User(AbstractUser):
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
     blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 
+    
+
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 

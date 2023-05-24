@@ -29,7 +29,7 @@ urlpatterns = [
     # path('comments/<int:comment_pk>/', views.comment_detail),
     # path('reviews/<int:review_pk>/comments/', views.comment_create),
     # path('liked_reviews/', views.get_liked_reviews),
-    path('user/detail/', views.user_detail_view, name='user_detail'),
+    path('user/detail/<int:user_id>/', views.user_detail_view, name='user_detail'),
     
     
     # 리뷰 댓글
