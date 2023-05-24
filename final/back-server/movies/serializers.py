@@ -16,6 +16,7 @@ class UsersimplifySerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'username', 'profile_image', 'following', )
 
 
+
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
@@ -178,8 +179,8 @@ class LikeMovieSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     like_reviews = LikeReviewSerializer(many=True, read_only=True)
     like_movies = LikeMovieSerializer(many=True, read_only=True)
-    following = UserSerializer(many=True, read_only=True)
-    followers = UserSerializer(many=True, read_only=True)
+    following = UsersimplifySerializer(many=True, read_only=True)
+    followers = UsersimplifySerializer(many=True, read_only=True)
     following_count = serializers.SerializerMethodField()
     followers_count = serializers.SerializerMethodField()
     
