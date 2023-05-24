@@ -14,25 +14,20 @@ import profile from '@/store/modules/profile.js'
 
 Vue.use(Vuex)
 
-
 export default new Vuex.Store({
   modules: {
     movie,
     list,
     account,
-    profile,
+    profile
   },
   plugins: [
     createPersistedState({
       paths: ['account']
-    }),
+    })
   ],
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+  state: {},
+  getters: {},
+  mutations: {},
+  actions: {}
 })

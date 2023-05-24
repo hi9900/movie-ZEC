@@ -3,6 +3,9 @@
     <div v-if="profile.is_staff">
       <h3>관리자페이지로 이동</h3>
     </div>
+    {{ profile }}
+    <br />
+    {{ isMyProfile }}
     <v-row>
       <v-col cols="12" md="3">
         <v-sheet class="profile-info">
@@ -55,6 +58,7 @@
 
 <script>
 import MyProfileData from '@/components/MyProfileData.vue'
+import axios from 'axios'
 
 export default {
   name: 'UserProfile',
@@ -63,7 +67,6 @@ export default {
   },
   data() {
     return {
-      isMyProfile: false,
       profile: {
         profile_image: 'https://letterboxd.com/hih1/avatar/medium/',
         username: 'hih1',
@@ -80,17 +83,17 @@ export default {
   },
   methods: {
     // username과 관련된 정보 받아오기
-    // getMyProfile(username) {
-    //   this.$store.dispatch('profile/getMyProfile', username)
-    // },
-    //   async blockUser() {
-    //   try {
-    //     await axios.post(`/api/block-user/${this.profileUserId}`);
-    //     this.isBlocked = true;
-    //   } catch (error) {
-    //     console.error("Error during block:", error);
-    //   }
-    // },
+    getMyProfile(username) {
+      this.$store.dispatch('profile/getMyProfile', username)
+    },
+    async blockUser() {
+      try {
+        await axios.post(`/api/block-user/${this.profileUserId}`)
+        this.isBlocked = true
+      } catch (error) {
+        console.error('Error during block:', error)
+      }
+    }
     // async unblockUser() {
     //   try {
     //     await axios.post(`/api/unblock-user/${this.profileUserId}`);
@@ -116,13 +119,15 @@ export default {
     //   }
     // },
   },
+  computed: {
+    // 내 페이지인지 확인하기
+    isMyProfile() {
+      return this.$route.params.username === this.$store.state.account.username
+    }
+  },
   created() {
     // console.log(this.$route.params.username)
     this.getMyProfile(this.$route.params.username)
-
-    // 이 프로필 페이지 정보가 로그인 한 유저 정보와 같은지 확인
-    this.isMyProfile =
-      this.$route.params.username === this.authenticatedUser.username
   }
 }
 </script>

@@ -2,15 +2,15 @@ import axios from 'axios'
 const API_URL = 'http://127.0.0.1:8000'
 import router from '@/router'
 
-
 const account = {
   namespaced: true,
   state: {
     token: null,
     accessToken: null,
     refreshToken: null,
+    userId: '',
     username: '',
-    useremail: '',
+    useremail: ''
   },
   getters: {
     // 로그인
@@ -22,35 +22,35 @@ const account = {
     // 회원가입
     SAVE_TOKEN(state, token) {
       state.token = token
-      router.push({name : 'LogIn'})
+      router.push({name: 'LogIn'})
     },
 
-    SET_ACCESS(state, token){
+    SET_ACCESS(state, token) {
       state.accessToken = token.access
     },
     SET_REFRESH(state, token) {
       state.refreshToken = token.refresh
     },
     // 로그인하면 토큰 두개 받아옴
-    LOGIN(state, token){
+    LOGIN(state, token) {
       state.accessToken = token.access
       state.refreshToken = token.refresh
       state.username = token.username
       state.useremail = token.email
-      router.push({name : 'Home'})
+      state.userId = token.id
+      router.push({name: 'Home'})
     },
     // 로그아웃
     LOGOUT(state) {
       state.token = null
     },
-    RESET(state){
+    RESET(state) {
       state.token = null
       state.accessToken = null
       state.refreshToken = null
-      state.username = '',
-      state.useremail = ''
+      ;(state.username = ''), (state.useremail = '')
     },
-    SET_USER(state, username){
+    SET_USER(state, username) {
       state.username = username
     }
   },
@@ -66,16 +66,19 @@ const account = {
         method: 'post',
         url: `${API_URL}/accounts/dj-rest-auth/registration/`,
         data: {
-          email, username, password1, password2
+          email,
+          username,
+          password1,
+          password2
         }
       })
-        .then((res) => {
+        .then(res => {
           console.log(res.data)
           context.commit('SAVE_TOKEN', res.data.key)
         })
-        .catch((err) => {
-        console.log(err)
-      })
+        .catch(err => {
+          console.log(err)
+        })
     },
     login(context, payload) {
       const email = payload.email
@@ -85,19 +88,20 @@ const account = {
         // url: `${API_URL}/accounts/dj-rest-auth/login/`,
         url: `${API_URL}/accounts/api/token/`,
         data: {
-          email, password
+          email,
+          password
         }
       })
-      .then((res) => {
-        // 사용자 확인
-        console.log('로그인')
-        console.log(res)
-        // context.commit('SAVE_TOKEN', res.data)
-        context.commit('LOGIN', res.data)
-        // context.commit('SET_ACCESS', res.data)
-        // context.commit('SET_REFRESH', res.data)
-      })
-      .catch((err) => console.log(err))
+        .then(res => {
+          // 사용자 확인
+          console.log('로그인')
+          console.log(res)
+          // context.commit('SAVE_TOKEN', res.data)
+          context.commit('LOGIN', res.data)
+          // context.commit('SET_ACCESS', res.data)
+          // context.commit('SET_REFRESH', res.data)
+        })
+        .catch(err => console.log(err))
     },
     // 만료된거 확인하고 받아와야함 토큰을 추가로 받아오는 로직
 
@@ -109,7 +113,7 @@ const account = {
       //   url: `${API_URL}/accounts/dj-rest-auth/logout/`
       // })
       // .then((res) => {
-        // console.log('로그아웃')
+      // console.log('로그아웃')
 
       //   console.log(res)
       // })
@@ -119,36 +123,34 @@ const account = {
       try {
         // 토큰을 헤더에 사용하고 프로필 정보를 얻습니다.
         const res = await axios.get(`${API_URL}/accounts/dj-rest-auth/user/`, {
-          headers: { Authorization: `Bearer ${this.state.token}` },
-        });
-      context.commit('SET_USER', res.data)
-    } catch(err) {
-      console.log(err)
+          headers: {Authorization: `Bearer ${this.state.token}`}
+        })
+        context.commit('SET_USER', res.data)
+      } catch (err) {
+        console.log(err)
+      }
     }
-  },
-  // updatePassword() {
-  //   axios({
-  //     method: 'post',
-  //     // url: `${API_URL}/accounts/dj-rest-auth/login/`,
-  //     url: `${API_URL}/accounts/api/token/`,
-  //     data: {
-  //       email, password
-  //     }
-  //   })
-  //   .then((res) => {
-  //     // 사용자 확인
-  //     console.log('로그인')
-  //     console.log(res)
-  //     // context.commit('SAVE_TOKEN', res.data)
-  //     context.commit('LOGIN', res.data)
-  //     // context.commit('SET_ACCESS', res.data)
-  //     // context.commit('SET_REFRESH', res.data)
-  //   })
-  //   .catch((err) => console.log(err))
-  // },
+    // updatePassword() {
+    //   axios({
+    //     method: 'post',
+    //     // url: `${API_URL}/accounts/dj-rest-auth/login/`,
+    //     url: `${API_URL}/accounts/api/token/`,
+    //     data: {
+    //       email, password
+    //     }
+    //   })
+    //   .then((res) => {
+    //     // 사용자 확인
+    //     console.log('로그인')
+    //     console.log(res)
+    //     // context.commit('SAVE_TOKEN', res.data)
+    //     context.commit('LOGIN', res.data)
+    //     // context.commit('SET_ACCESS', res.data)
+    //     // context.commit('SET_REFRESH', res.data)
+    //   })
+    //   .catch((err) => console.log(err))
+    // },
   }
 }
-
-
 
 export default account
