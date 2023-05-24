@@ -159,7 +159,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-        read_only_fields = ('created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at', 'movie_original_title')
 
 
 class LikeReviewSerializer(serializers.ModelSerializer):
@@ -180,4 +180,4 @@ class UserDetailSerializer(serializers.ModelSerializer):
     like_movies = LikeMovieSerializer(many=True, read_only=True)
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'username', 'like_reviews', 'like_movies')
+        fields = ('id', 'email', 'username', 'following', 'followers','like_reviews', 'like_movies')
