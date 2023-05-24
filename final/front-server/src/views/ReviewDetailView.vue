@@ -1,69 +1,165 @@
 <template>
   <v-skeleton-loader v-if="!review"></v-skeleton-loader>
   <v-container v-else>
-      <v-row>
-        <v-col>
-          <!-- 영화 포스터, 제목 적기 -->
-          <!-- 누르면 영화 상세 페이지로 -->
-          <!-- <movie-detail :movie="movie" /> -->
-
-          <p>영화 정보: {{review?.movie}} -> 무비 pk임 무비디테일로 보내?</p>
-        </v-col>
-        <v-col>
-          
-          <p>작성자 pk: {{review?.user}} -> 작성자 유저네임 알아오기</p>
-          <p>리뷰 내용: {{review?.content}} </p>
-          <p>별점: {{review?.rating}} </p>
-          <p>작성 시간: {{review?.created_at}} </p>
-          <p>리뷰에 대한 좋아요 갯수: {{review?.like_users.length}} </p>
-          <!-- 내 리뷰면 수정, 삭제 가능 -->
-          <!-- 수정 버튼을 누르면 수정하는 폼을 띄워서 수정할 수 있게 만들기 -->
-          <v-btn>수정</v-btn>
-          <v-btn  @click="deleteReview">삭제</v-btn>
-        </v-col>
-</v-row>
-
-<v-row>
-<v-col v-if="comments">
-  <p>댓글 갯수: {{comments?.length}}</p>
-      <!-- 리뷰에 달린 댓굴들 -->
-    <v-container 
-    v-for="comment in comments"
-    :key="comment.id">
-    <p>작성자: {{comment.user}} -> 이거도 유저pk인데 유저 네임으로 바꿔야함 </p> 
-    <p>내용: {{comment.content}}</p>
-    <p>작성시간: {{comment.created_at}}</p>
-    <!-- 만약에 내 이름이 작성자랑 같다면(유니크해서 ㄱㅊ), 수정/삭제버튼 표시하기 -->
-    <!-- 개못생김 오른쪽에 이쁘게 만들어 -->
-    <v-btn>수정</v-btn>
-    <v-btn @click="deleteComment(comment.id)">삭제</v-btn>
-        <ReplyForm 
-        :comment="comment"
-        @createReply="createReply"
+    <v-row>
+      <v-col>
+        <!-- 누르면 영화 상세 페이지로 -->
+        <!-- <movie-detail :movie="movie" /> -->
+        <v-img
+          :src="`https://www.themoviedb.org/t/p/original/${review.movie.poster_path}`"
+          alt="영화 포스터"
+          height="150px"
+          width="100px"
         />
-          
-    </v-container>
-</v-col>
-      </v-row>
-      <v-row>
-  <v-col>
-  <!-- 댓글 작성 -->
-  <!-- 너무 커 작게 만들기 -->
-  <v-card>
-    <v-card-text>
-      <v-textarea v-model="newComment" label="Your comment" 
-      @keyup.enter="createComment" rows="1"
-      />
-      
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" @click.prevent="createComment">댓글 작성</v-btn>
-    </v-card-actions>
-  </v-card>
-          <!-- 로그인 시 작성할 수 있게 -->
-</v-col>
-</v-row>
-    </v-container>
+
+        <p>{{ review.movie.title }}</p>
+        <p>{{ review.movie.original_title }}</p>
+      </v-col>
+      <v-col>
+        <p>{{ review.user.username }}</p>
+        <p>{{ review.content }}</p>
+        <v-rating
+          v-model="review.rating"
+          color="yellow"
+          background-color="grey"
+          size="20"
+          :step="0.5"
+          :half-increments="true"
+          readonly
+        ></v-rating>
+        <v-icon :color="review.like ? 'red' : 'grey'">mdi-heart</v-icon>
+        <v-icon :color="review.watched ? 'primary' : 'grey'">mdi-eye</v-icon>
+        <p>{{ review.watched_at.slice(0, 10) }}</p>
+        <p>
+          <!-- 리뷰에 대한 좋아요 구현하기 -->
+          <v-btn icon @click="like">
+            <v-icon>mdi-heart</v-icon>
+          </v-btn>
+          {{ review.like_users.length }}
+        </p>
+        <div v-if="review.user.username === username">
+          <!-- 수정 버튼을 누르면 수정하는 폼을 띄워서 수정할 수 있게 만들기 -->
+          <v-btn @click="editReview()">수정</v-btn>
+          <v-btn @click="deleteReview">삭제</v-btn>
+        </div>
+      </v-col>
+    </v-row>
+
+    <!-- 수정 -->
+    <!-- 기존 리뷰내용이랑 바인딩 -->
+    <!-- 오류 개많이나는데 되긴 함 -->
+    <v-dialog v-model="open">
+      <v-card>
+        <v-card-title class="text-h5"> 리뷰 수정 </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="3">
+              <v-img
+                :src="`https://www.themoviedb.org/t/p/original/${review.movie.poster_path}`"
+                alt="영화 포스터"
+                height="150px"
+                width="100px"
+              />
+            </v-col>
+            <v-col cols="9">
+              <h3>{{ review.movie.title }}</h3>
+
+              <v-row>
+                <v-col>
+                  <v-btn icon @click="toggleWatch">
+                    <v-icon
+                      :color="review.watched || isWatched ? 'primary' : 'grey'"
+                      >mdi-eye</v-icon
+                    ></v-btn
+                  >
+                  <v-btn icon @click="toggleHeart">
+                    <v-icon :color="upadateHearted ? 'red' : 'grey'"
+                      >mdi-heart</v-icon
+                    ></v-btn
+                  >
+                </v-col>
+              </v-row>
+
+              <v-row class="mt-5">
+                <v-col class="d-flex align-items-center">
+                  <v-rating
+                    v-model="updateRating"
+                    color="yellow"
+                    background-color="grey"
+                    size="20"
+                    :step="0.5"
+                    :half-increments="true"
+                    @input="updateWatchedStatus"
+                  />
+                  <span class="rating-number ml-2">{{ rating }}</span>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+
+          <!-- 리뷰 작성란 -->
+          <v-textarea
+            @input="updateWatchedStatus"
+            v-model="updateContent"
+            rows="5"
+            outlined
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="success" @click.prevent="submitReview">수정</v-btn>
+          <v-btn @click="open = false">취소</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-row>
+      <v-col>
+        <h3>댓글 ({{ comments?.length }})</h3>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
+
+    <v-row v-if="comments">
+      <v-col>
+        <div v-for="comment in comments" :key="comment.id" class="py-2">
+          <strong class="text-capitalize pr-3">{{
+            comment.user.username
+          }}</strong>
+          <small>{{ comment.created_at.slice(0, 10) }} 작성</small>
+          <div class="pl-3">{{ comment.content }}</div>
+          <div v-if="comment.user.username === username" class="pl-3">
+            <!-- <v-btn small>수정</v-btn> -->
+            <v-btn small @click="deleteComment(comment.id)">삭제</v-btn>
+          </div>
+          <ReplyForm :comment="comment" @createReply="createReply" />
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <!-- 댓글 작성 -->
+        <!-- 너무 커 작게 만들기 -->
+        <v-card>
+          <v-card-text>
+            <v-textarea
+              v-model="newComment"
+              label="Your comment"
+              @keyup.enter="createComment"
+              rows="1"
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" @click.prevent="createComment"
+              >댓글 작성</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+        <!-- 로그인 시 작성할 수 있게 -->
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -80,9 +176,20 @@ export default {
       // comments: null,
       newComment: '',
       newreply: '',
+      open: false,
+      updateRating: null,
+      updateContent: null,
+      upadateHearted: null,
+      updateWatched: null
     }
   },
   methods: {
+    toggleHeart() {
+      this.upadateHearted = !this.upadateHearted
+    },
+    updateWatchedStatus() {
+      this.watched = this.rating > 0 || this.reviewText !== ''
+    },
     getReview() {
       const Token = this.myToken
       const reviewId = this.$route.params.reviewId
@@ -92,33 +199,68 @@ export default {
         url: `http://127.0.0.1:8000/api/v1/reviews/${reviewId}/`,
         headers: {
           Authorization: `Bearer ${Token}`
-        },
+        }
       })
-      .then((res) => {
-        console.log(res.data)
-        this.review = res.data
-      })
-      .catch((err) => console.log(err))
+        .then(res => {
+          console.log(res.data)
+          this.review = res.data
+          this.updateRating = res.data.rating
+          this.updateContent = res.data.content
+          this.upadateHearted = res.data.like
+          this.updateWatched = res.data.watched
+        })
+        .catch(err => console.log(err))
     },
     // 리뷰 삭제
     deleteReview() {
       const Token = this.myToken
       const reviewId = this.$route.params.reviewId
-      
+
       axios({
-        method: 'delete', 
+        method: 'delete',
+        url: `http://127.0.0.1:8000/api/v1/reviews/${reviewId}/`,
+        headers: {
+          Authorization: `Bearer ${Token}`
+        }
+      })
+        .then(res => {
+          console.log(res)
+          alert('삭제되었습니다.')
+          this.$router.go(-1)
+        })
+        .catch(e => console.log(e))
+    },
+    // 리뷰수정
+    editReview() {
+      // 리뷰 수정 버튼을 클릭할 때마다 다이얼로그를 열고 선택된 리뷰 정보를 저장합니다.
+      this.open = true
+    },
+
+    submitReview() {
+      const Token = this.myToken
+      const reviewId = this.$route.params.reviewId
+      const data = {
+        content: this.updateContent,
+        rating: this.updateRating,
+        watched: this.updateWatched,
+        // watched_at: this.watched_at,
+        like: this.upadateHearted
+      }
+      axios({
+        method: 'put',
         url: `http://127.0.0.1:8000/api/v1/reviews/${reviewId}/`,
         headers: {
           Authorization: `Bearer ${Token}`
         },
+        data
+      }).then(res => {
+        console.log(res.data)
+        this.open = false
+        this.getReview()
       })
-      .then((res) => {
-        console.log(res)
-        alert('삭제되었습니다.')
-        this.$router.go(-1)
-      })
-      .catch((e)=> console.log(e))
+      // 리뷰 수정 내용을 저장합니다.
     },
+
     // 댓글 가져오기
     // getComment() {
     //   const Token = this.myToken
@@ -142,44 +284,44 @@ export default {
       if (this.newComment === '') {
         // alert말고 뭐 어케든 하기
         alert('입력해')
+      } else {
+        const Token = this.myToken
+        const reviewId = this.$route.params.reviewId
+        const data = {
+          // user: this.userId,
+          content: this.newComment
+        }
+        axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/api/v1/reviews/${reviewId}/comments/`,
+          headers: {
+            Authorization: `Bearer ${Token}`
+          },
+          data
+        }).then(() => {
+          // console.log(res.data)
+          this.newComment = ''
+          this.getReview()
+          // this.comments = res.data
+        })
       }
-      else {
-      const Token = this.myToken
-      const reviewId = this.$route.params.reviewId
-      const data = {
-        content: this.newComment
-      }
-      axios({
-        method: 'post',
-        url: `http://127.0.0.1:8000/api/v1/reviews/${reviewId}/comments/`,
-        headers: {
-          Authorization: `Bearer ${Token}`
-        },
-        data
-      })
-      .then((res) => {
-        console.log(res.data)
-        this.newComment = ''
-        this.getReview()
-        // this.comments = res.data
-      })
-    }},
+    },
     deleteComment(commentId) {
       const Token = this.myToken
-      
+
       axios({
-        method: 'delete', 
+        method: 'delete',
         url: `http://127.0.0.1:8000/api/v1/comments/${commentId}/`,
         headers: {
           Authorization: `Bearer ${Token}`
-        },
+        }
       })
-      .then((res) => {
-        console.log(res)
-        alert('삭제되었습니다.')
-        this.getReview()
-      })
-      .catch((e)=> console.log(e))
+        .then(res => {
+          console.log(res)
+          alert('삭제되었습니다.')
+          this.getReview()
+        })
+        .catch(e => console.log(e))
     },
     // 대댓글 작성
     createReply(childData) {
@@ -197,11 +339,11 @@ export default {
         },
         data
       })
-      .then((res) => {
-        console.log(res)
-        this.getReview()
-      })
-      .catch(e => console.log(e))
+        .then(res => {
+          console.log(res)
+          this.getReview()
+        })
+        .catch(e => console.log(e))
     }
   },
   created() {
@@ -214,7 +356,21 @@ export default {
     },
     comments() {
       return this.review.comments
+    },
+    username() {
+      return this.$store.state.account.username
+    },
+    userId() {
+      return this.$store.state.account.userId
     }
   }
-};
+}
 </script>
+<style scoped>
+.comment-body {
+  margin-bottom: 12px;
+}
+.text_capitalize {
+  text-transform: capitalize;
+}
+</style>

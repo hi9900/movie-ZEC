@@ -1,22 +1,25 @@
 <template>
   <v-container>
     <!-- 댓글에 달린 대댓글 -->
-          대댓글 갯수: {{ comment.replies.length }}
+    <div class="d-flex align-center">
+      대댓글 갯수: {{ comment.replies.length }}
+      <v-btn small @click="showReplies = !showReplies">접기/펼치기</v-btn>
+    </div>
+    <v-expand-transition>
+      <div v-if="showReplies">
         <v-container v-for="reply in comment.replies" :key="reply.id">
-          작성자: {{ reply.user }}
-          내용: {{ reply.content }}
-          작성시간: {{ reply.created_at }}
+          작성자: {{ reply.user.username }} 내용: {{ reply.content }} 작성시간:
+          {{ reply.created_at.slice(0, 10) }}
         </v-container>
+
         <v-container>
-          <v-btn >대댓글 쓰기</v-btn>
-          <!-- 대댓글쓰기 버튼을 누르면 보이게하고 대댓글버튼은 사라지게 -->
           <v-row>
-          <v-text-field 
-            v-model="newreply"
-            solo></v-text-field>
-          <v-btn @click.prevent="createReply(comment.id)">작성</v-btn>
+            <v-text-field v-model="newreply" solo></v-text-field>
+            <v-btn @click.prevent="createReply(comment.id)">작성</v-btn>
           </v-row>
         </v-container>
+      </div>
+    </v-expand-transition>
   </v-container>
 </template>
 
@@ -28,6 +31,7 @@ export default {
   data() {
     return {
       newreply: '',
+      showReplies: true
     }
   },
   methods: {
@@ -43,6 +47,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style scoped></style>
