@@ -178,6 +178,17 @@ class LikeMovieSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     like_reviews = LikeReviewSerializer(many=True, read_only=True)
     like_movies = LikeMovieSerializer(many=True, read_only=True)
+    following = UserSerializer(many=True, read_only=True)
+    followers = UserSerializer(many=True, read_only=True)
+    following_count = serializers.SerializerMethodField()
+    followers_count = serializers.SerializerMethodField()
+    
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'username', 'following', 'followers','like_reviews', 'like_movies')
+        fields = ('id', 'email', 'username', 'following', 'followers', 'following_count', 'followers_count', 'like_reviews', 'like_movies')
+    
+    def get_following_count(self, obj):
+        return obj.following.count()
+
+    def get_followers_count(self, obj):
+        return obj.followers.count()

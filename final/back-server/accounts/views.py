@@ -179,5 +179,5 @@ def profile(request, username):
     #     'followings':user.following.all().count(),  # change here
         # 'followers': UserSerializer(user.followers, many=True).data,
         # 'following': UserSerializer(user.following, many=True).data, 팔로잉 한 사람 정보까지 띄우려면 주석해제
-    # }
+    # } 
     return Response(serializer.data)
