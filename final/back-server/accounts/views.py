@@ -75,46 +75,29 @@ def check_email(request, email):
 
 
 @api_view(['POST'])
-def follow(request, user_id):
-    user_to_follow = User.objects.get(id=user_id)
+def follow(request, username):
+    user_to_follow = User.objects.get(username=username)
     request.user.following.add(user_to_follow)
     return Response({'message': '팔로우 성공', 'result': True})
 
 @api_view(['POST'])
-def unfollow(request, user_id):
-    user_to_unfollow = User.objects.get(id=user_id)
+def unfollow(request, username):
+    user_to_unfollow = User.objects.get(username=username)
     request.user.following.remove(user_to_unfollow)
     return Response({'message': '팔로우 취소', 'result': True})
 
-@api_view(['GET'])
-def following(request, user_id):
-    user = User.objects.get(id=user_id)
-    following_list = user.following.all()
-    data = []
-    for user in following_list:
-        data.append({'id': user.id, 'username': user.username})
-    return Response({'following': data})
 
-@api_view(['GET'])
-def followers(request, user_id):
-    user = User.objects.get(id=user_id)
-    followers_list = user.followers.all()
-    data = []
-    for user in followers_list:
-        data.append({'id': user.id, 'username': user.username})
-    return Response({'followers': data})
+# @api_view(['POST'])
+# def block_user(request, user_id):
+#     user_to_block = User.objects.get(id=user_id)
+#     request.user.blocked_users.add(user_to_block)
+#     return Response({'message': '차단 완료', 'result': True})
 
-@api_view(['POST'])
-def block_user(request, user_id):
-    user_to_block = User.objects.get(id=user_id)
-    request.user.blocked_users.add(user_to_block)
-    return Response({'message': '차단 완료', 'result': True})
-
-@api_view(['POST'])
-def unblock_user(request, user_id):
-    user_to_unblock = User.objects.get(id=user_id)
-    request.user.blocked_users.remove(user_to_unblock)
-    return Response({'message': '차단 해제 완료', 'result': True})
+# @api_view(['POST'])
+# def unblock_user(request, user_id):
+#     user_to_unblock = User.objects.get(id=user_id)
+#     request.user.blocked_users.remove(user_to_unblock)
+#     return Response({'message': '차단 해제 완료', 'result': True})
 
 ############################################################
 
@@ -165,19 +148,3 @@ def signup(request):
 #     else:
 #         return Response({'detail': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
-# @authentication_classes([JWTAuthentication])
-# @permission_classes([IsAuthenticated])
-def profile(request, username):    
-    user = get_object_or_404(User, username=username)
-    serializer = UserProfileSerializer(user)
-    # response = {
-    #     'username': user.username,
-    #     'email': user.email,
-    #     'created_at': user.date_joined,
-    #     'followers':user.followers.all().count(),  # change here
-    #     'followings':user.following.all().count(),  # change here
-        # 'followers': UserSerializer(user.followers, many=True).data,
-        # 'following': UserSerializer(user.following, many=True).data, 팔로잉 한 사람 정보까지 띄우려면 주석해제
-    # } 
-    return Response(serializer.data)

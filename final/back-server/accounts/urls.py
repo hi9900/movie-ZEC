@@ -33,17 +33,13 @@ urlpatterns = [
     path('check-username/<str:username>/', views.check_username),
 
     # 팔로우
-    path('api/follow/<int:user_id>/', views.follow),
-    path('api/unfollow/<int:user_id>/', views.unfollow),
-    path('api/following/<int:user_id>/', views.following),
-    path('api/followers/<int:user_id>/', views.followers),
+    path('api/follow/<str:username>/', views.follow),
+    path('api/unfollow/<str:username>/', views.unfollow),
     
     # 차단 확인/생성/취소
-    path('api/block-user/<int:user_id>/', views.block_user),
-    path('api/unblock-user/<int:user_id>/', views.unblock_user),
+    # path('api/block-user/<int:user_id>/', views.block_user),
+    # path('api/unblock-user/<int:user_id>/', views.unblock_user),
 
-    # 프로필
-    path('users/<str:username>/', views.profile)
 
     # path("register/", RegisterAPIView.as_view()), # post - 회원가입
     # path("auth/", AuthAPIView.as_view()), # post - 로그인, delete - 로그아웃, get - 유저정보
