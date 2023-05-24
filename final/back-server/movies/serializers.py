@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UsersimplifySerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'username', 'profile_image')
+        fields = ('id', 'email', 'username', 'profile_image', 'following', )
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -125,7 +125,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
         # fields = ('id', 'author', 'content', 'created_at')
-        read_only_fields = ('review', 'user')
+        read_only_fields = ('review', 'username')
     
     def get_replies(self, obj):
         replies = obj.replies.all()
