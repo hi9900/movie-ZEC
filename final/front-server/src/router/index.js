@@ -17,6 +17,7 @@ const routes = [
     name: 'Home',
     component: () => import('@/views/HomePageView')
   },
+  // 영화
   {
     path: '/movies',
     name: 'Movie',
@@ -27,12 +28,37 @@ const routes = [
     name: 'MovieDetail',
     component: () => import('@/views/MovieDetailView')
   },
-
+  // 리뷰
   {
-    path: '/community',
-    name: 'Community',
-    component: () => import('@/views/CommunityPageView')
+    path: '/reviews/:reviewId',
+    name: 'ReviewDetail',
+    component: () => import('@/views/ReviewDetailView')
   },
+
+  // 프로필
+  {
+    path: "/profile/:username",
+    component: () => import("@/views/ProfilePageView"),
+    children: [
+      {
+        path: 'reviews',
+        name: 'Profile',
+        component: () => import('@/views/ProfileReviewView'),
+      },
+      {
+        path: "followers",
+        name: "FollowersList",
+        component: () => import("@/views/FollowersListView"),
+      },
+      {
+        path: "followings",
+        name: "FollowingList",
+        component: () => import("@/views/FollowingsListView"),
+      },
+    ]
+  },
+
+  // account
   {
     path: '/signup',
     name: 'SignUp',
@@ -49,21 +75,8 @@ const routes = [
     name: 'Update',
     component: () => import('@/views/UpdateView')
   },
-  {
-    path: '/profile/:username',
-    name: 'Profile',
-    component: () => import('@/views/ProfilePageView')
-  },
-  {
-    path: "/profile/:username/followers",
-    name: "FollowersList",
-    component: () => import("@/views/FollowersListView"),
-  },
-  {
-    path: "/profile/:username/following",
-    name: "FollowingList",
-    component: () => import("@/views/FollowingListView"),
-  },
+
+  // 리스트
   {
     path: '/lists',
     name: 'Lists',
@@ -74,12 +87,16 @@ const routes = [
     name: 'ListsDetail',
     component: () => import('@/views/ListsDirectorView')
   },
-  {
-    path: '/reviews/:reviewId',
-    name: 'ReviewDetail',
-    component: () => import('@/views/ReviewDetailView')
-  },
 
+
+
+
+
+  {
+    path: '/community',
+    name: 'Community',
+    component: () => import('@/views/CommunityPageView')
+  },
 
 ]
 

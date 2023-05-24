@@ -72,16 +72,17 @@ def movie_lists_random(request):
 # 감독별 영화 찾기
 @api_view(['GET'])
 def movie_list_by_director(request, director_id):
+    page = request.query_params.get('page', 1)
 
     # 감독 별로 전체 movie list
-    movies = list(Movie.objects.filter(director__id=director_id).order_by('-popularity'))
+    movies = Movie.objects.filter(director__id=director_id).order_by('-popularity')
     director_data = get_object_or_404(Director, pk=director_id)
 
-    # 랜덤 20개 추출하기 (20개 보다 작다면 그만큼만)
-    # num_movies = min(20, len(movies))
-    # random_movies = random.sample(movies, num_movies)
-    
-    serializer = MovieSerializer(movies, many=True)
+    # 페이지네이션 설정
+    paginator = Paginator(movies, 30)  # 한 페이지당 30개의 영화 표시
+    movies_paginated = paginator.get_page(page)
+
+    serializer = MovieSerializer(movies_paginated, many=True)
     serializer_d = DirectorSerializer(director_data)
 
     response = {
@@ -94,6 +95,8 @@ def movie_list_by_director(request, director_id):
 # 배우별 영화 찾기
 @api_view(['GET'])
 def movie_list_by_actor(request, actor_id):
+    page = request.query_params.get('page', 1)
+
     actor = get_list_or_404(Actor)
     # 배우 별로 전체 movie list
     movies = list(Movie.objects.filter(characters__actor__id=actor.id).order_by('-popularity'))

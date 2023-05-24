@@ -1,35 +1,32 @@
 <template>
-  <div>
-    <h1>팔로워 목록</h1>
-    <div>
-      <UserProfileCard v-for="follower in followers" :key="follower.id" :user="follower" />
-    </div>
-  </div>
+  <v-container>
+    <v-row v-if="followers()">
+      <v-col cols="3" v-for="follower in this.followers" :key="follower.id">
+        <UserProfileCard :user="follower" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import UserProfileCard from "@/components/UserProfileCard.vue";
+import UserProfileCard from '@/components/profile/UserProfileCard'
 
 export default {
-  name: "FollowersList",
+  name: 'FollowersList',
   components: {
-    UserProfileCard,
+    UserProfileCard
   },
-  data() {
-    return {
-      followers: [
-        {
-          id: 1,
-          username: "User1",
-          profileImage: "https://via.placeholder.com/150",
-        },
-        {
-          id: 2,
-          username: "User2",
-          profileImage: "https://via.placeholder.com/150",
-        },
-      ],
-    };
+  props: {
+    profile: Object
   },
-};
+  computed: {
+    followers() {
+      if (this.profile.followers !== []) {
+        return this.profile?.followers
+      }
+      return false
+    }
+  },
+  method: {}
+}
 </script>

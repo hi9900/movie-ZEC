@@ -9,7 +9,7 @@
               <img
                 @click="goToProfile(review.user.username)"
                 class="avatar"
-                :src="`https://avatars.dicebear.com/api/initials/${review.user}.svg`"
+                :src="`https://source.boringavatars.com/beam/40/${user?.username}`"
               />
             </v-col>
             <v-col>
@@ -51,6 +51,7 @@
         </div>
       </v-col>
     </v-row>
+    <v-divider></v-divider>
   </v-container>
 </template>
 
@@ -113,8 +114,6 @@ export default {
 <style scoped>
 .review {
   padding: 1rem;
-  /* border: 1px solid #ccc; */ /* 기존 전체 테두리 제거 */
-  border-bottom: 1px solid rgba(204, 204, 204, 0.5); /* 아래쪽 테두리 추가 */
   border-radius: 8px;
   margin-bottom: 1rem;
 }
