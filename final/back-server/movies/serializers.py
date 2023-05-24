@@ -92,7 +92,7 @@ class MovieSerializer(serializers.ModelSerializer):
 class MoviesimplifySerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields= ('id', 'title', 'release_date', 'poster_path', 'runtime')
+        fields= ('id', 'title', 'release_date', 'poster_path', 'runtime', 'original_title')
 
 
 ##########################
@@ -159,7 +159,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-        read_only_fields = ('created_at', 'updated_at', 'movie_original_title')
+        read_only_fields = ('created_at', 'updated_at')
 
 
 class LikeReviewSerializer(serializers.ModelSerializer):
