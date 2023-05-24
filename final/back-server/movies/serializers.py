@@ -119,8 +119,8 @@ class MovieListSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UsersimplifySerializer()
-    replies = serializers.SerializerMethodField()
+    user = UsersimplifySerializer(read_only=True)
+    replies = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Comment
         fields = '__all__'

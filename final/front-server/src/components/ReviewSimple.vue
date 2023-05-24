@@ -109,7 +109,7 @@
   </v-container>
 </template>
 
-<script >
+<script>
 import axios from 'axios'
 const API_URL = 'http://127.0.0.1:8000'
 
@@ -119,7 +119,7 @@ export default {
       liked: false,
       hearted: false,
       watched: false,
-      rating: 0.0,
+      rating: 0,
       showReviewModal: false,
       reviewText: ''
       // 날짜 받아서 적기
@@ -155,7 +155,7 @@ export default {
         rating: this.rating,
         watched: this.watched,
         // watched_at: this.watched_at,
-        like: this.liked
+        like: this.hearted
       }
       axios({
         url: `${API_URL}/api/v1/movies/${movieId}/reviews/`,
