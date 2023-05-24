@@ -3,9 +3,6 @@
     <div v-if="profile.is_staff">
       <h3>관리자페이지로 이동</h3>
     </div>
-    {{ profile }}
-    <br />
-    {{ isMyProfile }}
     <v-row>
       <v-col cols="12" md="3">
         <v-sheet class="profile-info">
@@ -14,34 +11,36 @@
           </v-avatar>
           <h2 class="profile-title">{{ profile.username }}</h2>
           <div class="profile-stats">
-            <!-- 각각 갯수 표시 -->
             <div>
-              <b>{{ profile.reviews }}</b> 리뷰
+              <!-- 아직 안줬어 -->
+              리뷰 갯수<b>{{ profile.reviews }}</b>
             </div>
             <router-link :to="`/profile/${profile.username}/followers`">
               <div>
-                <b>{{ profile.followers }}</b> 팔로워
+                팔로워 <b>{{ profile.followers_count }}</b>
               </div>
             </router-link>
             <router-link :to="`/profile/${profile.username}/following`">
               <div>
-                <b>{{ profile.following }}</b> 팔로잉
+                팔로잉 <b>{{ profile.following_count }}</b>
               </div>
             </router-link>
           </div>
 
+          <!-- 내 페이지가 아니면 -->
           <div v-if="!isMyProfile">
             <v-btn color="primary" v-if="!isFollowing" @click="follow">
               팔로우
             </v-btn>
             <v-btn color="red" v-else @click="unfollow"> 팔로우 취소 </v-btn>
-            <v-btn color="error" v-if="!isBlocked" @click="blockUser">
+            <!-- <v-btn color="error" v-if="!isBlocked" @click="blockUser">
               차단하기
             </v-btn>
             <v-btn color="success" v-else @click="unblockUser">
               차단 해제
-            </v-btn>
+            </v-btn> -->
           </div>
+          <!-- 내 페이지면 수정 -->
           <div v-else>
             <v-btn> 회원 정보 수정 </v-btn>
           </div>
@@ -50,6 +49,7 @@
 
       <v-col cols="12" md="9">
         <MyProfileData />
+        <!-- 리뷰 뿌랍 -->
         <!-- :profile="profile" -->
       </v-col>
     </v-row>
@@ -67,33 +67,50 @@ export default {
   },
   data() {
     return {
-      profile: {
-        profile_image: 'https://letterboxd.com/hih1/avatar/medium/',
-        username: 'hih1',
-        reviews: 91,
-        ratings: 2382,
-        followers: 421,
-        following: 341,
-        is_staff: false
-      },
-      isFollowing: false,
-      isBlocked: false,
-      isAdmin: false
+      profile: null
+      // profile: {
+      //   profile_image: 'https://letterboxd.com/hih1/avatar/medium/',
+      //   username: 'hih1',
+      //   reviews: 91,
+      //   ratings: 2382,
+      //   followers: 421,
+      //   following: 341,
+      //   is_staff: false
+      // },
+      // isFollowing: false,
+      // isBlocked: false,
+      // isAdmin: false
     }
   },
   methods: {
     // username과 관련된 정보 받아오기
-    getMyProfile(username) {
-      this.$store.dispatch('profile/getMyProfile', username)
-    },
-    async blockUser() {
-      try {
-        await axios.post(`/api/block-user/${this.profileUserId}`)
-        this.isBlocked = true
-      } catch (error) {
-        console.error('Error during block:', error)
-      }
+    getProfile() {
+      const Token = this.myToken
+      const userId = this.userId
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/api/v1/user/detail/${userId}/`,
+        headers: {
+          Authorization: `Bearer ${Token}`
+        }
+      })
+        .then(res => {
+          console.log(res.data)
+          this.profile = res.data
+        })
+        .catch(err => console.log(err))
     }
+    // getMyProfile(username) {
+    //   this.$store.dispatch('profile/getMyProfile', username)
+    // },
+    // async blockUser() {
+    //   try {
+    //     await axios.post(`/api/block-user/${this.profileUserId}`)
+    //     this.isBlocked = true
+    //   } catch (error) {
+    //     console.error('Error during block:', error)
+    //   }
+    // }
     // async unblockUser() {
     //   try {
     //     await axios.post(`/api/unblock-user/${this.profileUserId}`);
@@ -123,11 +140,17 @@ export default {
     // 내 페이지인지 확인하기
     isMyProfile() {
       return this.$route.params.username === this.$store.state.account.username
+    },
+    userId() {
+      return this.$store.state.account.userId
+    },
+    myToken() {
+      return this.$store.state.account.accessToken
     }
   },
   created() {
     // console.log(this.$route.params.username)
-    this.getMyProfile(this.$route.params.username)
+    this.getProfile()
   }
 }
 </script>

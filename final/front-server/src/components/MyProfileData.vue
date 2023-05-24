@@ -1,8 +1,7 @@
-// src/components/MyProfileData.vue
-
 <template>
-  <div>
+  <v-container fluid>
     <ReviewDatePicker @selected-date-events="onSelectedDateEvents" />
+    <!-- 리뷰 뿌랍 -->
     <div>
       <ul>
         <li v-for="(event, index) in selectedDateEvents" :key="index">
@@ -10,26 +9,26 @@
         </li>
       </ul>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script scoped>
-import ReviewDatePicker from "@/components/ReviewDatePicker.vue";
+import ReviewDatePicker from '@/components/ReviewDatePicker.vue'
 export default {
   components: {
-    ReviewDatePicker,
+    ReviewDatePicker
   },
   data() {
     return {
-      selectedDate: "",
-      selectedDateEvents: [],
-    };
+      selectedDate: '',
+      selectedDateEvents: []
+    }
   },
   methods: {
     onSelectedDateEvents(date, events) {
-      this.selectedDate = date;
-      this.selectedDateEvents = events;
-    },
-  },
-};
+      this.selectedDate = date
+      this.selectedDateEvents = events
+    }
+  }
+}
 </script>
