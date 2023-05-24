@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UsersimplifySerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'username', 'profile_image', 'following', )
+        fields = ('id', 'email', 'username', 'profile_image', 'following', 'is_staff')
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -68,14 +68,14 @@ class TagSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    hashtags = TagSerializer(many=True, read_only=True)
-    # like_users = UserSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
-    class Meta:
-        model = Review
-        fields = '__all__'
-        read_only_fields = ('movie', 'user', 'created_at', 'updated_at')
+# class ReviewSerializer(serializers.ModelSerializer):
+#     hashtags = TagSerializer(many=True, read_only=True)
+#     # like_users = UserSerializer(many=True, read_only=True)
+#     comments = CommentSerializer(many=True, read_only=True)
+#     class Meta:
+#         model = Review
+#         fields = '__all__'
+#         read_only_fields = ('movie', 'user', 'created_at', 'updated_at')
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -162,6 +162,17 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_at', 'updated_at')
 
 
+class ReviewListSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(many=True, read_only=True)
+    movie = MoviesimplifySerializer(read_only=True)
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
+
+
+
+
 class LikeReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
@@ -178,14 +189,16 @@ class LikeMovieSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     like_reviews = LikeReviewSerializer(many=True, read_only=True)
     like_movies = LikeMovieSerializer(many=True, read_only=True)
-    following = UserSerializer(many=True, read_only=True)
-    followers = UserSerializer(many=True, read_only=True)
+    following = UsersimplifySerializer(many=True, read_only=True)
+    followers = UsersimplifySerializer(many=True, read_only=True)
     following_count = serializers.SerializerMethodField()
     followers_count = serializers.SerializerMethodField()
+    reviews = ReviewListSerializer(many=True, read_only=True, source='review_set')
+
     
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'username', 'following', 'followers', 'following_count', 'followers_count', 'like_reviews', 'like_movies')
+        fields = ('id', 'email', 'username', 'reviews', 'following', 'followers', 'following_count', 'followers_count', 'like_reviews', 'like_movies', 'is_staff')
     
     def get_following_count(self, obj):
         return obj.following.count()
