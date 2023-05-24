@@ -1,8 +1,14 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-tabs>
+      <!-- 여기는 모든 리뷰 정리하고 -->
       <v-tab>Diary</v-tab>
+      <!-- 여기는 content가 있는 리뷰 정리하고 -->
       <v-tab>전체 리뷰</v-tab>
+      <!-- 여기는 watched 누른 리뷰만 정리하고 -->
+      <v-tab>watched</v-tab>
+      <!-- 여기는 like 리뷰만 정리하기 -->
+      <v-tab>like</v-tab>
 
       <v-tab-item>
         <v-row>
@@ -32,21 +38,22 @@
         <v-list>
           <!-- https://letterboxd.com/schaffrillas/films/reviews/ 보면서 수정해 -->
           <v-list-item v-for="review in reviews" :key="review.id">
-          <v-list-item-avatar tile size="96">
-            <v-img :src="review.poster"></v-img>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{ review.movieTitle }}</v-list-item-title>
-            <v-list-item-subtitle>{{ review.releaseDate }}</v-list-item-subtitle>
-            <div>{{ review.content }}</div>
-            <div>평점: {{ review.rating }}</div>
-            <v-list-item-action>
-              <v-icon>mdi-thumb-up</v-icon>
-              {{ review.likes }}
-            </v-list-item-action>
-          </v-list-item-content>
-        </v-list-item>
-
+            <v-list-item-avatar tile size="96">
+              <v-img :src="review.poster"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>{{ review.movieTitle }}</v-list-item-title>
+              <v-list-item-subtitle>{{
+                review.releaseDate
+              }}</v-list-item-subtitle>
+              <div>{{ review.content }}</div>
+              <div>평점: {{ review.rating }}</div>
+              <v-list-item-action>
+                <v-icon>mdi-thumb-up</v-icon>
+                {{ review.likes }}
+              </v-list-item-action>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-tab-item>
     </v-tabs>
@@ -57,7 +64,7 @@
 // import ReviewList from "@/components/ReviewList.vue";
 
 export default {
-  name: "ReviewDatePicker",
+  name: 'ReviewDatePicker',
   components: {
     // ReviewList
   },
@@ -68,56 +75,56 @@ export default {
       reviews: [
         {
           id: 1,
-          title: "리뷰 1",
-          date: "2023-05-13",
-          content: "첫 번째 리뷰의 상세 내용입니다.",
+          title: '리뷰 1',
+          date: '2023-05-13',
+          content: '첫 번째 리뷰의 상세 내용입니다.',
           rating: 5,
-          status: "content",
+          status: 'content'
         },
         {
           id: 2,
-          title: "리뷰 2",
-          date: "2023-05-15",
-          content: "두 번째 리뷰의 상세 내용입니다.",
+          title: '리뷰 2',
+          date: '2023-05-15',
+          content: '두 번째 리뷰의 상세 내용입니다.',
           rating: 3,
-          status: "watched",
-        },
+          status: 'watched'
+        }
         // 추가 리뷰 데이터...
-      ],
-    };
+      ]
+    }
   },
   computed: {
     eventsForDatePicker() {
-      return this.reviews.map((review) => review.date);
-    },
+      return this.reviews.map(review => review.date)
+    }
   },
   methods: {
     dateChanged(date) {
-      this.selectedReview = this.reviews.find((review) => review.date === date);
+      this.selectedReview = this.reviews.find(review => review.date === date)
     },
     selectToday() {
-      const today = new Date();
-      const todayStr = today.toISOString().slice(0, 10);
-      this.selectedDate = todayStr;
-      this.dateChanged(todayStr);
+      const today = new Date()
+      const todayStr = today.toISOString().slice(0, 10)
+      this.selectedDate = todayStr
+      this.dateChanged(todayStr)
     },
     eventColorResolver(eventDate) {
       const matchedReview = this.reviews.find(
-        (review) => review.date === eventDate
-      );
+        review => review.date === eventDate
+      )
       if (!matchedReview) {
-        return null;
+        return null
       }
-      if (matchedReview.status === "watched") {
-        return "blue";
-      } else if (matchedReview.status === "content") {
-        return "green";
-      } else if (matchedReview.status === "liked") {
-        return "red";
+      if (matchedReview.status === 'watched') {
+        return 'blue'
+      } else if (matchedReview.status === 'content') {
+        return 'green'
+      } else if (matchedReview.status === 'liked') {
+        return 'red'
       } else {
-        return null;
+        return null
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
