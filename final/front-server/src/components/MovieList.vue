@@ -60,10 +60,10 @@
       >
         <v-row no-gutters align="center" justify="center" class="card-actions">
           <v-col cols="4" class="text-center">
-            <v-icon :color="WatchIconColor ? 'blue' : 'white'">mdi-eye</v-icon>
+            <v-icon :color="WatchIconColor ? 'blue' : ''">mdi-eye</v-icon>
           </v-col>
           <v-col cols="4" class="text-center">
-            <v-icon :color="heartIconColor ? 'red' : 'white'">mdi-heart</v-icon>
+            <v-icon :color="heartIconColor ? 'red' : ''">mdi-heart</v-icon>
           </v-col>
 
           <v-col cols="4" class="text-center">
@@ -73,7 +73,7 @@
                 <v-icon
                   v-bind="attrs"
                   v-on="on"
-                  :color="starIconColor ? 'yellow' : 'white'"
+                  :color="starIconColor ? 'yellow' : ''"
                 >
                   mdi-star
                 </v-icon>
