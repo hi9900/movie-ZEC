@@ -9,6 +9,7 @@ import movie from '@/store/modules/movie.js'
 import list from '@/store/modules/list.js'
 import account from '@/store/modules/account.js'
 import profile from '@/store/modules/profile.js'
+import article from '@/store/modules/article.js'
 
 // const API_URL = 'http://127.0.0.1:8000'
 
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     movie,
     list,
     account,
-    profile
+    profile,
+    article
   },
   plugins: [
     createPersistedState({

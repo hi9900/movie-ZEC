@@ -79,7 +79,24 @@ const routes = [
     name: 'ReviewDetail',
     component: () => import('@/views/ReviewDetailView')
   },
-
+  {
+    path: '/article',
+    name: 'Article',
+    redirect: '/article/list',
+    component: () => import('@/views/ArticleView'),
+    children: [
+      {
+        path: "list",
+        name: 'ArticleList',
+        component: () => import('@/components/article/ArticleList'),
+      },
+      {
+        path: "detail",
+        name: 'ArticleDetail',
+        component: () => import('@/components/article/ArticleDetail'),
+      },
+    ]
+  }
 
 ]
 
