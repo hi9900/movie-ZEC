@@ -67,11 +67,33 @@ const list = {
         url: `${API_URL}/api/v1/movies/directors/${directorId}/`,
       })
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           context.commit('GET_MOVIES', res.data)
         })
         .catch((err) => console.log(err))
     },
+    getGenreId(context, genreId) {
+      axios({
+        method: 'get',
+        url: `${API_URL}/api/v1/movies/genres/${genreId}/`,
+      })
+        .then((res) => {
+          // console.log(res.data)
+          context.commit('GET_MOVIES', res.data)
+        })
+        .catch((err) => console.log(err))
+    },
+    // getDirectorId(context, directorId) {
+    //   axios({
+    //     method: 'get',
+    //     url: `${API_URL}/api/v1/movies/directors/${directorId}/`,
+    //   })
+    //     .then((res) => {
+    //       console.log(res.data)
+    //       context.commit('GET_MOVIES', res.data)
+    //     })
+    //     .catch((err) => console.log(err))
+    // },
     getGenre(context) {
       axios({
         method: 'get',

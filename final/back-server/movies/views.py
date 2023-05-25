@@ -100,12 +100,18 @@ def movie_list_by_actor(request, actor_id):
     actor = get_list_or_404(Actor)
     # 배우 별로 전체 movie list
     movies = list(Movie.objects.filter(characters__actor__id=actor.id).order_by('-popularity'))
-    
-    # 랜덤 20개 추출하기 (20개 보다 작다면 그만큼만)
-    # num_movies = min(20, len(movies))
-    # random_movies = random.sample(movies, num_movies)
-    
-    serializer = MovieSerializer(movies, many=True)
+    actor_data = get_object_or_404(Actor, pk=actor_id)
+    # 페이지네이션 설정
+    paginator = Paginator(movies, 30)  # 한 페이지당 30개의 영화 표시
+    movies_paginated = paginator.get_page(page)
+
+    serializer = MovieSerializer(movies_paginated, many=True)
+    serializer_d = ActorSerializer(actor_data)
+
+    response = {
+        'actor_data': serializer_d.data,
+        'data': serializer.data
+    }
     
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -114,19 +120,28 @@ def movie_list_by_actor(request, actor_id):
 @api_view(['GET'])
 def movie_list_by_genre(request, genre_id):
     # 장르 별로 전체 movie list
-    movies = list(Movie.objects.filter(genres__id=genre_id).order_by('-popularity'))
+    page = request.query_params.get('page', 1)
     
     # 랜덤 20개 추출하기 (20개 보다 작다면 그만큼만)
     # num_movies = min(20, len(movies))
     # random_movies = random.sample(movies, num_movies)
     
-    serializer = MovieSerializer(movies, many=True)
+    movies = list(Movie.objects.filter(genre__id=genre_id).order_by('-popularity'))
     genre_data = get_object_or_404(Genre, pk=genre_id)
-    serializer_g = GenreSerializer(genre_data)
+
+    # 페이지네이션 설정
+    paginator = Paginator(movies, 30)  # 한 페이지당 30개의 영화 표시
+    movies_paginated = paginator.get_page(page)
+
+    serializer = MovieSerializer(movies_paginated, many=True)
+    serializer_d = GenreSerializer(genre_data)
+
     response = {
-        'genre_data': serializer_g.data,
+        'genre_data': serializer_d.data,
         'data': serializer.data
     }
+
+
     return Response(response, status=status.HTTP_200_OK)
 
 
