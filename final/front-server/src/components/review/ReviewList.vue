@@ -5,6 +5,7 @@
       <v-col>
         <div class="review">
           <v-row>
+            {{ review }}
             <v-col cols="auto" v-if="review.user.username">
               <img
                 @click="goToProfile(review.user.username)"
@@ -17,17 +18,16 @@
                 <div v-if="review.user.username" class="review-user">
                   {{ review.user.username }}
                 </div>
-                <div class="review-rating">
-                  <v-rating
-                    :value="review.rating"
-                    readonly
-                    color="yellow"
-                    half-increments
-                    background-color="grey darken-1"
-                    size="20"
-                    dense
-                  ></v-rating>
-                </div>
+                <v-rating
+                  class="review-rating"
+                  :value="review.rating"
+                  readonly
+                  color="yellow"
+                  half-increments
+                  background-color="grey darken-1"
+                  size="20"
+                  dense
+                ></v-rating>
                 <div class="review-date">
                   {{ formatDate(review.watched_at) }}
                 </div>
@@ -36,14 +36,14 @@
                 class="d-flex align-center"
                 style="justify-content: space-between"
               >
-                <div class="review-body">
+                <v-col cols="11" class="review-body">
                   {{ review.content }}
-                </div>
+                </v-col>
 
-                <div class="review-like-icon">
+                <!-- <div class="review-like-icon">
                   <v-icon :color="isLiked ? 'red' : 'gray'">mdi-heart</v-icon>
                   {{ like_users_length }}
-                </div>
+                </div> -->
               </div>
             </v-col>
           </v-row>

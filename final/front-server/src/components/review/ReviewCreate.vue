@@ -1,8 +1,7 @@
 <!-- src/components/ReviewForm.vue -->
 <template>
   <v-card>
-    <!-- 이거 글씨 스타일도 바꾸기 -->
-    <v-card-title class="text-h5"> 리뷰 작성하기 </v-card-title>
+    <v-card-title class="font-weight-black"> 리뷰 작성하기 </v-card-title>
     <v-card-text>
       <v-row mb-3>
         <v-col cols="3">
@@ -15,7 +14,7 @@
         </v-col>
 
         <v-col cols="9">
-          <div class="my-3">
+          <div class="my-3 font-weight-bold">
             <h2>{{ movie.title }}</h2>
             <span>{{ movie.original_title }}</span>
           </div>
@@ -26,7 +25,7 @@
               <v-menu
                 ref="menu"
                 v-model="menu"
-                :close-on-content-click="false"
+                :close-on-content-click="true"
                 transition="scale-transition"
                 offset-y
                 min-width="290px"
@@ -70,12 +69,13 @@
         ></v-textarea>
       </v-row>
     </v-card-text>
+
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn elevation="5" color="secondary" @click.prevent="reviewCreate">
         작성
       </v-btn>
-      <v-btn elevation="5" text @click="showReviewModal = false"> 취소 </v-btn>
+      <v-btn elevation="5" text> 취소 </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -106,12 +106,21 @@ export default {
       const movieId = this.movie.id
       const Token = this.myToken
       // console.log(movieId, Token)
+      const now = new Date()
+      const selectedDate = new Date(this.watched_date)
+      selectedDate.setHours(
+        now.getHours(),
+        now.getMinutes(),
+        now.getSeconds(),
+        now.getMilliseconds()
+      )
+
       const data = {
         movie: movieId,
         content: this.reviewText,
         rating: this.rating,
-        watched: this.watched
-        // watched_at: this.watched_date
+        watched: this.watched,
+        watched_at: selectedDate
       }
       axios({
         url: `${API_URL}/api/v1/movies/${movieId}/reviews/`,
@@ -129,6 +138,9 @@ export default {
           this.$emit('reviewCreate')
         })
         .catch(err => console.log(err))
+    },
+    cancel() {
+      this.showReviewModal = false
     }
   },
   computed: {

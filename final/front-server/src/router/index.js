@@ -112,11 +112,11 @@ const routes = [
         name: 'ArticleCreate',
         component: () => import('@/components/article/ArticleCreate')
       },
-      {
-        path: '/create-comment/:articleId',
-        name: 'CreateComment',
-        component: () => import('@/components/article/CommentCreate')
-      },
+      // {
+      //   path: '/create-comment/:articleId',
+      //   name: 'CreateComment',
+      //   component: () => import('@/components/article/CommentCreate')
+      // },
     ]
   }
 ]
@@ -127,7 +127,7 @@ const router = new VueRouter({
   routes,
   scrollBehavior() {
     // scrollBehavior 메서드 추가
-    return {x: 0, y: 0}
+    return { x: 0, y: 0 }
   }
 })
 
