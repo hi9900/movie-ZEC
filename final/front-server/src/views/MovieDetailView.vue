@@ -2,6 +2,7 @@
   <v-container v-if="!movie" type="carousel"></v-container>
   <v-container fluid v-else>
     <div
+      v-show="movie.backdrop_path !== 'None'"
       class="backdrop-container"
       :class="`themed-border themetype-${
         $vuetify.theme.dark ? 'dark' : 'light'
@@ -150,8 +151,8 @@
           <v-container mt-5>
             <!-- content가 있는 리뷰만 보이게 -->
 
-            {{ reviews }}
-            <v-row> 작성된 리뷰 {{ this.review_count }} </v-row>
+            <!-- {{ reviews }} -->
+            <!-- <v-row> 작성된 리뷰 {{ this.review_count }} </v-row> -->
 
             <v-row no-gutters v-for="review in reviews" :key="review.id">
               <ReviewList v-if="review?.content" :review="review" />

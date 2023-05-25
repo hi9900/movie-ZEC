@@ -2,7 +2,7 @@
   <v-container>
     <v-row v-if="users">
       <v-col cols="3" v-for="user in users" :key="user.id">
-        <UserProfileCard :user="user" />
+        <UserProfileCard @getNewProfile="getNewProfile" :user="user" />
       </v-col>
     </v-row>
   </v-container>
@@ -27,7 +27,11 @@ export default {
   methods: {
     followings() {
       this.users = this.profile?.following
-      console.log(this.users)
+      // console.log(this.users)
+    },
+    getNewProfile(username) {
+      console.log(2)
+      this.$emit('getNewProfile', username)
     }
   },
   created() {

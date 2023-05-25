@@ -22,7 +22,7 @@ const account = {
     // 회원가입
     SAVE_TOKEN(state, token) {
       state.token = token
-      router.push({ name: 'LogIn' })
+      router.push({name: 'LogIn'})
     },
 
     SET_ACCESS(state, token) {
@@ -38,7 +38,7 @@ const account = {
       state.username = token.username
       state.useremail = token.email
       state.userId = token.id
-      router.push({ name: 'Home' })
+      router.push({name: 'Home'})
     },
     // 로그아웃
     LOGOUT(state) {
@@ -102,7 +102,10 @@ const account = {
           // context.commit('SET_ACCESS', res.data)
           // context.commit('SET_REFRESH', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          alert('이메일이나 비밀번호가 틀립니다.')
+          console.log(err)
+        })
     },
     // 만료된거 확인하고 받아와야함 토큰을 추가로 받아오는 로직
 
@@ -112,16 +115,13 @@ const account = {
       axios({
         method: 'post',
         url: `${API_URL}/accounts/dj-rest-auth/logout/`
+      }).then(res => {
+        console.log('로그아웃')
+
+        console.log(res)
+        context.commit('RESET')
       })
-        .then((res) => {
-          console.log('로그아웃')
-
-          console.log(res)
-          context.commit('RESET')
-
-        })
-
-    },
+    }
 
     // updatePassword() {
     //   axios({
