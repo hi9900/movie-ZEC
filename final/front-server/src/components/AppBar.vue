@@ -1,11 +1,12 @@
 <template>
-  <v-app-bar app>
+  <v-app-bar dark app>
     <!-- Logo -->
     <v-img
       @click="goHome"
       max-height="50"
       max-width="150"
-      :src="require('@/assets/logo.png')"
+      style="object-fit: cover"
+      :src="require('@/assets/logo0.png')"
       alt="Your Logo"
       class="mr-4 logoImg"
     ></v-img>
@@ -16,8 +17,9 @@
     <v-btn text :to="{name: 'Lists'}">Lists</v-btn>
     <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
 
-    <v-btn text v-if="!isLogin" :to="{name: 'LogIn'}">LogIn</v-btn>
+    <v-btn text :to="{name: 'Article'}">Article</v-btn>
 
+    <v-btn text v-if="!isLogin" :to="{name: 'LogIn'}">LogIn</v-btn>
     <v-menu v-else open-on-hover offset-y>
       <template v-slot:activator="{on, attrs}">
         <v-btn

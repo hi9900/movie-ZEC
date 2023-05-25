@@ -8,7 +8,11 @@
     <v-expand-transition>
       <div v-if="showReplies">
         <v-container v-for="reply in comment.replies" :key="reply.id">
-          작성자: {{ reply.user.username }} 내용: {{ reply.content }} 작성시간:
+          작성자: {{ reply.user.username }}
+          <br />
+          내용: {{ reply.content }}
+          <br />
+          작성시간:
           {{ reply.created_at.slice(0, 10) }}
         </v-container>
 

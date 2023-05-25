@@ -29,7 +29,7 @@
       </v-btn>
     </div>
     <!-- 이거 넘겨주기 -->
-    {{ this.myData }}
+    <!-- {{ this.myData }} -->
     <!-- 영화 카드 하나씩 표시 -->
     <v-row no-gutters>
       <v-col

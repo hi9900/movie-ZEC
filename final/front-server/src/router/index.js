@@ -37,24 +37,24 @@ const routes = [
 
   // 프로필
   {
-    path: "/profile/:username",
-    component: () => import("@/views/ProfilePageView"),
+    path: '/profile/:username',
+    component: () => import('@/views/ProfilePageView'),
     children: [
       {
         path: 'reviews',
         name: 'Profile',
-        component: () => import('@/views/ProfileReviewView'),
+        component: () => import('@/views/ProfileReviewView')
       },
       {
-        path: "followers",
-        name: "FollowersList",
-        component: () => import("@/views/FollowersListView"),
+        path: 'followers',
+        name: 'FollowersList',
+        component: () => import('@/views/FollowersListView')
       },
       {
-        path: "followings",
-        name: "FollowingList",
-        component: () => import("@/views/FollowingsListView"),
-      },
+        path: 'followings',
+        name: 'FollowingList',
+        component: () => import('@/views/FollowingsListView')
+      }
     ]
   },
 
@@ -88,10 +88,6 @@ const routes = [
     component: () => import('@/views/ListsDirectorView')
   },
 
-
-
-
-
   {
     path: '/community',
     name: 'Community',
@@ -104,27 +100,31 @@ const routes = [
     component: () => import('@/views/ArticleView'),
     children: [
       {
-        path: "list",
+        path: 'list',
         name: 'ArticleList',
-        component: () => import('@/components/article/ArticleList'),
+        component: () => import('@/components/article/ArticleList')
       },
       {
-        path: "detail",
+        path: 'detail',
         name: 'ArticleDetail',
-        component: () => import('@/components/article/ArticleDetail'),
+        component: () => import('@/components/article/ArticleDetail')
       },
+      {
+        path: 'create',
+        name: 'ArticleCreate',
+        component: () => import('@/components/article/ArticleCreate')
+      }
     ]
   }
-
 ]
-
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior() { // scrollBehavior 메서드 추가
-    return { x: 0, y: 0 }
+  scrollBehavior() {
+    // scrollBehavior 메서드 추가
+    return {x: 0, y: 0}
   }
 })
 

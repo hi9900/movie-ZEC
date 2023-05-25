@@ -82,6 +82,10 @@ export default {
         .catch(err => console.log(err))
     }
   },
+  updated() {
+    // this.getProfile()
+    console.log(1111111111111111111111)
+  },
   computed: {
     myToken() {
       return this.$store.state.account.accessToken
@@ -106,5 +110,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
