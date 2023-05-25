@@ -1,0 +1,92 @@
+[
+{
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$FegwrSsDFsbegUHZ1KWPRV$7wzsOTigNo+XlpEohLw0O+OgEnxi+2xxAlrwfzNgMas=",
+        "last_login": "2023-05-25T23:16:36.102Z",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "date_joined": "2023-05-25T23:16:35.978Z",
+        "email": "rlagusqls@test.kr",
+        "username": "김현빈",
+        "profile_image": "",
+        "is_staff": false,
+        "is_superuser": false,
+        "groups": [],
+        "user_permissions": [],
+        "following": [
+            4
+        ],
+        "blocked_users": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$11WshXarRZRex8V0A0S0KV$H7/BKhMG566ojrhqhMoRvuC2wQxBSNfwTDjNmCkRN70=",
+        "last_login": "2023-05-25T23:16:57.880Z",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "date_joined": "2023-05-25T23:16:57.759Z",
+        "email": "rlaeodnd@test.kr",
+        "username": "김대웅",
+        "profile_image": "",
+        "is_staff": false,
+        "is_superuser": false,
+        "groups": [],
+        "user_permissions": [],
+        "following": [
+            1
+        ],
+        "blocked_users": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$3cWBimXasoay51wlQpNIai$SpnrCLaVpftd4mjQyNTmFuhMwPub5V2yoxU4sqTmDO0=",
+        "last_login": "2023-05-25T23:17:23.051Z",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "date_joined": "2023-05-25T23:17:22.930Z",
+        "email": "rladpwls@test.kr",
+        "username": "김예진",
+        "profile_image": "",
+        "is_staff": false,
+        "is_superuser": false,
+        "groups": [],
+        "user_permissions": [],
+        "following": [
+            1
+        ],
+        "blocked_users": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$VFqtIwKW0esr26VRpytMB2$/P+M//oRTTYNJ4f17PtgyVtdvw/rn8Rk7b3zDtjE7UM=",
+        "last_login": "2023-05-25T23:17:43.811Z",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "date_joined": "2023-05-25T23:17:43.688Z",
+        "email": "rlarngus@test.kr",
+        "username": "Viktor",
+        "profile_image": "",
+        "is_staff": false,
+        "is_superuser": false,
+        "groups": [],
+        "user_permissions": [],
+        "following": [],
+        "blocked_users": []
+    }
+}
+]

@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
-    
     # sites
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.kakao',
@@ -300,3 +299,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # ACCOUNT_LOGOUT_REDIRECT_URL = 로그아웃시 갈 URL `settings.LOGOUT_REDIRECT_URL or “/”`
 
+# settings.py
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
