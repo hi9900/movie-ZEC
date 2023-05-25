@@ -1,11 +1,15 @@
+// ArticleDetail.vue
 <template>
   <div>
     {{article.title}}
+    <hr>
     {{article.content}}
-    
-    <div v-for="comment in commentList" :key="comment.id">
-      {{comment.content}}
-    </div>
+    <hr>
+    <div v-for="comment in sortedComments" :key="comment.id">
+  {{comment.content}}
+   <hr>
+  </div>
+    <v-btn :to="{name: 'CreateComment', params: { articleId: article.id }}"> 댓글생성 </v-btn>
   </div>
 </template>
 
@@ -26,6 +30,9 @@ export default {
   },
   computed: {
     ...mapGetters("article", ["article", "commentList"]),
+    sortedComments() {
+    return [...this.commentList].sort((a, b) => a.id - b.id);
+    },
   },
 }
 </script>

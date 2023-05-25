@@ -122,7 +122,7 @@ def reply_list(request, article_id, parent_id):
 
 # 게시글 좋아요 여부 변경
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def update_like_article(request, article_id):
     article = get_object_or_404(Article, id=article_id)
     user = request.user

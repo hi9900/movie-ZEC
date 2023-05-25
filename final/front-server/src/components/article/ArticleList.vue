@@ -1,7 +1,7 @@
 <template>
   <div>
     <article-list-card
-      v-for="article in articleList"
+      v-for="article in sortedList"
       :key="article"
       :article="article"
     >
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapMutations} from 'vuex'
+import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
 import ArticleListCard from './include/ArticleListCard.vue'
 export default {
   components: {ArticleListCard},
@@ -19,14 +19,18 @@ export default {
     return {}
   },
   methods: {
-    ...mapActions('article', ['getArticleList']),
+    ...mapActions('article', ['addArticle','getArticleList']),
     ...mapMutations('article', ['SETARTICLEPAGE'])
   },
   created() {
     this.getArticleList()
   },
   computed: {
-    ...mapGetters('article', ['articleList', 'articlePage'])
+    ...mapGetters('article', ['articleList', 'articlePage']),
+    ...mapState("article", ["articleList"]),
+    sortedList() {
+    return [...this.articleList].sort((a, b) => a.id - b.id);
+    },
   }
 }
 </script>

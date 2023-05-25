@@ -1,3 +1,4 @@
+// article/CommentCreate.vue
 <template>
   <form action="">
     <v-text-field v-model="writer" type="text" label="writer"></v-text-field>
@@ -6,39 +7,36 @@
       type="text"
       label="password"
     ></v-text-field>
-    <v-text-field v-model="title" type="text" label="title"></v-text-field>
     <v-text-field v-model="content" type="text" label="content"></v-text-field>
-    <v-btn @click="create">생성</v-btn>
+    <v-btn @click="createComment">댓글 달기</v-btn>
   </form>
 </template>
 
 <script>
 // import axios from 'axios';
+
 import { mapActions } from "vuex";
+
 export default {
+  props: ['articleId'],
   data() {
     return {
-      title: '',
       writer: '',
       password: '',
       content: ''
     }
   },
   methods: {
-    ...mapActions("article", ["addArticle", "getArticleList"]),
-  moveList() {
-    this.$router.push({ name: "ArticleList" });
-  },
-    async create() {
-      const article = {
-        title: this.title,
+    ...mapActions("article", ["addComment", "getCommentList"]),
+    async createComment() {
+      const comment = {
         writer: this.writer,
         password: this.password,
         content: this.content,
       };
-      await this.addArticle(article);
-      this.getArticleList();
-      this.$router.push({ name: "ArticleList" });
+      await this.addComment({ comment, articleId: this.$route.params.articleId });
+      this.getCommentList();
+      this.$router.push({ name: "ArticleDetail", params: { articleId: this.$route.params.articleId } });
     },
   },
 }

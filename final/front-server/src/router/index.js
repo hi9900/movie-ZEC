@@ -1,3 +1,4 @@
+// router/index.js
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -113,7 +114,12 @@ const routes = [
         path: 'create',
         name: 'ArticleCreate',
         component: () => import('@/components/article/ArticleCreate')
-      }
+      },
+      {
+        path: '/create-comment/:articleId',
+        name: 'CreateComment',
+        component: () => import('@/components/article/CommentCreate')
+      },
     ]
   }
 ]
