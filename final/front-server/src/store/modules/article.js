@@ -1,3 +1,4 @@
+// store/modules/article.js
 import * as api from "@/api/article";
 
 export default {
@@ -65,17 +66,24 @@ export default {
         articleId
       )
     },
-    addArticle: (article) => {
-      api.articleAdd(
-        ({ data }) => {
-          console.log(data);
-        },
-        (error) => {
-          console.log(error);
-        },
-        article
-      )
+    addArticle: ({ commit, state }, article) => {
+      return new Promise((resolve, reject) => {
+        api.articleAdd(
+          ({ data }) => {
+            console.log(data);
+            // Add the new article to the list of articles
+            commit("SETARTICLELIST", [...state.articleList, data]);
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            reject(error);
+          },
+          article
+        );
+      });
     },
+    
     updateArticle: (article, articleId) => {
       api.articleUpadte(
         ({ data }) => {
@@ -111,18 +119,35 @@ export default {
         articleId
       )
     },
-    addComment: (comment, articleId) => {
-      api.commentAdd(
-        ({ data }) => {
-          console.log(data);
-        },
-        (error) => {
-          console.log(error);
-        },
-        comment,
-        articleId
-      )
+    addComment({ commit }, { comment, articleId }) {
+      return new Promise((resolve, reject) => {
+        api.commentAdd(
+          ({ data }) => {
+            console.log(data);
+            commit("UPDATE_COMMENTS", data);
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            reject(error);
+          },
+          comment,
+          articleId
+        );
+      });
     },
+    // addComment: (comment, articleId) => {
+    //   api.commentAdd(
+    //     ({ data }) => {
+    //       console.log(data);
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     },
+    //     comment,
+    //     articleId
+    //   )
+    // },
     updateComment: (comment, commentId) => {
       api.commentUpdate(
         ({ data }) => {
