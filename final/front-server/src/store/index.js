@@ -8,6 +8,7 @@ import movie from '@/store/modules/movie.js'
 import list from '@/store/modules/list.js'
 import account from '@/store/modules/account.js'
 import profile from '@/store/modules/profile.js'
+import article from '@/store/modules/article.js'
 
 
 Vue.use(Vuex)
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     list,
     account,
     profile,
+    article
   },
   plugins: [
     createPersistedState({
