@@ -28,7 +28,8 @@
         </v-icon>
       </v-btn>
     </div>
-
+    <!-- 이거 넘겨주기 -->
+    {{ this.myData }}
     <!-- 영화 카드 하나씩 표시 -->
     <v-row no-gutters>
       <v-col
@@ -59,7 +60,8 @@
 <script>
 import MovieSearch from '@/components/movie/MovieSearch'
 import MovieListCard from '@/components/movie/MovieListCard'
-
+import axios from 'axios'
+const API_URL = 'http://127.0.0.1:8000'
 export default {
   name: 'MoviePage',
   components: {
@@ -78,7 +80,8 @@ export default {
         {label: 'Runtime', value: 'runtime'},
         {label: 'Vote', value: 'vote_average'}
       ],
-      selectedOption: {label: 'Vote', value: 'vote_average'}
+      selectedOption: {label: 'Vote', value: 'vote_average'},
+      myData: null
     }
   },
   computed: {
@@ -134,10 +137,26 @@ export default {
         ordering: this.filter
       })
       window.scrollTo(0, 0)
+    },
+    getMyData() {
+      const Token = `Bearer ${this.$store.state.account.accessToken}`
+      const username = this.$store.state.account.username
+
+      axios({
+        method: 'get',
+        url: `${API_URL}/api/v1/user/detail/${username}/`,
+        headers: {Authorization: Token}
+      })
+        .then(res => {
+          // console.log(res.data)
+          this.myData = res.data
+        })
+        .catch(e => console.log(e))
     }
   },
   created() {
     this.updateMovie()
+    this.getMyData()
   }
 }
 </script>

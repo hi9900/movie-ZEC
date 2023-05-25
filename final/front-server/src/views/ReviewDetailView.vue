@@ -2,7 +2,7 @@
   <v-skeleton-loader v-if="!review"></v-skeleton-loader>
   <v-container v-else>
     <v-row>
-      <v-col>
+      <v-col cols="2">
         <!-- 누르면 영화 상세 페이지로 -->
         <!-- <movie-detail :movie="movie" /> -->
         <v-img
