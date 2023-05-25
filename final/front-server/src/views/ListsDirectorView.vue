@@ -1,9 +1,15 @@
 <template>
   <v-container>
-    {{ movies.director_data.name }} 감독의 영화
-    <!-- 나중에 동그라미로 뽑기 -->
-    {{ movies.director_data.profile_path }}
-
+    <div class="content" v-if="movies.director_data">
+      <v-avatar>
+        <v-img
+          :src="`https://image.tmdb.org/t/p/w500${movies.director_data.profile_path}`"
+        ></v-img>
+      </v-avatar>
+      <span>{{ movies.director_data.name }} 감독의 인기 영화</span>
+    </div>
+    <!-- {{ movies.director_data.profile_path }} -->
+    <v-divider></v-divider>
     <v-row no-gutters>
       <v-col
         v-for="movie in movies.data"
@@ -46,4 +52,20 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  display: flex;
+  align-items: center; /* 수평 정렬 */
+  gap: 16px; /* 이미지와 텍스트 사이의 간격 조절 */
+  margin-bottom: 24px; /* 밑에 간격 조절 */
+}
+
+.image {
+  margin: 0;
+  padding: 0;
+}
+
+.text {
+  margin: 0;
+  padding: 0;
+}
 </style>

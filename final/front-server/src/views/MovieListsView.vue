@@ -2,7 +2,8 @@
   <!-- 집가서 이거하기 -->
   <!-- <v-skeleton-loader v-if="!randomMovies" type="carousel"></v-skeleton-loader> -->
   <v-container v-if="directorMovies">
-    <h1>오늘의 랜덤 영화</h1>
+    <h2>오늘의 랜덤 영화</h2>
+
     <v-row>
       <!-- 랜덤 감독 추천 -->
       <v-col cols="12" sm="6" md="4" no-gutter>
@@ -11,7 +12,6 @@
           outlined
           @click="goToDirector(directorMovies?.director.id)"
         >
-          <!-- @click="goToDirector(directorMovies.director_data.id)"> -->
           <!-- 카드를 누르면 그 감독의 영화 조회 페이지로 이동 -->
           <v-card-title class="card-title-margin"
             >{{ directorMovies?.director.name }}감독의 인기 영화</v-card-title
@@ -48,7 +48,11 @@
       <!-- 랜덤 장르 추천 -->
       <!-- 카드를 누르면 그 장르의 영화 조회 페이지로 이동 -->
       <v-col cols="12" sm="6" md="4">
-        <v-card height="250px" outlined>
+        <v-card
+          height="250px"
+          outlined
+          @click="goToGenre(genreMovies?.genre.id)"
+        >
           <!-- @click="goToDirector(directorMovies.director_data.id)"> -->
           <!-- 카드를 누르면 그 감독의 영화 조회 페이지로 이동 -->
           <v-card-title class="card-title-margin"
@@ -147,13 +151,16 @@ export default {
     },
     goToDirector(directorId) {
       this.$router.push({name: 'ListsDetail', params: {id: directorId}})
-    }
+    },
     // goToDirector(directorId) {
     //   this.$router.push({ name: 'Director', params: { directorid: directorId }})
     // },
     // getLists() {
     //   this.$store.dispatch('list/getLists')
-    // }
+    // },
+    goToGenre(genreId) {
+      this.$router.push({name: 'ListsDetail', params: {id: genreId}})
+    }
   },
   created() {
     this.getMovie()

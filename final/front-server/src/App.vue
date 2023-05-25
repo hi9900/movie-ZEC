@@ -14,11 +14,12 @@
       </v-container>
     </v-main>
 
-    <v-footer color="footerColor">
+    <v-footer padless color="footerColor">
       <v-container fluid>
-        <v-row>
+        <v-row no-gutters>
           <v-col class="text-center">
-            <p>&copy; 2023 Ssafy 9th BUK 1_HB HY.</p>
+            <p class="small-text">&copy; 2023 SSAFY 9th - ZEC</p>
+            <p class="small-text">Zero Empty Coffin</p>
           </v-col>
         </v-row>
       </v-container>
@@ -72,10 +73,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .v-btn--floating {
   /* position: absolute; */
-
   position: relative;
+}
+.small-text {
+  font-size: 12px;
+  margin: 4px 0;
 }
 </style>

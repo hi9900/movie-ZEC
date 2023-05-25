@@ -13,7 +13,7 @@
       </v-row>
       <v-row>
         <v-col class="py-1">
-          <v-btn @click="toggleWatch" icon>
+          <v-btn @click="toggleWatch" icon class="btn-no">
             <v-icon :color="this.watched ? 'blue' : ''">mdi-eye</v-icon>
           </v-btn>
         </v-col>
@@ -36,7 +36,11 @@
 
     <!-- 리뷰 작성 모달 -->
     <v-dialog v-model="showReviewModal" max-width="600px">
-      <ReviewCreate :movie="this.movie" @reviewCreate="reviewCreate" />
+      <ReviewCreate
+        :movie="this.movie"
+        @cancel="cancel"
+        @reviewCreate="reviewCreate"
+      />
     </v-dialog>
   </v-container>
 </template>
@@ -141,6 +145,9 @@ export default {
     reviewCreate() {
       this.showReviewModal = false
       this.$emit('reviewCreate')
+    },
+    cancel() {
+      this.showReviewModal = false
     }
   },
   computed: {
@@ -165,5 +172,8 @@ export default {
   flex-direction: column;
   width: 100%;
   align-items: center;
+}
+.btn-no {
+  cursor: Default;
 }
 </style>

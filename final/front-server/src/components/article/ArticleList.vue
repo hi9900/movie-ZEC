@@ -1,13 +1,48 @@
 <template>
-  <div>
+  <v-container>
+    <v-row class="mb-5">
+      <v-col>
+        <v-btn
+          :to="{name: 'ArticleCreate'}"
+          color="primary"
+          @click="openCreateDialog"
+        >
+          새 게시글 작성
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-simple-table>
+      <template>
+        <thead>
+          <tr>
+            <th class="text-left">번호</th>
+            <th class="text-left">제목</th>
+            <th class="text-left">작성자</th>
+            <th class="text-left">댓글</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="article in sortedList"
+            :key="article.id"
+            @click="moveDetail()"
+          >
+            <td>{{ article.id }}</td>
+            <td>{{ article.title }}</td>
+            <td>{{ article.content }}</td>
+            <td>{{ article.date }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+
     <article-list-card
       v-for="article in sortedList"
       :key="article"
       :article="article"
     >
     </article-list-card>
-    <v-btn :to="{name: 'ArticleCreate'}">생성</v-btn>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -19,18 +54,23 @@ export default {
     return {}
   },
   methods: {
-    ...mapActions('article', ['addArticle','getArticleList']),
-    ...mapMutations('article', ['SETARTICLEPAGE'])
+    ...mapActions('article', ['addArticle', 'getArticleList']),
+    ...mapMutations('article', ['SETARTICLEPAGE']),
+    moveDetail() {
+      // this.getArticle(this.article.id)
+      // this.getCommentList(this.article.id)
+      this.$router.push({name: 'ArticleDetail'})
+    }
   },
   created() {
     this.getArticleList()
   },
   computed: {
     ...mapGetters('article', ['articleList', 'articlePage']),
-    ...mapState("article", ["articleList"]),
+    ...mapState('article', ['articleList']),
     sortedList() {
-    return [...this.articleList].sort((a, b) => a.id - b.id);
-    },
+      return [...this.articleList].sort((a, b) => a.id - b.id)
+    }
   }
 }
 </script>

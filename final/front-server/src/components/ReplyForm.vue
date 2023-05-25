@@ -1,25 +1,39 @@
+// @/components/ReviewForm
 <template>
   <v-container>
     <!-- 댓글에 달린 대댓글 -->
     <div class="d-flex align-center">
       대댓글 갯수: {{ comment.replies.length }}
-      <v-btn small @click="showReplies = !showReplies">접기/펼치기</v-btn>
+      <v-btn icon small @click="showReplies = !showReplies">
+        <v-icon v-if="showReplies">mdi-chevron-up</v-icon>
+        <v-icon v-else>mdi-chevron-down</v-icon>
+      </v-btn>
     </div>
     <v-expand-transition>
       <div v-if="showReplies">
         <v-container v-for="reply in comment.replies" :key="reply.id">
-          작성자: {{ reply.user.username }}
+          <div style="display: flex; justify-content: space-between">
+            <div>
+              <span style="font-weight: bold; margin-right: 8px">{{
+                reply.user.username
+              }}</span>
+              <span>{{ reply.content }}</span>
+            </div>
+            <v-col cols="2">
+              <small>{{ reply.created_at.slice(0, 10) }} 작성</small>
+            </v-col>
+          </div>
           <br />
-          내용: {{ reply.content }}
-          <br />
-          작성시간:
-          {{ reply.created_at.slice(0, 10) }}
         </v-container>
 
         <v-container>
           <v-row>
-            <v-text-field v-model="newreply" solo></v-text-field>
-            <v-btn @click.prevent="createReply(comment.id)">작성</v-btn>
+            <v-text-field
+              @keyup.enter="createReply"
+              v-model="newreply"
+            ></v-text-field>
+            <v-btn @click.prevent="createReply">작성</v-btn>
+            <!-- <v-btn @click.prevent="createReply(event, comment.id)">작성</v-btn> -->
           </v-row>
         </v-container>
       </div>
@@ -39,9 +53,13 @@ export default {
     }
   },
   methods: {
-    createReply(commentId) {
+    createReply() {
+      if (!this.newreply) {
+        alert('내용을 입력해주세요.')
+        return
+      }
       const data = {
-        commentId,
+        commentId: this.comment.id,
         newreply: this.newreply
       }
       this.$emit('createReply', data)
