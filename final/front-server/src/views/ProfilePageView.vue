@@ -1,169 +1,110 @@
 <template>
   <v-container fluid>
-    <div v-if="profile.is_staff">
-      <h3>관리자페이지로 이동</h3>
-    </div>
+    <!-- <div v-if="profile.is_staff">
+      <a href="http://127.0.0.1:8000/admin"> <h3>admin</h3></a>
+    </div> -->
     <v-row>
-      <v-col cols="12" md="3">
-        <v-sheet class="profile-info">
-          <v-avatar size="120" class="mx-auto d-block">
-            <img :src="profile.profile_image" :alt="profile.name" />
-          </v-avatar>
-          <h2 class="profile-title">{{ profile.username }}</h2>
-          <div class="profile-stats">
-            <div>
-              <!-- 아직 안줬어 -->
-              리뷰 갯수<b>{{ profile.reviews }}</b>
-            </div>
-            <router-link :to="`/profile/${profile.username}/followers`">
-              <div>
-                팔로워 <b>{{ profile.followers_count }}</b>
-              </div>
-            </router-link>
-            <router-link :to="`/profile/${profile.username}/following`">
-              <div>
-                팔로잉 <b>{{ profile.following_count }}</b>
-              </div>
-            </router-link>
-          </div>
-
-          <!-- 내 페이지가 아니면 -->
-          <div v-if="!isMyProfile">
-            <v-btn color="primary" v-if="!isFollowing" @click="follow">
-              팔로우
-            </v-btn>
-            <v-btn color="red" v-else @click="unfollow"> 팔로우 취소 </v-btn>
-            <!-- <v-btn color="error" v-if="!isBlocked" @click="blockUser">
-              차단하기
-            </v-btn>
-            <v-btn color="success" v-else @click="unblockUser">
-              차단 해제
-            </v-btn> -->
-          </div>
-          <!-- 내 페이지면 수정 -->
-          <div v-else>
-            <v-btn> 회원 정보 수정 </v-btn>
-          </div>
-        </v-sheet>
+      <v-col cols="3">
+        <ProfileCard
+          :profile="profile"
+          :isMyProfile="isMyProfile"
+          style="position: sticky; top: 85px"
+          @follow="getProfile"
+          :isFollowed="isFollowed"
+        />
+        <!-- style="position: fixed; left: 10px" -->
       </v-col>
+      <v-col cols="9">
+        <v-tabs center-active>
+          <v-tab :to="{name: 'Profile', params: {username: this.profileUser}}">
+            Reviews
+          </v-tab>
+          <v-tab
+            :to="{name: 'FollowersList', params: {username: this.profileUser}}"
+          >
+            Followers
+          </v-tab>
+          <v-tab
+            :to="{name: 'FollowingList', params: {username: this.profileUser}}"
+          >
+            Followings
+          </v-tab>
+        </v-tabs>
+        <!-- <v-tabs-items v-model="tab">
+          <v-tab-item v-for="item in items" :key="item">
+            <v-card flat>
+              <v-card-text v-text="text"></v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items> -->
 
-      <v-col cols="12" md="9">
-        <MyProfileData />
-        <!-- 리뷰 뿌랍 -->
-        <!-- :profile="profile" -->
+        <router-view :profile="profile"></router-view>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import MyProfileData from '@/components/MyProfileData.vue'
 import axios from 'axios'
+
+import ProfileCard from '@/components/profile/ProfileCard'
 
 export default {
   name: 'UserProfile',
   components: {
-    MyProfileData
+    ProfileCard
   },
   data() {
     return {
       profile: null
-      // profile: {
-      //   profile_image: 'https://letterboxd.com/hih1/avatar/medium/',
-      //   username: 'hih1',
-      //   reviews: 91,
-      //   ratings: 2382,
-      //   followers: 421,
-      //   following: 341,
-      //   is_staff: false
-      // },
-      // isFollowing: false,
-      // isBlocked: false,
-      // isAdmin: false
-    }
-  },
-  methods: {
-    // username과 관련된 정보 받아오기
-    getProfile() {
-      const Token = this.myToken
-      const userId = this.userId
-      axios({
-        method: 'get',
-        url: `http://127.0.0.1:8000/api/v1/user/detail/${userId}/`,
-        headers: {
-          Authorization: `Bearer ${Token}`
-        }
-      })
-        .then(res => {
-          console.log(res.data)
-          this.profile = res.data
-        })
-        .catch(err => console.log(err))
-    }
-    // getMyProfile(username) {
-    //   this.$store.dispatch('profile/getMyProfile', username)
-    // },
-    // async blockUser() {
-    //   try {
-    //     await axios.post(`/api/block-user/${this.profileUserId}`)
-    //     this.isBlocked = true
-    //   } catch (error) {
-    //     console.error('Error during block:', error)
-    //   }
-    // }
-    // async unblockUser() {
-    //   try {
-    //     await axios.post(`/api/unblock-user/${this.profileUserId}`);
-    //     this.isBlocked = false;
-    //   } catch (error) {
-    //     console.error("Error during unblock:", error);
-    //   }
-    // },
-    // async follow() {
-    //   try {
-    //     await axios.post(`/api/follow/${this.profileUserId}`);
-    //     this.isFollowing = true;
-    //   } catch (error) {
-    //     console.error("Error during follow:", error);
-    //   }
-    // },
-    // async unfollow() {
-    //   try {
-    //     await axios.post(`/api/unfollow/${this.profileUserId}`);
-    //     this.isFollowing = false;
-    //   } catch (error) {
-    //     console.error("Error during unfollow:", error);
-    //   }
-    // },
-  },
-  computed: {
-    // 내 페이지인지 확인하기
-    isMyProfile() {
-      return this.$route.params.username === this.$store.state.account.username
-    },
-    userId() {
-      return this.$store.state.account.userId
-    },
-    myToken() {
-      return this.$store.state.account.accessToken
     }
   },
   created() {
     // console.log(this.$route.params.username)
     this.getProfile()
+  },
+  methods: {
+    // username과 관련된 정보 받아오기
+    getProfile() {
+      const Token = this.$store.state.account.accessToken
+      const username = this.$route.params.username
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/api/v1/user/detail/${username}/`,
+        headers: {
+          Authorization: `Bearer ${Token}`
+        }
+      })
+        .then(res => {
+          // console.log(res.data)
+          this.profile = res.data
+        })
+        .catch(err => console.log(err))
+    }
+  },
+  computed: {
+    myToken() {
+      return this.$store.state.account.accessToken
+    },
+    profileUser() {
+      return this.$route.params.username
+    },
+    // 내 페이지인지 T/F
+    isMyProfile() {
+      return this.profileUser === this.$store.state.account.username
+    },
+    isFollowed() {
+      if (!this.isMyProfile) {
+        const userId = this.$store.state.account.userId
+        // profile.followers 안에 userId가 있으면 True
+        const arr = this.profile.followers
+        return arr.some(item => item.id === userId)
+      }
+      return false
+    }
   }
 }
 </script>
 
 <style scoped>
-.profile-info {
-  text-align: center;
-}
-.profile-title {
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-.profile-stats div {
-  margin-bottom: 5px;
-}
 </style>

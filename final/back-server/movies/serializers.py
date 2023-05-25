@@ -84,6 +84,7 @@ class MovieSerializer(serializers.ModelSerializer):
     keywords = KeywordSerializer(many=True, read_only=True)
     characters = CharacterSerializer(many=True, read_only=True)
     like_users = UserSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Movie
         fields = '__all__'
@@ -106,16 +107,6 @@ class MovieListSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('user',)
 ##########################
-
-
-# class ReviewListSerializer(serializers.ModelSerializer):
-#     username = serializers.CharField(source='user.username', read_only=True)
-
-#     class Meta:
-#         model = Review
-#         # fields = ('id', 'title', 'content')
-#         # fields = ('id', 'title', 'content', 'user', 'username')
-#         fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):

@@ -22,7 +22,7 @@ const account = {
     // 회원가입
     SAVE_TOKEN(state, token) {
       state.token = token
-      router.push({name: 'LogIn'})
+      router.push({ name: 'LogIn' })
     },
 
     SET_ACCESS(state, token) {
@@ -38,7 +38,7 @@ const account = {
       state.username = token.username
       state.useremail = token.email
       state.userId = token.id
-      router.push({name: 'Home'})
+      router.push({ name: 'Home' })
     },
     // 로그아웃
     LOGOUT(state) {
@@ -48,7 +48,8 @@ const account = {
       state.token = null
       state.accessToken = null
       state.refreshToken = null
-      ;(state.username = ''), (state.useremail = '')
+      state.username = ''
+      state.useremail = ''
     },
     SET_USER(state, username) {
       state.username = username
@@ -106,30 +107,22 @@ const account = {
     // 만료된거 확인하고 받아와야함 토큰을 추가로 받아오는 로직
 
     logout(context) {
-      context.commit('RESET')
       // axios 요청 안해도 되나?
-      // axios({
-      //   method: 'delete',
-      //   url: `${API_URL}/accounts/dj-rest-auth/logout/`
-      // })
-      // .then((res) => {
-      // console.log('로그아웃')
 
-      //   console.log(res)
-      // })
-    },
-    // 유저정보 가져오기 안돼
-    async fetchUser(context) {
-      try {
-        // 토큰을 헤더에 사용하고 프로필 정보를 얻습니다.
-        const res = await axios.get(`${API_URL}/accounts/dj-rest-auth/user/`, {
-          headers: {Authorization: `Bearer ${this.state.token}`}
+      axios({
+        method: 'post',
+        url: `${API_URL}/accounts/dj-rest-auth/logout/`
+      })
+        .then((res) => {
+          console.log('로그아웃')
+
+          console.log(res)
+          context.commit('RESET')
+
         })
-        context.commit('SET_USER', res.data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
+
+    },
+
     // updatePassword() {
     //   axios({
     //     method: 'post',
@@ -139,16 +132,16 @@ const account = {
     //       email, password
     //     }
     //   })
-    //   .then((res) => {
-    //     // 사용자 확인
-    //     console.log('로그인')
-    //     console.log(res)
-    //     // context.commit('SAVE_TOKEN', res.data)
-    //     context.commit('LOGIN', res.data)
-    //     // context.commit('SET_ACCESS', res.data)
-    //     // context.commit('SET_REFRESH', res.data)
-    //   })
-    //   .catch((err) => console.log(err))
+    //     .then((res) => {
+    //       // 사용자 확인
+    //       console.log('로그인')
+    //       console.log(res)
+    //       // context.commit('SAVE_TOKEN', res.data)
+    //       context.commit('LOGIN', res.data)
+    //       // context.commit('SET_ACCESS', res.data)
+    //       // context.commit('SET_REFRESH', res.data)
+    //     })
+    //     .catch((err) => console.log(err))
     // },
   }
 }

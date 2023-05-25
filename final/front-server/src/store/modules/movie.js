@@ -14,9 +14,9 @@ const movie = {
   getters: {
     getAllMovies: (state) => state.movies,
     getTotalPages: (state) => state.totalPages,
-  },  
+  },
   mutations: {
-    // MoviePage
+    // 검색된 MovieList 생성
     GET_MOVIES(state, movies) {
       state.movies = movies.data
       state.totalPages = movies.total_pages
@@ -31,20 +31,20 @@ const movie = {
   },
   actions: {
     getMovieId(context, movieId) {
-    axios
-    .all([
-      axios.get(`${API_URL}/api/v1/movies/${movieId}/`), 
-      axios.get(`${API_URL}/api/v1/movies/${movieId}/reviews/`)
-    ])
-    .then(
-      axios.spread((res1, res2) => {
-      console.log(res1.data, res2.data)
-      context.commit('GET_MOVIE', res1.data)
-      context.commit('GET_REVIEWS', res2.data)
-    })
-    )
-    .catch((err) => console.log(err))
-  },
+      axios
+        .all([
+          axios.get(`${API_URL}/api/v1/movies/${movieId}/`),
+          axios.get(`${API_URL}/api/v1/movies/${movieId}/reviews/`)
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            console.log(res1.data, res2.data)
+            context.commit('GET_MOVIE', res1.data)
+            context.commit('GET_REVIEWS', res2.data)
+          })
+        )
+        .catch((err) => console.log(err))
+    },
     // 영화 단일 조회
     // getMovieId(context, movieId) {
     //   axios({
@@ -70,24 +70,24 @@ const movie = {
 
     // 영화 조회
     updateMovies(context, Query) {
-      console.log(Query)
       axios({
         method: 'get',
         url: `${API_URL}/api/v1/movies/search/`,
         params: {
           search: Query.search,
-          page: Query.page
+          page: Query.page,
+          ordering: Query.ordering
         }
       })
-      .then((res) => {
-        console.log(res.data)
-        context.commit('GET_MOVIES', res.data)
-      })
-      .catch((err) => console.log(err, Query))
+        .then((res) => {
+          console.log('MovieListCard')
+          context.commit('GET_MOVIES', res.data)
+        })
+        .catch((err) => console.log(err, Query))
     },
-    
+
     // 
-    
+
   },
 }
 

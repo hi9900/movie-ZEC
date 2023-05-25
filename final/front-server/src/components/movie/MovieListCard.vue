@@ -1,4 +1,5 @@
 <template>
+  <!-- 이 페이지 로딩화면 구현해야함 -->
   <v-container fluid>
     <v-card
       @mouseover="isHover = true"
@@ -157,7 +158,7 @@ export default {
 <style scoped>
 .fixed-height {
   height: 400px;
-  min-height: 370px;
+  min-height: 400px;
   max-height: 400px;
   overflow: hidden;
 }
@@ -205,9 +206,9 @@ export default {
   max-height: 250px;
 }
 .large-card-height {
-  height: 350px;
-  min-height: 350px;
-  max-height: 350px;
+  height: 370px;
+  min-height: 370px;
+  max-height: 370px;
 }
 .middle-card-height {
   height: 320px;

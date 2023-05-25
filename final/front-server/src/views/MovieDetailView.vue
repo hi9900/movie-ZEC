@@ -14,56 +14,43 @@
     </div>
     <v-container mt-3>
       <v-row>
-        <!-- 영화 정보 왼쪽 플로팅 -->
+        <!-- 영화 정보 왼쪽 띄우기 -->
         <v-col md="2" class="poster-container md-2 hidden-sm-and-down">
           <!-- 영화 포스터 -->
           <v-img
+            v-show="movie?.poster_path"
             class="movie-poster"
             spect-ratio="0.675"
             :src="`https://www.themoviedb.org/t/p/original/${movie?.poster_path}`"
           ></v-img>
+          <!-- 프로젝트 폴더에 로딩 이미지 넣기 -->
+          <!-- :lazy-src="'path/to/loading_img.png'" -->
+          <!-- 또는 이거? vuetify에 있는데 먼지 모르겟음 -->
           <!-- :lazy-src="'https://www.themoviedb.org/t/p/original/'+`${movie.poster_path}`" -->
 
           <v-row class="mt-2">
-            <v-col class="d-flex flex-column align-center">
-              <v-icon color="red">mdi-heart</v-icon>
-              <p>
-                {{ movie.like_users?.length }}
-              </p>
-            </v-col>
-            <v-col class="d-flex flex-column align-center">
-              <v-icon color="yellow">mdi-star</v-icon>
-              <p>{{ movie.vote_average }}</p>
-            </v-col>
-          </v-row>
+            <v-tooltip top>
+              <template v-slot:activator="{on}">
+                <v-col v-on="on" class="d-flex flex-column align-center">
+                  <v-icon color="red">mdi-heart</v-icon>
+                  <p>
+                    {{ movie.like_users?.length }}
+                  </p>
+                </v-col>
+              </template>
+              <span>liked by {{ movie.like_users?.length }} users</span>
+            </v-tooltip>
 
-          <!-- 예고편 유투브 링크 모달으로 띄워보기 -->
-          <!-- 여기 유투브 예고편 모달 -->
-          <!-- 체크안해봄 -->
-          <!-- <v-row>
-           <v-col>
-          <v-row>
-            <v-col>
-      <v-btn color="blue" @click="showTrailerModal = true">Watch Trailer</v-btn>
-    </v-col>
-  </v-row>
-  
-  <v-dialog v-model="showTrailerModal" width="1000" fullscreen hide-overlay>
-    <v-card>
-      <v-card-text>
-        <iframe width="100%" height="500" :src="`https://www.youtube.com/embed/${youtube_trailer}?autoplay=1`" 
-        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen></iframe>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="showTrailerModal = false">Close</v-btn>
-        <v-spacer></v-spacer>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-          </v-col> 
-          </v-row>-->
+            <v-tooltip top>
+              <template v-slot:activator="{on}">
+                <v-col v-on="on" class="d-flex flex-column align-center">
+                  <v-icon color="yellow">mdi-star</v-icon>
+                  <p>{{ movie.vote_average }}</p>
+                </v-col>
+              </template>
+              <span>vote_average by TMDB</span>
+            </v-tooltip>
+          </v-row>
         </v-col>
 
         <v-col xs="12">
@@ -71,32 +58,36 @@
             <v-col>
               <v-row>
                 <v-col>
-                  <h1>{{ movie.title }}</h1>
-                  <p class="text-subtitle-1">
-                    {{ movie.original_title }}
+                  <h1>{{ movie?.title }}</h1>
+                  <p>
+                    <span class="text-subtitle-1">
+                      {{ movie?.original_title }}
+                    </span>
+                    <span>{{ movie?.runtime }}mins</span>
                   </p>
-                  <span class="text-body-1"
-                    >{{ movie.release_date?.substr(0, 4) }}
-                  </span>
-                  <span class="font-weight-thin">Directed by </span>
-                  <span
-                    class="text-body-1"
-                    v-for="director in movie.director"
-                    :key="director.id"
-                    >{{ director.name }}
-                  </span>
-                  <!-- <span>{{ movie.runtime }}M</span> -->
+                  <div>
+                    <span class="text-body-1"
+                      >{{ movie.release_date?.slice(0, 4) }}
+                    </span>
+                    <span class="font-weight-thin">Directed by </span>
+                    <span
+                      class="text-body-1"
+                      v-for="director in movie?.director"
+                      :key="director.id"
+                      >{{ director.name }}
+                    </span>
+                  </div>
                 </v-col>
               </v-row>
 
-              <!-- 5줄이 넘어가면 더보기 -->
               <v-row>
                 <v-col>
                   <p class="font-weight-light overview">
-                    {{ movie.overview }}
+                    {{ movie?.overview }}
                   </p>
                 </v-col>
               </v-row>
+
               <v-row>
                 <v-col>
                   <v-tabs fixed-tabs color="dark">
@@ -154,28 +145,31 @@
                 </v-col>
               </v-row>
             </v-col>
+          </v-row>
+          <v-divider></v-divider>
+          <v-container mt-5>
+            <!-- content가 있는 리뷰만 보이게 -->
 
-            <v-col md="3" no-gutter class="d-none d-md-block">
-              <!-- 리뷰 간단 작성 폼 -->
-              <!-- movie 데이터 푸랍 -->
-              <ReviewSimple :movie="movie" />
-            </v-col>
-          </v-row>
+            <v-row> 작성된 리뷰 {{ reviews.length }} </v-row>
 
-          <!-- 간격 왜 안생겨 -->
-          <v-row>
-            <v-col mt-3 class="d-md-none">
-              <span>리뷰 작성하기 </span>
-              <v-icon class="ml-2">mdi-pencil</v-icon>
-            </v-col>
-          </v-row>
-          <v-row>
-            <ReviewList
-              :review="review"
-              v-for="review in reviews"
-              :key="review.id"
-            />
-          </v-row>
+            <v-row no-gutters v-for="review in reviews" :key="review.id">
+              <ReviewList v-if="review.content" :review="review" />
+            </v-row>
+          </v-container>
+          <!-- 글씨 스타일 바꾸기 -->
+          <p v-if="reviews.length === 0">이 영화의 첫 리뷰를 작성해보세요</p>
+        </v-col>
+
+        <!-- 리뷰 작성 sticky, 폼 -->
+        <v-col md="1" no-gutter class="d-none d-md-block review-create">
+          <ReviewSimpleCreate
+            :movie="movie"
+            :myData="myData"
+            :myLikeMovies="myLikeMovies"
+            :myReviews="myData.reviews"
+            @reviewCreate="reviewCreate"
+            @toggleLike="toggleLike"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -183,19 +177,22 @@
 </template>
 
 <script>
-import ReviewSimple from '@/components/ReviewSimple'
-import ReviewList from '@/components/ReviewList'
+import ReviewSimpleCreate from '@/components/review/ReviewSimpleCreate'
+import ReviewList from '@/components/review/ReviewList'
+import axios from 'axios'
+const API_URL = 'http://127.0.0.1:8000'
 export default {
   components: {
-    ReviewSimple,
+    ReviewSimpleCreate,
     ReviewList
   },
   data() {
     return {
-      showFullList: false
+      showFullList: false,
       // movie: null,
       // showTrailerModal: false,
       // youtube_trailer: 'abcdefghijklmnop',
+      myData: null
     }
   },
   computed: {
@@ -211,9 +208,23 @@ export default {
     },
     isLogin() {
       return this.$store.getters['accounts/isLogin']
+    },
+    // 왜안되징
+    // iscontentReview() {
+    //   const arr = this.reviews
+    //   const res = arr.filter(el => {
+    //     el.content.length > 0
+    //   }).length
+    //   return res
+    // },
+    myLikeMovies() {
+      return this.myData.like_movies
     }
   },
   methods: {
+    toggleLike() {
+      this.getMovieId()
+    },
     getMovieId() {
       const movieId = this.$route.params.id
       // console.log(movieId)
@@ -221,28 +232,34 @@ export default {
     },
     showAll() {
       this.showFullList = true
+    },
+    reviewCreate() {
+      this.getMovieId()
+    },
+    getMyData() {
+      const Token = `Bearer ${this.$store.state.account.accessToken}`
+      const username = this.$store.state.account.username
+
+      axios({
+        method: 'get',
+        url: `${API_URL}/api/v1/user/detail/${username}/`,
+        headers: {Authorization: Token}
+      })
+        .then(res => {
+          // console.log(res.data)
+          this.myData = res.data
+        })
+        .catch(e => console.log(e))
     }
   },
   created() {
     this.getMovieId()
+    this.getMyData()
   }
 }
 </script>
 
 <style scoped>
-/* .backdrop-container {
-  position: relative;
-}
-.backdrop-image {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-} */
-/* Gradient border */
 .backdrop-container {
   position: relative;
   height: 500px;
@@ -290,6 +307,11 @@ export default {
 }
 
 .poster-container {
+  position: sticky;
+  top: 70px;
+  align-self: flex-start;
+}
+.review-create {
   position: sticky;
   top: 70px;
   align-self: flex-start;
