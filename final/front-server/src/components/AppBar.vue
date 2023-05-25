@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app color="appBarColor">
+  <v-app-bar app>
     <!-- Logo -->
     <v-img
       @click="goHome"
@@ -31,7 +31,7 @@
         </v-btn>
       </template>
       <v-list>
-        <v-list-item @click.prevent="logout">
+        <v-list-item @click="logout">
           <v-list-item-title>Logout</v-list-item-title>
         </v-list-item>
         <v-list-item @click.prevent="update">

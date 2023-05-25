@@ -6,9 +6,30 @@
       :MoviesCount="MoviesCount"
       @search="updateSearchQuery"
     />
+    <div>
+      <label>Sort by:</label>
+      <v-btn
+        v-for="option in options"
+        :key="option.value"
+        :color="getButtonColor(option)"
+        outlined
+        class="mx-1"
+        @click.prevent="changeSorting(option)"
+      >
+        {{ option.label }}
+        <v-icon v-if="option.value === selectedOption.value" small>
+          {{
+            option.value !== 'vote_average'
+              ? sortOrder === 'desc'
+                ? 'mdi-chevron-down'
+                : 'mdi-chevron-up'
+              : ''
+          }}
+        </v-icon>
+      </v-btn>
+    </div>
 
     <!-- 영화 카드 하나씩 표시 -->
-    <!-- 이거 반응형 -->
     <v-row no-gutters>
       <v-col
         v-for="movie in movieList"
@@ -18,7 +39,7 @@
         md="4"
         lg="2"
       >
-        <MovieList :movie="movie" />
+        <MovieListCard :movie="movie" />
       </v-col>
     </v-row>
 
@@ -37,17 +58,27 @@
 
 <script>
 import MovieSearch from '@/components/movie/MovieSearch'
-import MovieList from '@/components/MovieList'
+import MovieListCard from '@/components/movie/MovieListCard'
+
 export default {
   name: 'MoviePage',
   components: {
     MovieSearch,
-    MovieList
+    MovieListCard
   },
   data() {
     return {
       currentPage: 1,
-      searchQuery: ''
+      searchQuery: '',
+      filter: '',
+      sortOrder: 'desc',
+      options: [
+        {label: 'Popularity', value: 'popularity'},
+        {label: 'Release Date', value: 'release_date'},
+        {label: 'Runtime', value: 'runtime'},
+        {label: 'Vote', value: 'vote_average'}
+      ],
+      selectedOption: {label: 'Vote', value: 'vote_average'}
     }
   },
   computed: {
@@ -65,25 +96,42 @@ export default {
     searchQuery(query) {
       this.searchQuery = query.trim()
       this.updateMovie()
+    },
+    filter() {
+      this.currentPage = 1
+      this.updateMovie()
     }
   },
   methods: {
+    getButtonColor(option) {
+      return this.selectedOption.value === option.value ? 'blue' : 'grey'
+    },
+    changeSorting(option) {
+      if (option.value !== 'vote_average') {
+        if (this.selectedOption.value === option.value) {
+          this.sortOrder = this.sortOrder === 'desc' ? 'asc' : 'desc'
+        } else {
+          this.selectedOption = option
+          this.sortOrder = 'desc'
+        }
+        const sortingOrder = this.sortOrder
+        this.filter = this.selectedOption.value + '_' + sortingOrder
+      } else {
+        this.selectedOption = option
+        this.filter = option.value
+      }
+    },
+    // 검색
     updateSearchQuery(query) {
       this.searchQuery = query
       this.currentPage = 1
     },
-    // getMovies() {
-    //   this.$store.dispatch('movie/getMovies', {
-    //     page: this.currentPage,
-    //     search: this.searchQuery,
-    //   })
-    //   window.scrollTo(0, 0)
-    // },
+    // 영화 store.state 가져오기
     updateMovie() {
-      console.log(this.searchQuery)
       this.$store.dispatch('movie/updateMovies', {
         page: this.currentPage,
-        search: this.searchQuery
+        search: this.searchQuery,
+        ordering: this.filter
       })
       window.scrollTo(0, 0)
     }

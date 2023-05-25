@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <AppBar />
+
     <v-main>
       <v-container fluid>
         <v-row>
@@ -13,15 +14,15 @@
       </v-container>
     </v-main>
 
-    <!-- <v-footer color="footerColor">
+    <v-footer color="footerColor">
       <v-container fluid>
         <v-row>
           <v-col class="text-center">
-            <p>&copy; 2023 Company Name. All rights reserved.</p>
+            <p>&copy; 2023 Ssafy 9th BUK 1_HB HY.</p>
           </v-col>
         </v-row>
       </v-container>
-    </v-footer> -->
+    </v-footer>
 
     <!-- 맨위로 버튼 -->
     <v-fab-transition>
