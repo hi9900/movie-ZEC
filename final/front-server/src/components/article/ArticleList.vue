@@ -1,3 +1,4 @@
+// components/article/ArticleList.vue
 <template>
   <v-container>
     <v-row class="mb-5">
@@ -25,7 +26,7 @@
           <tr
             v-for="article in sortedList"
             :key="article.id"
-            @click="moveDetail()"
+            @click="moveDetail(article.id)"
           >
             <td>{{ article.id }}</td>
             <td>{{ article.title }}</td>
@@ -35,12 +36,12 @@
         </tbody>
       </template>
     </v-simple-table>
-
-    <article-list-card
+    <article-list-card>
+      <!-- <article-list-card
       v-for="article in sortedList"
       :key="article"
       :article="article"
-    >
+    > -->
     </article-list-card>
   </v-container>
 </template>
@@ -54,13 +55,23 @@ export default {
     return {}
   },
   methods: {
-    ...mapActions('article', ['addArticle', 'getArticleList']),
+    ...mapActions('article', [
+      'addArticle',
+      'getArticleList',
+      'getArticle',
+      'getCommentList'
+    ]),
     ...mapMutations('article', ['SETARTICLEPAGE']),
-    moveDetail() {
-      // this.getArticle(this.article.id)
-      // this.getCommentList(this.article.id)
+    moveDetail(articleId) {
+      this.getArticle(articleId)
+      this.getCommentList(articleId)
       this.$router.push({name: 'ArticleDetail'})
     }
+    // moveDetail() {
+    //   this.getArticle(this.article.id)
+    //   this.getCommentList(this.article.id)
+    //   this.$router.push({name: 'ArticleDetail'})
+    // }
   },
   created() {
     this.getArticleList()

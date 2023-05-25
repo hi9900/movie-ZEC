@@ -1,5 +1,6 @@
 // store/modules/article.js
 import * as api from "@/api/article";
+import router from '@/router';
 
 export default {
   namespaced: true,
@@ -55,7 +56,7 @@ export default {
         }
       )
     },
-    getArticle: ({commit}, articleId) => {
+    getArticle: ({ commit }, articleId) => {
       api.articleDetail(
         ({ data }) => {
           commit("SETARTICLE", data);
@@ -83,21 +84,9 @@ export default {
         );
       });
     },
-    
-    updateArticle: (article, articleId) => {
-      api.articleUpadte(
-        ({ data }) => {
-          console.log(data);
-        },
-        (error) => {
-          console.log(error);
-        },
-        article,
-        articleId
-      )
-    },
-    deleteArticle: (password, articleId) => {
-      api.articleDelete(
+
+    updateArticle: (_, { password, article, articleId }) => {
+      api.articleUpdate(
         ({ data }) => {
           console.log(data);
         },
@@ -105,10 +94,24 @@ export default {
           console.log(error);
         },
         password,
+        article,
         articleId
-      )
+      );
     },
-    getCommentList: ({commit}, articleId) => {
+
+    deleteArticle(context, { articleId, password }) { // context has been added instead of {}
+      // Replace this with the correct API call
+      api.delete(`/articles/${articleId}`, { data: { password } })
+        .then(() => {
+          // Perform some action after the article is deleted, such as redirecting to a different page
+          router.push({ name: 'ArticleList' });
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+        });
+    },
+    getCommentList: ({ commit }, articleId) => {
       api.commentList(
         ({ data }) => {
           commit("SETCOMMENTLIST", data);

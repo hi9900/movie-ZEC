@@ -46,6 +46,7 @@ def article_detail(request, article_id):
 
     elif request.method == 'PUT':
         password = json.loads(request.body).get('password')
+        print(article.password, password)
         if password == article.password:
             serializer = ArticleSerializer(article, data=request.data)
             if serializer.is_valid(raise_exception=True):
@@ -53,6 +54,8 @@ def article_detail(request, article_id):
                 return Response(serializer.data)
         else:
             return Response({"message" : "비밀번호가 일치하지 않습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+
 
 
 # 게시글 댓글

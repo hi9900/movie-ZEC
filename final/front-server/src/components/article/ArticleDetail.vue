@@ -1,42 +1,66 @@
-// ArticleDetail.vue
+// components/article/ArticleDetail.vue
 <template>
   <div>
-    {{article.title}}
-    <hr>
-    {{article.content}}
-    <hr>
+    {{ article.title }}
+    <hr />
+    {{ article.content }}
+    <hr />
     <div v-for="comment in sortedComments" :key="comment.id">
-  {{comment.content}}
-   <hr>
-  </div>
-    <v-btn :to="{name: 'CreateComment', params: { articleId: article.id }}"> 댓글생성 </v-btn>
+      {{ comment.content }}
+      <hr />
+    </div>
+    <v-btn :to="{name: 'CreateComment', params: {articleId: article.id}}">
+      댓글생성
+    </v-btn>
+    <v-btn :to="{name: 'ArticleUpdate', params: {articleId: article.id}}">
+      게시글 수정
+    </v-btn>
+    <input v-model="password" type="password" placeholder="Password" />
+    <v-btn @click="submitDeleteArticle">게시글 삭제</v-btn>
   </div>
 </template>
 
 <script>
-import {  mapGetters } from 'vuex';
+import {mapGetters, mapActions} from 'vuex'
 export default {
-
   data() {
     return {
-
-    };
+      password: ''
+    }
   },
   methods: {
-
+    ...mapActions('article', ['deleteArticle']),
+    async submitDeleteArticle() {
+      try {
+        await this.deleteArticle({
+          password: this.password,
+          articleId: this.$route.params.articleId
+        })
+        this.password = '' // Clear the password input
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    loadArticle() {
+      this.fetchArticle({articleId: this.$route.params.articleId})
+    }
   },
   created() {
-
+    this.loadArticle()
+  },
+  watch: {
+    // call again the method if the route changes
+    $route: 'loadArticle'
   },
   computed: {
-    ...mapGetters("article", ["article", "commentList"]),
+    ...mapGetters('article', ['article', 'commentList']),
+    ...mapActions('article', ['deleteArticle']),
     sortedComments() {
-    return [...this.commentList].sort((a, b) => a.id - b.id);
-    },
-  },
+      return [...this.commentList].sort((a, b) => a.id - b.id)
+    }
+  }
 }
 </script>
 
 <style>
-
 </style>

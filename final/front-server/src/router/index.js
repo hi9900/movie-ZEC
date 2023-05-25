@@ -124,11 +124,16 @@ const routes = [
         name: 'ArticleCreate',
         component: () => import('@/components/article/ArticleCreate')
       },
-      // {
-      //   path: '/create-comment/:articleId',
-      //   name: 'CreateComment',
-      //   component: () => import('@/components/article/CommentCreate')
-      // },
+      {
+        path: '/create-comment/:articleId',
+        name: 'CreateComment',
+        component: () => import('@/components/article/CommentCreate')
+      },
+      {
+        path: '/:articleId',
+        name: 'ArticleUpdate',
+        component: () => import('@/components/article/ArticleUpdate')
+      },
     ]
   }
 ]

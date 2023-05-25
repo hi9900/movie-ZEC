@@ -10,7 +10,8 @@ const account = {
     refreshToken: null,
     userId: '',
     username: '',
-    useremail: ''
+    useremail: '',
+    is_staff: null,
   },
   getters: {
     // 로그인
@@ -38,6 +39,7 @@ const account = {
       state.username = token.username
       state.useremail = token.email
       state.userId = token.id
+      state.is_staff = token.is_staff
       router.push({ name: 'Movie' })
     },
     // 로그아웃

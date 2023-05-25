@@ -15,7 +15,7 @@
 <script>
 // import axios from 'axios';
 
-import { mapActions } from "vuex";
+import {mapActions} from 'vuex'
 
 export default {
   props: ['articleId'],
@@ -27,18 +27,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions("article", ["addComment", "getCommentList"]),
+    ...mapActions('article', ['addComment', 'getCommentList']),
     async createComment() {
       const comment = {
         writer: this.writer,
         password: this.password,
-        content: this.content,
-      };
-      await this.addComment({ comment, articleId: this.$route.params.articleId });
-      this.getCommentList();
-      this.$router.push({ name: "ArticleDetail", params: { articleId: this.$route.params.articleId } });
-    },
-  },
+        content: this.content
+      }
+      const articleId = this.$route.params.articleId
+      await this.addComment({comment, articleId})
+      await this.getCommentList(articleId) // pass the articleId here
+      this.$router.push({name: 'ArticleDetail', params: {articleId}})
+    }
+  }
 }
 </script>
 

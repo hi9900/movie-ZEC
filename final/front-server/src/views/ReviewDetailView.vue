@@ -89,6 +89,7 @@
     </v-row>
 
     <!-- 수정 -->
+
     <v-dialog max-width="600px" v-model="open">
       <v-card>
         <v-card-title class="font-weight-black"> 리뷰 수정하기 </v-card-title>
