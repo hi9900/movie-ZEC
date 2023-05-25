@@ -1,6 +1,8 @@
 <template>
   <!-- 이 페이지 로딩화면 구현해야함 -->
   <v-container fluid>
+    {{ this.myData }}
+
     <v-card
       @mouseover="isHover = true"
       @mouseleave="isHover = false"
@@ -46,7 +48,6 @@
             </div>
           </v-img>
         </div>
-
         <v-card-title primary-title class="d-md-block d-none">
           <div class="body-1 ellipsis-second-line">{{ movie.title }}</div>
           <p class="caption text--disabled original_title">
@@ -54,9 +55,8 @@
           </p>
         </v-card-title>
       </div>
-
       <v-card-actions
-        class="card-actions fixed-bottom"
+        class="card-actions fixed-bottom d-md-block d-none"
         :class="cardActionsClass"
       >
         <v-row no-gutters align="center" justify="center" class="card-actions">

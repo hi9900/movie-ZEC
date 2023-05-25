@@ -150,10 +150,10 @@
           <v-container mt-5>
             <!-- content가 있는 리뷰만 보이게 -->
 
-            <v-row> 작성된 리뷰 {{ reviews.length }} </v-row>
+            <v-row> 작성된 리뷰 {{ this.review_count }} </v-row>
 
             <v-row no-gutters v-for="review in reviews" :key="review.id">
-              <ReviewList v-if="review.content" :review="review" />
+              <ReviewList v-if="review?.content" :review="review" />
             </v-row>
           </v-container>
           <!-- 글씨 스타일 바꾸기 -->
@@ -192,7 +192,8 @@ export default {
       // movie: null,
       // showTrailerModal: false,
       // youtube_trailer: 'abcdefghijklmnop',
-      myData: null
+      myData: null,
+      review_count: 0
     }
   },
   computed: {
@@ -209,14 +210,7 @@ export default {
     isLogin() {
       return this.$store.getters['accounts/isLogin']
     },
-    // 왜안되징
-    // iscontentReview() {
-    //   const arr = this.reviews
-    //   const res = arr.filter(el => {
-    //     el.content.length > 0
-    //   }).length
-    //   return res
-    // },
+
     myLikeMovies() {
       return this.myData.like_movies
     }
@@ -236,6 +230,15 @@ export default {
     reviewCreate() {
       this.getMovieId()
     },
+    // 왜안되징
+    iscontentReview() {
+      const arr = this.reviews
+      const res = arr.filter(el => {
+        el.content.length > 0
+      }).length
+      console.log(res)
+      this.review_count = res
+    },
     getMyData() {
       const Token = `Bearer ${this.$store.state.account.accessToken}`
       const username = this.$store.state.account.username
@@ -248,6 +251,7 @@ export default {
         .then(res => {
           // console.log(res.data)
           this.myData = res.data
+          this.iscontentReview()
         })
         .catch(e => console.log(e))
     }

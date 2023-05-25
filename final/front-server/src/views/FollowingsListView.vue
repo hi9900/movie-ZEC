@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-row v-if="followings">
-      <v-col cols="3" v-for="following in this.followings" :key="following.id">
-        <UserProfileCard :user="following" />
+    <v-row v-if="users">
+      <v-col cols="3" v-for="user in users" :key="user.id">
+        <UserProfileCard :user="user" />
       </v-col>
     </v-row>
   </v-container>
@@ -21,27 +21,17 @@ export default {
   },
   data() {
     return {
-      followingList: [
-        {
-          id: 3,
-          username: 'User3',
-          profileImage: 'https://via.placeholder.com/150'
-        },
-        {
-          id: 4,
-          username: 'User4',
-          profileImage: 'https://via.placeholder.com/150'
-        }
-      ]
+      users: []
     }
   },
-  computed: {
+  methods: {
     followings() {
-      if (this.profile.following !== []) {
-        return this.profile?.following
-      }
-      return false
+      this.users = this.profile?.following
+      console.log(this.users)
     }
+  },
+  created() {
+    this.followings()
   }
 }
 </script>
