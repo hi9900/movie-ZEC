@@ -55,7 +55,7 @@
                 :step="0.5"
                 :half-increments="true"
               />
-              <span class="rating-number ml-2">{{ rating }}</span>
+              <!-- <span class="rating-number ml-2">{{ rating }}</span> -->
             </v-col>
           </v-row>
         </v-col>

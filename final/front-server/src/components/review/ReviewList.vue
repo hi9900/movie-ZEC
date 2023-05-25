@@ -5,19 +5,16 @@
       <v-col>
         <div class="review">
           <v-row>
-            <v-col cols="auto">
+            <v-col cols="auto" v-if="review.user.username">
               <img
                 @click="goToProfile(review.user.username)"
                 class="avatar"
-                :src="`https://source.boringavatars.com/beam/40/${user?.username}`"
+                :src="`https://source.boringavatars.com/beam/40/${review?.user.username}`"
               />
             </v-col>
-            <v-col>
-              <div class="review-header">
-                <div
-                  class="review-user"
-                  @click="goToProfile(review.user.username)"
-                >
+            <v-col @click="onReview">
+              <div class="review-header" style="justify-content: space-between">
+                <div v-if="review.user.username" class="review-user">
                   {{ review.user.username }}
                 </div>
                 <div class="review-rating">
@@ -35,16 +32,18 @@
                   {{ formatDate(review.watched_at) }}
                 </div>
               </div>
-              <div class="review-body" @click="onReview">
-                {{ review.content }}
-              </div>
+              <div
+                class="d-flex align-center"
+                style="justify-content: space-between"
+              >
+                <div class="review-body">
+                  {{ review.content }}
+                </div>
 
-              <div class="review-like-icon">
-                <v-btn icon @click.prevent="likeReviews">
+                <div class="review-like-icon">
                   <v-icon :color="isLiked ? 'red' : 'gray'">mdi-heart</v-icon>
-                </v-btn>
-                {{ like_users_length }}
-                <!-- {{ review }} -->
+                  {{ like_users_length }}
+                </div>
               </div>
             </v-col>
           </v-row>
@@ -56,9 +55,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-const API_URL = 'http://127.0.0.1:8000'
-
 export default {
   data() {
     return {
@@ -67,7 +63,8 @@ export default {
     }
   },
   props: {
-    review: Object
+    review: Object,
+    profile: Object
   },
   methods: {
     onReview() {
@@ -82,31 +79,20 @@ export default {
       const d = new Date(date)
       return d.toLocaleDateString()
     },
-    likeReviews() {
-      const Token = this.$store.state.account.accessToken
-      // 리뷰에 대한 좋아요, like_users +- 1
-      axios({
-        method: 'put',
-        url: `${API_URL}/api/v1/reviews/${this.review.id}/like/`,
-        headers: {
-          Authorization: `Bearer ${Token}`
-        }
-      })
-        .then(() => {
-          console.log('좋아요/좋아요취소')
 
-          // 이거 좋아요 비동기 어케하지
-          // 여기 review.liked_user에 userid가 들어가있는데,
-          // 이것도 username으로 바꿔서 만약 그 배열에 있으면 취소, 없으면 좋아요로 구현하기
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
     goToProfile(username) {
       this.$router.push({name: 'Profile', params: {username: username}})
     }
     // isLiked() {}
+  },
+  computed: {
+    // username() {
+    //   if (this.review.user.username) {
+    //     return this.review.user.username
+    //   } else {
+    //     return this.profile.username
+    //   }
+    // }
   }
 }
 </script>

@@ -6,7 +6,7 @@
       max-height="50"
       max-width="150"
       style="object-fit: cover"
-      :src="require('@/assets/logo0.png')"
+      :src="require('@/assets/logo.png')"
       alt="Your Logo"
       class="mr-4 logoImg"
     ></v-img>
@@ -14,7 +14,7 @@
     <v-spacer></v-spacer>
 
     <v-btn text :to="{name: 'Movie'}">Movie</v-btn>
-    <v-btn text :to="{name: 'Lists'}">Lists</v-btn>
+    <!-- <v-btn text :to="{name: 'Lists'}">Lists</v-btn> -->
     <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
 
     <v-btn text :to="{name: 'Article'}">Article</v-btn>
@@ -34,11 +34,11 @@
       </template>
       <v-list>
         <v-list-item @click="logout">
-          <v-list-item-title>Logout</v-list-item-title>
+          <v-list-item-title>LOGOUT</v-list-item-title>
         </v-list-item>
-        <v-list-item @click.prevent="update">
+        <!-- <v-list-item @click.prevent="update">
           <v-list-item-title>회원정보수정</v-list-item-title>
-        </v-list-item>
+        </v-list-item> -->
       </v-list>
     </v-menu>
 

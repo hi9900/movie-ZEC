@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="profile-info">
+  <v-sheet class="profile-info px-2">
     <v-avatar size="120" class="mx-auto d-block">
       <img
         class="avatar"
@@ -30,9 +30,9 @@
       <v-btn color="red" outlined v-else @click="unfollow"> 팔로우 취소 </v-btn>
     </div>
     <!-- 내 페이지면 수정버튼 -->
-    <div v-else>
+    <!-- <div v-else>
       <v-btn outlined @click="updateUser"> 회원 정보 수정 </v-btn>
-    </div>
+    </div> -->
   </v-sheet>
 </template>
 
@@ -93,6 +93,11 @@ export default {
     profileUser() {
       return this.profile.username
     }
+  },
+  watched: {},
+  updated() {
+    //
+    // this.$emit('getProfile')
   }
 }
 </script>

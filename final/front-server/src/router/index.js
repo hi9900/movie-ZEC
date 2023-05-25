@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store/index'
 
 Vue.use(VueRouter)
 
@@ -15,7 +16,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/HomePageView')
+    component: () => import('@/views/MoviePageView')
   },
   // 영화
   {
@@ -87,17 +88,13 @@ const routes = [
     name: 'ListsDetail',
     component: () => import('@/views/ListsDirectorView')
   },
-
-  {
-    path: '/community',
-    name: 'Community',
-    component: () => import('@/views/CommunityPageView')
-  },
+  // 게시판
   {
     path: '/article',
     name: 'Article',
     redirect: '/article/list',
     component: () => import('@/views/ArticleView'),
+    props: true,
     children: [
       {
         path: 'list',
@@ -125,6 +122,41 @@ const router = new VueRouter({
   scrollBehavior() {
     // scrollBehavior 메서드 추가
     return {x: 0, y: 0}
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  // CODE HERE
+  //  console.log('to', to)
+  //  console.log('from', from)
+  //  console.log('next', next)
+
+  // 로그인 여부
+  // const isLoggedIn = false
+  const isLogin = store.getters['account/isLogin']
+
+  // 로그인이 필요한 페이지 지정
+  const authPages = [
+    'MovieDetail',
+    'ReviewDetail',
+    'Profile',
+    'FollowersList',
+    'FollowingList',
+    'Update',
+    'ListsDetail',
+    'Lists',
+    'Update'
+  ]
+  // 앞으로 이동할 페이지(to)가 로그인이 필요한 페이지인지 확인
+  const isAuthRequired = authPages.includes(to.name)
+
+  if (isAuthRequired && !isLogin) {
+    console.log('Login')
+    // next({name: 'LogIn'})
+    alert('로그인이 필요한 페이지입니다.')
+  } else {
+    console.log('to')
+    next()
   }
 })
 

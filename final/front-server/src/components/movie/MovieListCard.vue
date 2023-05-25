@@ -19,6 +19,7 @@
               movie.poster_path
             "
           >
+            <!-- 작을때 -->
             <div
               class="d-none d-lg-none text-overlay absolute d-flex flex-column align-center"
               v-if="isHover"
@@ -53,7 +54,7 @@
           </p>
         </v-card-title>
       </div>
-      <v-card-actions
+      <!-- <v-card-actions
         class="card-actions fixed-bottom d-md-block d-none"
         :class="cardActionsClass"
       >
@@ -67,7 +68,6 @@
 
           <v-col cols="4" class="text-center">
             <v-tooltip top>
-              <!-- v-tooltip 추가 -->
               <template v-slot:activator="{on, attrs}">
                 <v-icon
                   v-bind="attrs"
@@ -77,12 +77,11 @@
                   mdi-star
                 </v-icon>
               </template>
-              <!-- 내가 준 평점 정보 -->
               <span>Tooltip text</span>
             </v-tooltip>
           </v-col>
         </v-row>
-      </v-card-actions>
+      </v-card-actions> -->
     </v-card>
   </v-container>
 </template>
@@ -125,7 +124,7 @@ export default {
     cardHeightClass() {
       if (this.$vuetify.breakpoint.smAndDown) {
         return 'small-card-height'
-      } else if (this.$vuetify.breakpoint.lgAndUp) {
+      } else if (this.$vuetify.breakpoint.lg) {
         return 'large-card-height'
       } else if (this.$vuetify.breakpoint.md) {
         return 'middle-card-height'
@@ -214,9 +213,9 @@ export default {
   max-height: 320px;
 }
 .default-card-height {
-  height: 320px;
-  min-height: 320px;
-  max-height: 320px;
+  height: 400px;
+  min-height: 400px;
+  max-height: 400px;
 }
 
 .card-actions {
