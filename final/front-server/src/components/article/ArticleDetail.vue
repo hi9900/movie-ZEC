@@ -15,8 +15,10 @@
     <v-btn :to="{name: 'ArticleUpdate', params: {articleId: article.id}}">
       게시글 수정
     </v-btn>
-    <input v-model="password" type="password" placeholder="Password" />
-    <v-btn @click="submitDeleteArticle">게시글 삭제</v-btn>
+    <form @submit.prevent="submitDeleteArticle">
+      <!-- <input v-model="password" type="password" placeholder="Password" />
+      <button type="submit">Delete</button> -->
+    </form>
   </div>
 </template>
 
@@ -36,7 +38,10 @@ export default {
           password: this.password,
           articleId: this.$route.params.articleId
         })
-        this.password = '' // Clear the password input
+        // Clear the password input
+        this.password = ''
+        // Redirect to article list after successful deletion
+        this.$router.push({name: 'ArticleList'})
       } catch (error) {
         console.error(error)
       }

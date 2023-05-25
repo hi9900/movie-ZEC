@@ -99,17 +99,20 @@ export default {
       );
     },
 
-    deleteArticle(context, { articleId, password }) { // context has been added instead of {}
-      // Replace this with the correct API call
-      api.delete(`/articles/${articleId}`, { data: { password } })
-        .then(() => {
+    deleteArticle(_, { articleId, password }) {
+      // Call the 'articleDelete' method instead of 'api.delete'
+      api.articleDelete(
+        () => {
           // Perform some action after the article is deleted, such as redirecting to a different page
           router.push({ name: 'ArticleList' });
-        })
-        .catch(error => {
+        },
+        (error) => {
           // Handle error
           console.error(error);
-        });
+        },
+        password,
+        articleId
+      );
     },
     getCommentList: ({ commit }, articleId) => {
       api.commentList(
