@@ -14,7 +14,7 @@
     <v-spacer></v-spacer>
 
     <v-btn text :to="{name: 'Movie'}">Movie</v-btn>
-    <!-- <v-btn text :to="{name: 'Lists'}">Lists</v-btn> -->
+    <v-btn text :to="{name: 'Lists'}">GGU</v-btn>
     <!-- <v-btn text :to="{ name: 'Community' }">Community</v-btn> -->
 
     <v-btn text :to="{name: 'Article'}">Article</v-btn>
@@ -69,10 +69,10 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('account/logout')
-      this.$router.push({name: 'Home'})
+      this.$router.push({name: 'Movie'})
     },
     goHome() {
-      this.$router.push({name: 'Home'})
+      this.$router.push({name: 'Movie'})
       // console.log(this.$route.name)
     },
     update() {

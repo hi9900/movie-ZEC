@@ -22,7 +22,7 @@ const account = {
     // 회원가입
     SAVE_TOKEN(state, token) {
       state.token = token
-      router.push({name: 'LogIn'})
+      router.push({ name: 'LogIn' })
     },
 
     SET_ACCESS(state, token) {
@@ -38,7 +38,7 @@ const account = {
       state.username = token.username
       state.useremail = token.email
       state.userId = token.id
-      router.push({name: 'Home'})
+      router.push({ name: 'Movie' })
     },
     // 로그아웃
     LOGOUT(state) {
@@ -74,7 +74,7 @@ const account = {
         }
       })
         .then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           context.commit('SAVE_TOKEN', res.data.key)
         })
         .catch(err => {
@@ -93,10 +93,10 @@ const account = {
           password
         }
       })
-        .then(res => {
+        .then((res) => {
           // 사용자 확인
           console.log('로그인')
-          console.log(res)
+          // console.log(res)
           // context.commit('SAVE_TOKEN', res.data)
           context.commit('LOGIN', res.data)
           // context.commit('SET_ACCESS', res.data)
@@ -115,10 +115,10 @@ const account = {
       axios({
         method: 'post',
         url: `${API_URL}/accounts/dj-rest-auth/logout/`
-      }).then(res => {
+      }).then(() => {
         console.log('로그아웃')
 
-        console.log(res)
+        // console.log(res)
         context.commit('RESET')
       })
     }
