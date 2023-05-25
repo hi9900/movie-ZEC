@@ -150,6 +150,7 @@
           <v-container mt-5>
             <!-- content가 있는 리뷰만 보이게 -->
 
+            {{ reviews }}
             <v-row> 작성된 리뷰 {{ this.review_count }} </v-row>
 
             <v-row no-gutters v-for="review in reviews" :key="review.id">
@@ -161,7 +162,7 @@
         </v-col>
 
         <!-- 리뷰 작성 sticky, 폼 -->
-        <v-col md="1" no-gutter class="d-none d-md-block review-create">
+        <v-col cols="1" no-gutter class="review-create">
           <ReviewSimpleCreate
             :movie="movie"
             :myData="myData"
@@ -251,7 +252,6 @@ export default {
         .then(res => {
           // console.log(res.data)
           this.myData = res.data
-          this.iscontentReview()
         })
         .catch(e => console.log(e))
     }
@@ -330,4 +330,3 @@ export default {
   word-break: keep-all;
 }
 </style>
-
