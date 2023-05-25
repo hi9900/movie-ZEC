@@ -85,10 +85,22 @@ const routes = [
     component: () => import('@/views/MovieListsView')
   },
   {
-    path: '/lists/:id',
-    name: 'ListsDetail',
+    path: '/lists/derector/:id',
+    name: 'ListsDerector',
     component: () => import('@/views/ListsDirectorView')
   },
+  {
+    path: '/lists/Genre/:id',
+    name: 'ListsGenre',
+    component: () => import('@/views/ListsGenreView')
+  },
+  {
+    path: '/lists/actor/:id',
+    name: 'ListsActor',
+    component: () => import('@/views/ListsActorView')
+  },
+
+
   // 게시판
   {
     path: '/article',

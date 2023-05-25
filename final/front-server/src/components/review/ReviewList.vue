@@ -5,7 +5,6 @@
       <v-col>
         <div class="review">
           <v-row>
-            {{ review }}
             <v-col cols="auto" v-if="review.user.username">
               <img
                 @click="goToProfile(review.user.username)"

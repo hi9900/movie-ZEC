@@ -76,7 +76,11 @@ const movie = {
         params: {
           search: Query.search,
           page: Query.page,
-          ordering: Query.ordering
+          ordering: Query.ordering,
+          director: Query.director,
+          actor: Query.actor,
+          character: Query.character,
+          genre: Query.genre
         }
       })
         .then((res) => {
