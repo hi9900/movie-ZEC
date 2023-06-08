@@ -140,8 +140,6 @@ def movie_list_by_genre(request, genre_id):
         'genre_data': serializer_d.data,
         'data': serializer.data
     }
-
-
     return Response(response, status=status.HTTP_200_OK)
 
 

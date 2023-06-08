@@ -15,8 +15,8 @@
           <tr>
             <th class="text-left">번호</th>
             <th class="text-left">제목</th>
+            <th class="text-left">내용</th>
             <th class="text-left">작성자</th>
-            <th class="text-left">댓글</th>
           </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
             <td>{{ article.id }}</td>
             <td>{{ article.title }}</td>
             <td>{{ article.content }}</td>
-            <td>{{ article.date }}</td>
+            <td>{{ article.writer }}</td>
           </tr>
         </tbody>
       </template>

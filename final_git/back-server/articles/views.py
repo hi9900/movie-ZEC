@@ -56,8 +56,6 @@ def article_detail(request, article_id):
             return Response({"message" : "비밀번호가 일치하지 않습니다."}, status=status.HTTP_403_FORBIDDEN)
 
 
-
-
 # 게시글 댓글
 @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated])
@@ -103,6 +101,7 @@ def comment_detail(request, article_comment_id):
                 return Response(serializer.data)
         else:
             return Response({"message" : "비밀번호가 일치하지 않습니다."}, status=status.HTTP_403_FORBIDDEN)
+        
         
 # 게시글 대댓글
 @api_view(['GET', 'POST'])
